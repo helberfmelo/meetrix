@@ -1,0 +1,67 @@
+name: Deploy Meetrix
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  web-deploy:
+    name: 🎉 Deploy
+    runs-on: ubuntu-latest
+    steps:
+    - name: 🚚 Get latest code
+      uses: actions/checkout@v4
+
+    - name:  Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.2'
+        extensions: mbstring, intl, pdo_mysql
+
+    - name: 📂 Cache Composer packages
+      id: composer-cache
+      uses: actions/cache@v3
+      with:
+        path: vendor
+        key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-php-
+
+    - name: 📦 Install Composer Dependencies
+      run: composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader
+
+    - name: 📂 Cache Node.js modules
+      id: node-cache
+      uses: actions/cache@v3
+      with:
+        path: node_modules
+        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-node-
+
+    - name: 📦 Install Node.js Dependencies
+      run: npm install
+
+    - name: 🔨 Build Frontend
+      run: npm run build
+
+    - name: 📂 Sync files (FTP)
+      uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+      with:
+        server: ${{ secrets.FTP_HOST }}
+        username: ${{ secrets.FTP_USER }}
+        password: ${{ secrets.FTP_PASSWORD }}
+        server-dir: /public_html/meetrix/
+        exclude: |
+          **/.git*
+          **/.git/**
+          **/node_modules/**
+          **/tests/**
+          .editorconfig
+          .env.example
+          .gitignore
+          README.md
+          phpunit.xml
+          storage/framework/cache/data/**
+          storage/framework/sessions/**
+          storage/framework/views/**

@@ -52,10 +52,10 @@
                 <router-view></router-view>
             </div>
 
-            <footer class="py-12 px-12 flex justify-between items-center text-[8px] font-black uppercase tracking-[0.4em] text-slate-500 border-t border-black/5 dark:border-white/5 bg-zinc-50/50 dark:bg-zinc-950/50 backdrop-blur-sm">
-                <div>MEETRIX // SOVEREIGN_NODE</div>
+            <footer class="py-8 px-12 flex justify-between items-center text-[10px] font-medium uppercase tracking-wider text-slate-500 border-t border-black/5 dark:border-white/5 bg-zinc-50/50 dark:bg-zinc-950/50 backdrop-blur-sm">
+                <div>MEETRIX <span class="mx-2 text-slate-300 dark:text-slate-700">|</span> SOVEREIGN NODE</div>
                 <div>
-                    © {{ new Date().getFullYear() }} // <a href="https://opents.com.br" target="_blank" class="hover:text-meetrix-orange transition-colors">OTS - Open Tecnologia e Serviços Ltda.</a>
+                    © {{ new Date().getFullYear() }} <span class="mx-2 text-slate-300 dark:text-slate-700">|</span> <a href="https://opents.com.br" target="_blank" class="hover:text-meetrix-orange transition-colors">OTS - Open Tecnologia e Serviços Ltda.</a>
                 </div>
             </footer>
         </main>

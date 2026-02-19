@@ -20,17 +20,17 @@
                     @click="activeSection = section.id"
                     :class="[
                         'w-full text-left px-4 py-3 rounded-lg flex items-center transition-colors',
-                        activeSection === section.id ? 'bg-indigo-50 text-indigo-700 font-medium' : 'text-gray-600 hover:bg-gray-50'
+                        activeSection === section.id ? 'bg-zinc-950 text-white dark:bg-zinc-800 dark:text-white' : 'text-slate-600 hover:bg-zinc-50 dark:text-slate-400 dark:hover:bg-zinc-900/50'
                     ]"
                 >
-                    <span class="mr-3 text-lg">{{ section.icon }}</span>
+                    <i :class="[section.icon, 'mr-3 text-lg']"></i>
                     {{ section.label }}
                 </button>
             </nav>
 
-            <div class="p-4 border-t border-gray-100">
-                <button @click="saveChanges" class="w-full btn-primary flex justify-center items-center">
-                    <span v-if="saving" class="animate-spin mr-2">⏳</span>
+            <div class="p-4 border-t border-black/5 dark:border-white/5">
+                <button @click="saveChanges" class="w-full bg-zinc-950 text-white dark:bg-meetrix-orange dark:text-zinc-950 py-3 rounded-xl font-black text-[10px] uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-xl flex justify-center items-center gap-2">
+                    <i v-if="saving" class="fas fa-circle-notch fa-spin"></i>
                     {{ saving ? 'Saving...' : 'Save Changes' }}
                 </button>
             </div>
@@ -113,12 +113,12 @@ const pageConfig = ref({
 const activeSection = ref('what');
 
 const sections = [
-    { id: 'what', label: 'Basic Info', icon: '📝', component: EditorSectionWhat },
-    { id: 'when', label: 'Availability', icon: '📅', component: EditorSectionWhen },
-    { id: 'types', label: 'Services', icon: '🏷️', component: EditorSectionTypes },
-    { id: 'form', label: 'Booking Form', icon: '📋', component: EditorSectionForm },
-    { id: 'analytics', label: 'Analytics', icon: '📈', component: EditorSectionAnalytics },
-    { id: 'branding', label: 'Branding', icon: '🎨', component: EditorSectionBranding },
+    { id: 'what', label: 'Basic Info', icon: 'fas fa-info-circle', component: EditorSectionWhat },
+    { id: 'when', label: 'Availability', icon: 'fas fa-calendar-alt', component: EditorSectionWhen },
+    { id: 'types', label: 'Services', icon: 'fas fa-tags', component: EditorSectionTypes },
+    { id: 'form', label: 'Booking Form', icon: 'fas fa-list-alt', component: EditorSectionForm },
+    { id: 'analytics', label: 'Analytics', icon: 'fas fa-chart-line', component: EditorSectionAnalytics },
+    { id: 'branding', label: 'Branding', icon: 'fas fa-palette', component: EditorSectionBranding },
 ];
 
 const currentSection = computed(() => sections.find(s => s.id === activeSection.value));

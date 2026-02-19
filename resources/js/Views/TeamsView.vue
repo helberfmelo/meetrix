@@ -8,8 +8,8 @@
         </div>
 
         <!-- Teams List -->
-        <div v-if="loading" class="flex justify-center py-12">
-            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
+        <div v-if="loading" class="flex justify-center py-24">
+            <i class="fas fa-circle-notch fa-spin text-4xl text-meetrix-orange"></i>
         </div>
 
         <div v-else-if="teams.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -43,8 +43,8 @@
             </div>
         </div>
 
-        <div v-else class="bg-white p-12 text-center rounded-3xl border-2 border-dashed border-gray-100">
-            <div class="text-5xl mb-4">🤝</div>
+        <div v-else class="bg-white dark:bg-zinc-900/50 p-12 text-center rounded-[40px] border border-black/5 dark:border-white/5 shadow-premium">
+            <div class="text-5xl mb-4 text-meetrix-orange"><i class="fas fa-users-viewfinder"></i></div>
             <h2 class="text-xl font-bold text-gray-900 mb-2">No teams yet</h2>
             <p class="text-gray-500 max-w-sm mx-auto mb-8">
                 Create a team to collaborate with other professionals and manage shared scheduling pages.

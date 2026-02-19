@@ -38,17 +38,17 @@
                     </div>
 
                     <button type="submit" :disabled="authStore.loading"
-                        class="w-full bg-zinc-950 text-white hover:bg-zinc-800 dark:bg-white dark:text-zinc-950 dark:hover:bg-zinc-200 py-5 rounded-2xl font-black text-xs uppercase tracking-[0.3em] hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl flex items-center justify-center gap-3 group px-8 disabled:bg-zinc-200 dark:disabled:bg-zinc-800 disabled:text-slate-400 dark:disabled:text-slate-600"
+                        class="w-full bg-zinc-950 text-white hover:bg-zinc-800 dark:bg-zinc-800 dark:text-white dark:hover:bg-zinc-700 py-5 rounded-2xl font-black text-xs uppercase tracking-[0.3em] hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl flex items-center justify-center gap-3 group px-8 disabled:bg-zinc-200 dark:disabled:bg-zinc-800 disabled:text-slate-400 dark:disabled:text-slate-600"
                     >
-                        <span v-if="authStore.loading" class="animate-spin text-lg">🌀</span>
+                        <span v-if="authStore.loading" class="animate-spin text-lg"><i class="fas fa-circle-notch"></i></span>
                         {{ authStore.loading ? $t('login.loading') : $t('login.submit') }}
-                        <span class="group-hover:translate-x-2 transition-transform">→</span>
+                        <i class="fas fa-arrow-right group-hover:translate-x-2 transition-transform"></i>
                     </button>
                 </form>
             </div>
             
-            <p class="text-[8px] font-black uppercase tracking-[0.5em] text-slate-700 text-center">
-                MEETRIX_AUTH_PROTOCOL // SECURE_HANDSHAKE
+            <p class="text-[8px] font-black uppercase tracking-[0.5em] text-slate-500 dark:text-slate-600 text-center">
+                <i class="fas fa-shield-halved mr-2"></i> MEETRIX_AUTH_PROTOCOL // SECURE_HANDSHAKE
             </p>
         </div>
     </div>

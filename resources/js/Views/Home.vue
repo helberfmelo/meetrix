@@ -22,7 +22,7 @@
                         
                         <router-link to="/onboarding" class="group flex items-center gap-4 text-zinc-950 dark:text-white hover:text-meetrix-orange transition-colors">
                             <span class="w-12 h-12 rounded-full border border-black/10 dark:border-white/20 flex items-center justify-center group-hover:border-meetrix-orange group-hover:bg-meetrix-orange transition-all duration-500">
-                                <svg class="w-5 h-5 group-hover:text-zinc-950 text-zinc-950 dark:text-white" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                                <i class="fas fa-chevron-right group-hover:text-zinc-950 text-zinc-950 dark:text-white transition-colors"></i>
                             </span>
                             <span class="text-sm font-black uppercase tracking-widest">{{ $t('home.get_started') }}</span>
                         </router-link>
@@ -55,7 +55,9 @@
                         <div class="group h-full bg-zinc-50 dark:bg-zinc-900/40 p-12 rounded-[3.5rem] border border-black/5 dark:border-white/5 hover:border-meetrix-orange/30 hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-all duration-700 flex flex-col justify-between translate-y-8 opacity-0 group-[.in-view]:translate-y-0 group-[.in-view]:opacity-100"
                             :style="{ transitionDelay: `${i * 150}ms` }">
                             <div>
-                                <span class="text-meetrix-orange font-black text-[10px] uppercase tracking-[0.4em] mb-12 block">0{{ i }} // NODE_MODULE</span>
+                                <span class="text-meetrix-orange font-black text-[10px] uppercase tracking-[0.4em] mb-12 block">
+                                    <i class="fas fa-microchip mr-2"></i> 0{{ i }} // NODE_MODULE
+                                </span>
                                 <h3 class="text-3xl font-black text-zinc-950 dark:text-white mb-6 uppercase font-outfit leading-none">{{ $t(`home.feature_${i}_title`) }}</h3>
                                 <p class="text-lg text-slate-500 leading-snug font-medium mb-12">{{ $t(`home.feature_${i}_desc`) }}</p>
                             </div>
@@ -82,12 +84,12 @@
                     <div class="flex items-center gap-6 mt-12 bg-white dark:bg-zinc-900 p-2 rounded-full border border-black/5 dark:border-white/5 w-fit">
                         <button @click="billingCycle = 'monthly'" 
                             class="px-8 py-3 rounded-full text-[10px] font-black uppercase tracking-widest transition-all"
-                            :class="billingCycle === 'monthly' ? 'bg-zinc-950 text-white dark:bg-white dark:text-zinc-950' : 'text-slate-400 hover:text-zinc-950 dark:hover:text-white'">
+                            :class="billingCycle === 'monthly' ? 'bg-zinc-950 text-white dark:bg-zinc-700/50 dark:text-white/90' : 'text-slate-400 hover:text-zinc-950 dark:hover:text-white'">
                             {{ $t('home.billing_monthly') }}
                         </button>
                         <button @click="billingCycle = 'annual'" 
                             class="px-8 py-3 rounded-full text-[10px] font-black uppercase tracking-widest transition-all relative"
-                            :class="billingCycle === 'annual' ? 'bg-zinc-950 text-white dark:bg-white dark:text-zinc-950' : 'text-slate-400 hover:text-zinc-950 dark:hover:text-white'">
+                            :class="billingCycle === 'annual' ? 'bg-zinc-950 text-white dark:bg-zinc-700/50 dark:text-white/90' : 'text-slate-400 hover:text-zinc-950 dark:hover:text-white'">
                             {{ $t('home.billing_annual') }}
                             <span class="absolute -top-4 -right-4 bg-meetrix-orange text-white text-[8px] px-2 py-0.5 rounded-full animate-bounce">-20%</span>
                         </button>

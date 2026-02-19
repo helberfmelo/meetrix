@@ -1,16 +1,11 @@
 <template>
     <button @click="toggleTheme" 
-        class="relative inline-flex items-center justify-center h-10 w-10 rounded-full bg-zinc-900 border border-white/10 transition-all duration-500 hover:border-meetrix-orange active:scale-95 shadow-premium group overflow-hidden"
+        class="relative flex items-center justify-center p-2 text-zinc-500 hover:text-meetrix-orange dark:text-slate-400 dark:hover:text-white transition-all active:scale-90"
         aria-label="Toggle Theme">
         
-        <!-- Background Animation -->
-        <div class="absolute inset-0 bg-gradient-to-tr from-meetrix-orange/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-
-        <!-- Icon -->
-        <div class="relative z-10 flex items-center justify-center transition-all duration-500 ease-out">
-            <span v-if="isDark" class="text-xs">🌙</span>
-            <span v-else class="text-xs">☀️</span>
-        </div>
+        <!-- Icon: Show Moon in Light Mode (to switch to Dark), Sun in Dark Mode (to switch to Light) -->
+        <i v-if="isDark" class="fas fa-sun text-lg"></i>
+        <i v-else class="fas fa-moon text-lg"></i>
     </button>
 </template>
 
@@ -41,13 +36,11 @@ onMounted(() => {
     if (savedTheme) {
         isDark.value = savedTheme === 'dark';
     } else {
-        // Obey user's browser theme if no preference saved
         isDark.value = prefersDark;
     }
     
     updateTheme();
 
-    // Listen for system changes if no preference saved
     window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
         if (!localStorage.getItem('theme')) {
             isDark.value = e.matches;
@@ -56,9 +49,3 @@ onMounted(() => {
     });
 });
 </script>
-
-<style scoped>
-.shadow-premium {
-    box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.3);
-}
-</style>

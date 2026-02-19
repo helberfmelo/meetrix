@@ -14,14 +14,14 @@
                     :class="[route.path === item.path ? '' : 'text-slate-500 hover:text-zinc-950 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5']"
                 >
                     <div v-if="route.path === item.path" class="absolute left-0 top-2 bottom-2 w-1 bg-meetrix-orange rounded-full"></div>
-                    <span class="text-xl grayscale group-hover:grayscale-0 transition-all">{{ item.icon }}</span>
+                    <i :class="[item.icon, 'text-lg grayscale group-hover:grayscale-0 transition-all']"></i>
                     <span class="hidden lg:block text-[10px] font-black uppercase tracking-[0.2em]">{{ item.label }}</span>
                 </router-link>
             </nav>
 
             <div class="p-8 border-t border-black/5 dark:border-white/5">
                 <button @click="handleLogout" class="w-full flex items-center gap-4 px-6 py-4 text-slate-500 hover:text-red-500 transition-colors group">
-                    <span class="text-xl">🚪</span>
+                    <i class="fas fa-sign-out-alt text-lg"></i>
                     <span class="hidden lg:block text-[10px] font-black uppercase tracking-[0.2em]">{{ $t('common.logout') }}</span>
                 </button>
             </div>
@@ -33,11 +33,8 @@
                 <div class="flex items-center gap-4">
                     <span class="text-[10px] font-black text-slate-600 uppercase tracking-[0.4em]">{{ breadcrumb }}</span>
                 </div>
-                <div class="flex flex-col items-center gap-4">
-                    <ThemeToggle />
-                    <LanguageSwitcher />
-                </div>
                 <div class="flex items-center gap-8 ml-4">
+                    <LanguageSwitcher />
                     <div class="flex items-center gap-3 pl-8 border-l border-black/10 dark:border-white/10 group cursor-pointer relative">
                         <div class="text-right hidden sm:block">
                             <p class="text-[10px] font-black text-zinc-950 dark:text-white uppercase tracking-widest leading-none">{{ user?.name }}</p>
@@ -48,6 +45,7 @@
                             {{ user?.name?.charAt(0) }}
                         </div>
                     </div>
+                    <ThemeToggle />
                 </div>
             </header>
             
@@ -81,13 +79,13 @@ const { t } = useI18n();
 const user = computed(() => authStore.user);
 
 const navItems = computed(() => [
-    { path: '/dashboard', label: t('common.dashboard'), icon: '📊' },
-    { path: '/dashboard/pages', label: t('common.pages'), icon: '📄' },
-    { path: '/dashboard/bookings', label: t('common.bookings'), icon: '📅' },
-    { path: '/dashboard/teams', label: 'Teams', icon: '👥' },
-    { path: '/dashboard/integrations', label: 'Integrations', icon: '🔌' },
-    { path: '/dashboard/polls', label: 'Polls', icon: '🗳️' },
-    { path: '/dashboard/coupons', label: 'Coupons', icon: '🏷️' }
+    { path: '/dashboard', label: t('common.dashboard'), icon: 'fas fa-chart-pie' },
+    { path: '/dashboard/pages', label: t('common.pages'), icon: 'fas fa-file-lines' },
+    { path: '/dashboard/bookings', label: t('common.bookings'), icon: 'fas fa-calendar-check' },
+    { path: '/dashboard/teams', label: 'Teams', icon: 'fas fa-users-viewfinder' },
+    { path: '/dashboard/integrations', label: 'Integrations', icon: 'fas fa-plug-circle-bolt' },
+    { path: '/dashboard/polls', label: 'Polls', icon: 'fas fa-square-poll-vertical' },
+    { path: '/dashboard/coupons', label: 'Coupons', icon: 'fas fa-ticket' }
 ]);
 
 const breadcrumb = computed(() => {

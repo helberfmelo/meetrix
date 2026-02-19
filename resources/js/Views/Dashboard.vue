@@ -54,7 +54,7 @@
                 <!-- Funnel: 3D Visualization -->
                 <div class="bg-white dark:bg-zinc-900 rounded-5xl border border-black/5 dark:border-white/5 p-12 relative overflow-hidden shadow-premium">
                     <h2 class="text-2xl font-black text-zinc-950 dark:text-white uppercase tracking-tighter mb-12 flex items-center gap-4">
-                        <span class="w-8 h-8 rounded-xl bg-meetrix-orange/20 flex items-center justify-center text-meetrix-orange text-xs text-center">F</span>
+                        <span class="w-8 h-8 rounded-xl bg-meetrix-orange/20 flex items-center justify-center text-meetrix-orange text-xs text-center"><i class="fas fa-filter"></i></span>
                         {{ $t('dashboard.conversion_arch') }}
                     </h2>
                     
@@ -91,7 +91,7 @@
                     <h2 class="text-xs font-black text-zinc-950 dark:text-white uppercase tracking-[0.5em] mb-12">LIVE_STREAM_PROTOCOL</h2>
                     
                     <div v-if="pageStore.pages.length === 0" class="flex flex-col items-center justify-center py-24 text-center">
-                         <div class="w-20 h-20 rounded-4xl bg-zinc-900 border border-white/5 flex items-center justify-center mb-8">
+                         <div class="w-20 h-20 rounded-4xl bg-zinc-100 dark:bg-zinc-900 border border-black/5 dark:border-white/5 flex items-center justify-center mb-8">
                              <div class="w-2 h-2 rounded-full bg-meetrix-orange animate-ping"></div>
                          </div>
                          <p class="text-xs font-black text-slate-600 uppercase tracking-widest">Waiting for first page deployment...</p>
@@ -110,11 +110,11 @@
                                     </div>
                                 </div>
                                 <div class="flex gap-2">
-                                     <a :href="`/p/${page.slug}`" target="_blank" class="p-2 bg-zinc-950 rounded-xl border border-white/5 text-white/50 hover:text-white transition-colors">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+                                     <a :href="`/p/${page.slug}`" target="_blank" class="p-2 bg-zinc-950 dark:bg-zinc-800 rounded-xl border border-white/5 text-white/50 hover:text-white transition-colors">
+                                        <i class="fas fa-external-link-alt text-xs"></i>
                                     </a>
-                                    <router-link :to="`/dashboard/editor/${page.slug}`" class="p-2 bg-white dark:bg-zinc-950 rounded-xl border border-black/5 dark:border-white/5 text-slate-400 hover:text-zinc-950 dark:hover:text-white transition-colors">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+                                    <router-link :to="`/dashboard/editor/${page.slug}`" class="p-2 bg-white dark:bg-zinc-800 rounded-xl border border-black/5 dark:border-white/5 text-slate-400 hover:text-zinc-950 dark:hover:text-white transition-colors">
+                                        <i class="fas fa-edit text-xs"></i>
                                     </router-link>
                                 </div>
                             </div>

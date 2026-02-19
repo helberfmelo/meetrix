@@ -11,7 +11,7 @@
             <button @click="showCreateModal = true" 
                 class="px-8 py-4 bg-meetrix-orange text-zinc-950 font-black text-xs uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-xl shadow-meetrix-orange/20 rounded-full flex items-center gap-3">
                 <span>NEW_VECTOR</span>
-                <span class="w-5 h-5 bg-zinc-950 text-white rounded-full flex items-center justify-center text-[10px]">+</span>
+                <span class="w-5 h-5 bg-zinc-950 text-white rounded-full flex items-center justify-center text-[10px]"><i class="fas fa-plus"></i></span>
             </button>
         </div>
 

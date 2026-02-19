@@ -10,13 +10,14 @@ import ThemeToggle from '../Components/ThemeToggle.vue';
             <div class="text-2xl font-black tracking-tighter text-zinc-950 dark:text-white font-outfit pointer-events-auto bg-white/10 dark:bg-black/10 backdrop-blur-sm px-4 py-2 rounded-2xl">MEETRIX<span class="text-meetrix-orange">.PRO</span></div>
             <div class="flex items-center gap-6 pointer-events-auto mt-4 sm:mt-0">
                 <router-link to="/login" class="text-[10px] uppercase font-black tracking-widest text-zinc-500 hover:text-zinc-950 dark:text-white/50 dark:hover:text-white transition-colors bg-white/10 dark:bg-black/10 backdrop-blur-sm px-4 py-2 rounded-2xl">{{ $t('home.login') }}</router-link>
-                <div class="flex items-center gap-2 bg-zinc-100/80 dark:bg-zinc-900/80 backdrop-blur-md p-1.5 rounded-2xl border border-black/5 dark:border-white/5 shadow-lg">
-                    <ThemeToggle />
-                    <LanguageSwitcher />
-                </div>
                 <router-link to="/onboarding" class="px-6 py-3 bg-zinc-950 text-white dark:bg-white dark:text-zinc-950 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-xl shadow-black/10">
                     {{ $t('home.get_started') }}
                 </router-link>
+
+                <div class="flex flex-col items-center gap-1 bg-zinc-100/40 dark:bg-zinc-900/40 backdrop-blur-md p-1 rounded-2xl border border-black/5 dark:border-white/5 pointer-events-auto">
+                    <ThemeToggle />
+                    <LanguageSwitcher />
+                </div>
             </div>
         </nav>
 

@@ -21,8 +21,9 @@
                 </div>
                 
                 <div v-if="!isGoogleConnected">
-                    <button @click="connectGoogle" :disabled="loading" class="w-full py-4 bg-white border-2 border-gray-100 rounded-xl font-bold hover:border-blue-400 hover:text-blue-600 transition-all flex items-center justify-center">
-                        <span v-if="loading" class="animate-spin mr-2">🌀</span>
+                    <button @click="connectGoogle" :disabled="loading" class="w-full py-4 bg-zinc-50 dark:bg-zinc-900 border-2 border-black/5 dark:border-white/10 rounded-xl font-bold hover:border-meetrix-orange transition-all flex items-center justify-center gap-3">
+                        <i v-if="loading" class="fas fa-circle-notch fa-spin"></i>
+                        <i v-else class="fab fa-google"></i>
                         Connect Google Calendar
                     </button>
                 </div>

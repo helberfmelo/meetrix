@@ -7,8 +7,8 @@
             </button>
         </div>
 
-        <div v-if="loading" class="flex justify-center py-12">
-            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
+        <div v-if="loading" class="flex justify-center py-24">
+            <i class="fas fa-circle-notch fa-spin text-4xl text-meetrix-orange"></i>
         </div>
 
         <div v-else-if="pages.length > 0" class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
@@ -46,8 +46,8 @@
                                 <router-link :to="'/dashboard/editor/' + page.slug" class="px-3 py-2 text-xs font-bold bg-white border border-gray-100 text-gray-600 rounded-lg hover:bg-gray-50">
                                     Edit
                                 </router-link>
-                                <button @click="deletePage(page.id)" class="px-3 py-2 text-gray-400 hover:text-red-500">
-                                    🗑️
+                                <button @click="deletePage(page.id)" class="px-3 py-2 text-slate-400 hover:text-red-500 transition-colors">
+                                    <i class="fas fa-trash-alt"></i>
                                 </button>
                             </div>
                         </td>
@@ -56,8 +56,8 @@
             </table>
         </div>
 
-        <div v-else class="bg-white p-20 text-center rounded-3xl border-2 border-dashed border-gray-100">
-            <div class="text-6xl mb-6">✨</div>
+        <div v-else class="bg-white dark:bg-zinc-900/50 p-20 text-center rounded-[40px] border border-black/5 dark:border-white/5 shadow-premium">
+            <div class="text-6xl mb-6 text-meetrix-orange"><i class="fas fa-magic-wand-sparkles"></i></div>
             <h2 class="text-2xl font-black text-gray-900 mb-2">Build your first booking page</h2>
             <p class="text-gray-500 max-w-sm mx-auto mb-8">
                 Create a professional page to start accepting appointments in minutes.

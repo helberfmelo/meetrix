@@ -56,7 +56,7 @@ jobs:
             phpunit.xml
             storage/**
 
-      - name: Post-deploy (SSH): Composer + caches
+      - name: "Post-deploy (SSH): Composer + caches"
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.SSH_HOST }}
@@ -78,5 +78,6 @@ jobs:
               php artisan route:cache
               php artisan view:cache
             fi
+
 
 

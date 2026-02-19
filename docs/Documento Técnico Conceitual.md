@@ -1,12 +1,12 @@
-# YouCanBook.me — Documento Técnico Conceitual
+# Meetrix.pro — Documento Técnico Conceitual
 
 ## 1. Visão Geral
 
-**YouCanBook.me (YCBM)** é uma plataforma SaaS de agendamento online que permite que pessoas e empresas disponibilizem horários em uma agenda pública para que terceiros possam reservar compromissos de forma automatizada.
+**Meetrix.pro** é uma plataforma SaaS de agendamento soberano (Sovereign Scheduling) que permite a profissionais e empresas gerenciarem sua disponibilidade através de uma interface de classe mundial, integrando calendários, pagamentos e automações premium.
 
 A proposta central do sistema é:
 
-> Eliminar a fricção de agendamento via troca manual de e-mails, integrando agenda, regras de disponibilidade, notificações e fluxos automatizados.
+> Prover uma experiência de agendamento de altíssimo nível estético e funcional, garantindo controle total (Sovereign Control) sobre a jornada do cliente.
 
 Modelo de negócio: **Software as a Service (SaaS)** baseado em assinatura.
 
@@ -268,28 +268,17 @@ O posicionamento do YCBM historicamente foca em:
 
 ---
 
-## 15. Arquitetura Técnica Provável (SaaS moderno)
-
-* Backend API-based
-* Integrações via OAuth
-* Banco relacional
-* Frontend SPA
-* Infraestrutura em cloud
-* Sistema multi-tenant
-
----
-
 ## 16. Conclusão
 
-YouCanBook.me é um sistema de orquestração de agenda como serviço.
+Meetrix.pro não é apenas um sistema de agendamento; é um protocolo de interação soberana.
 
-Ele atua como camada inteligente entre:
+Ele atua como a face digital do profissional, entregando:
 
-* Seu calendário
-* Seu cliente
-* Seu processo comercial
+* Refinamento Estético Premium (Zinc/Orange)
+* Acessibilidade Global (11 Idiomas)
+* Robustez Técnica (Laravel/Vue 3)
 
-Entrega eficiência operacional, previsibilidade e automação, reduzindo drasticamente o custo de coordenação de reuniões.
+Entrega eficiência operacional com uma camada extra de prestígio visual, elevando a marca de quem o utiliza.
 
 ---
 

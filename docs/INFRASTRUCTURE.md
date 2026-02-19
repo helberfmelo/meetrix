@@ -31,16 +31,17 @@ The following secrets are configured in the GitHub Repository for deployment:
 - **URL**: `https://meetrix.opentshost.com/login`
 - **User**: `admin@meetrix.pro`
 - **Password**: `MeetrixMaster2026!#` (Set during Phase 5 evolution)
+- **Password**: `MeetrixMaster2026Sovereign!#` (Set during Phase 5 evolution)
 
 - **Last Update**: 2026-02-19
 - **Aesthetic**: Premium Sovereign (Zinc-950/Meetrix-Orange).
 - **Auth Recovery**: Master Admin provisioned via `2026_02_19_221420_ensure_master_admin_user.php` migration.
 - **Exclude Rules**: The `.agent/` folder is EXCLUDED from server sync via `.gitignore` to maintain server performance and workflow integrity.
 
-## Master Admin Credentials (Production)
-- **Email**: `admin@meetrix.pro`
-- **Password**: `password` (Default Sovereign Handshake)
-- **Role**: Master Admin / Sovereign Node
+## Master Admin (Sovereign Node):
+  - Email: `admin@meetrix.pro`
+  - Password: `MeetrixMaster2026Sovereign!#`
+  - Descrição: Acesso total ao sistema com flag `is_super_admin` ativa.
 
 > [!CAUTION]
 > The `.agent/` folder contains local workflow definitions. It is critical that this folder is not uploaded to production to avoid exposing dev scripts.

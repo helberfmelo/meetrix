@@ -38,7 +38,7 @@
                     </div>
 
                     <button type="submit" :disabled="authStore.loading"
-                        class="w-full bg-zinc-950 text-white hover:bg-zinc-800 dark:bg-zinc-800 dark:text-white dark:hover:bg-zinc-700 py-5 rounded-2xl font-black text-xs uppercase tracking-[0.3em] hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl flex items-center justify-center gap-3 group px-8 disabled:bg-zinc-200 dark:disabled:bg-zinc-800 disabled:text-slate-400 dark:disabled:text-slate-600"
+                        class="w-full bg-meetrix-orange text-zinc-950 hover:bg-zinc-950 hover:text-white dark:bg-zinc-800 dark:text-white dark:hover:bg-zinc-700 py-5 rounded-2xl font-black text-xs uppercase tracking-[0.3em] hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl flex items-center justify-center gap-3 group px-8 disabled:bg-zinc-200 dark:disabled:bg-zinc-800 disabled:text-slate-400 dark:disabled:text-slate-600"
                     >
                         <span v-if="authStore.loading" class="animate-spin text-lg"><i class="fas fa-circle-notch"></i></span>
                         {{ authStore.loading ? $t('login.loading') : $t('login.submit') }}

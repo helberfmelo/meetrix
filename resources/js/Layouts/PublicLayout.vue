@@ -6,7 +6,7 @@ import ThemeToggle from '../Components/ThemeToggle.vue';
 <template>
     <div class="min-h-screen bg-zinc-50 dark:bg-zinc-950 text-slate-600 dark:text-slate-400 font-sans selection:bg-meetrix-orange selection:text-white overflow-x-hidden transition-colors duration-500">
         <!-- Unified Sovereign Navigation -->
-        <nav class="fixed top-0 w-full z-[1000] px-6 py-6 flex justify-between items-center pointer-events-none">
+        <nav class="fixed top-0 w-full z-[5000] px-6 py-6 flex justify-between items-center pointer-events-none">
             <div class="text-2xl font-black tracking-tighter text-zinc-950 dark:text-white font-outfit pointer-events-auto bg-white/10 dark:bg-black/10 backdrop-blur-sm px-4 py-2 rounded-2xl">MEETRIX<span class="text-meetrix-orange">.PRO</span></div>
             <div class="flex items-center gap-6 pointer-events-auto mt-4 sm:mt-0">
                 <router-link to="/login" class="text-[10px] uppercase font-black tracking-widest text-zinc-500 hover:text-zinc-950 dark:text-white/50 dark:hover:text-white transition-colors bg-white/10 dark:bg-black/10 backdrop-blur-sm px-4 py-2 rounded-2xl">{{ $t('home.login') }}</router-link>

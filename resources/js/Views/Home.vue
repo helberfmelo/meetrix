@@ -81,17 +81,17 @@
                     </h2>
                     
                     <!-- Billing Toggle -->
-                    <div class="flex items-center gap-6 mt-12 bg-white dark:bg-zinc-900 p-2 rounded-full border border-black/5 dark:border-white/5 w-fit">
+                    <div class="flex items-center gap-6 mt-12 bg-white dark:bg-zinc-900 p-2 rounded-full border border-black/5 dark:border-white/5 w-fit shadow-premium">
                         <button @click="billingCycle = 'monthly'" 
                             class="px-8 py-3 rounded-full text-[10px] font-black uppercase tracking-widest transition-all"
-                            :class="billingCycle === 'monthly' ? 'bg-zinc-950 text-white dark:bg-zinc-700/50 dark:text-white/90' : 'text-slate-400 hover:text-zinc-950 dark:hover:text-white'">
+                            :class="billingCycle === 'monthly' ? 'bg-zinc-900 text-white dark:bg-zinc-700/50 dark:text-white/90' : 'text-slate-400 hover:text-zinc-950 dark:hover:text-white'">
                             {{ $t('home.billing_monthly') }}
                         </button>
                         <button @click="billingCycle = 'annual'" 
                             class="px-8 py-3 rounded-full text-[10px] font-black uppercase tracking-widest transition-all relative"
-                            :class="billingCycle === 'annual' ? 'bg-zinc-950 text-white dark:bg-zinc-700/50 dark:text-white/90' : 'text-slate-400 hover:text-zinc-950 dark:hover:text-white'">
+                            :class="billingCycle === 'annual' ? 'bg-zinc-900 text-white dark:bg-zinc-700/50 dark:text-white/90' : 'text-slate-400 hover:text-zinc-950 dark:hover:text-white'">
                             {{ $t('home.billing_annual') }}
-                            <span class="absolute -top-4 -right-4 bg-meetrix-orange text-white text-[8px] px-2 py-0.5 rounded-full animate-bounce">-20%</span>
+                            <span class="absolute -top-4 -right-4 bg-meetrix-orange text-zinc-950 text-[8px] px-2 py-0.5 rounded-full animate-bounce font-black">-20%</span>
                         </button>
                     </div>
                 </div>
@@ -112,12 +112,12 @@
                         </router-link>
                     </div>
                     <!-- Pro -->
-                    <div class="bg-zinc-950 dark:bg-zinc-800 text-white p-12 flex flex-col h-full justify-between relative overflow-hidden group">
+                    <div class="bg-zinc-100 dark:bg-zinc-800 text-zinc-950 dark:text-white p-12 flex flex-col h-full justify-between relative overflow-hidden group">
                         <div class="absolute inset-0 bg-gradient-to-tr from-meetrix-orange/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-1000"></div>
                         <div class="relative z-10">
                             <div class="flex justify-between items-center mb-8">
                                 <h3 class="text-xs font-black uppercase tracking-widest text-slate-500">{{ $t('home.plan_pro') }}</h3>
-                                <span class="bg-meetrix-orange text-white text-[10px] px-3 py-1 font-black rounded-full uppercase shadow-lg shadow-meetrix-orange/20">{{ $t('home.plan_pro_tag') }}</span>
+                                <span class="bg-meetrix-orange text-zinc-950 text-[10px] px-3 py-1 font-black rounded-full uppercase shadow-lg shadow-meetrix-orange/20">{{ $t('home.plan_pro_tag') }}</span>
                             </div>
                             <div class="text-6xl font-black mb-2 text-meetrix-orange">
                                 {{ billingCycle === 'monthly' ? $t('home.price_pro_value') : $t('home.price_pro_annual_value') }}
@@ -126,12 +126,12 @@
                                 {{ billingCycle === 'monthly' ? $t('home.per_month') : $t('home.per_year_incentive') }}
                             </div>
                             <ul class="space-y-4 mb-20">
-                                <li v-for="feat in $tm('home.pro_features')" :key="feat" class="flex items-center text-sm font-bold text-slate-400">
+                                <li v-for="feat in $tm('home.free_features')" :key="feat" class="flex items-center text-sm font-bold text-slate-600 dark:text-slate-400">
                                     <span class="w-1.5 h-1.5 rounded-full bg-meetrix-orange mr-3"></span> {{ $rt(feat) }}
                                 </li>
                             </ul>
                         </div>
-                        <router-link to="/onboarding" class="relative z-10 w-full py-4 text-center bg-meetrix-orange text-zinc-950 font-black text-xs uppercase tracking-widest hover:bg-meetrix-orange/90 hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl shadow-meetrix-orange/30">
+                        <router-link to="/onboarding" class="relative z-10 w-full py-4 text-center bg-zinc-950 dark:bg-white text-white dark:text-zinc-950 font-black text-xs uppercase tracking-widest hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl shadow-black/10">
                             {{ $t('home.get_trial') }}
                         </router-link>
                     </div>

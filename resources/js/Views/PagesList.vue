@@ -1,9 +1,12 @@
 <template>
     <div class="space-y-6">
-        <div class="flex justify-between items-center">
-            <h1 class="text-3xl font-black text-gray-900">Your Pages</h1>
-            <button @click="showCreateModal = true" class="btn-primary">
-                + Create New Page
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+            <div>
+                <h1 class="text-5xl font-black text-zinc-950 dark:text-white tracking-tighter uppercase font-outfit">YOUR_PAGES<span class="text-meetrix-orange">.NODES</span></h1>
+                <p class="text-slate-500 font-bold text-xs uppercase tracking-[0.4em] mt-2">Active Deployment Channels</p>
+            </div>
+            <button @click="showCreateModal = true" class="px-8 py-4 bg-meetrix-orange text-zinc-950 rounded-2xl font-black text-xs uppercase tracking-[0.2em] hover:scale-105 active:scale-95 transition-all shadow-xl shadow-meetrix-orange/20">
+                <i class="fas fa-plus mr-2"></i> {{ $t('onboarding.page_title') }}
             </button>
         </div>
 
@@ -11,42 +14,42 @@
             <i class="fas fa-circle-notch fa-spin text-4xl text-meetrix-orange"></i>
         </div>
 
-        <div v-else-if="pages.length > 0" class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
-            <table class="min-w-full divide-y divide-gray-100">
-                <thead class="bg-gray-50">
+        <div v-else-if="pages.length > 0" class="bg-white dark:bg-zinc-900/40 rounded-[40px] border border-black/5 dark:border-white/5 overflow-hidden shadow-premium">
+            <table class="min-w-full divide-y divide-black/5 dark:divide-white/5">
+                <thead class="bg-zinc-50 dark:bg-zinc-950/50">
                     <tr>
-                        <th class="px-8 py-5 text-left text-[10px] font-black text-gray-400 uppercase tracking-widest">Page</th>
-                        <th class="px-8 py-5 text-left text-[10px] font-black text-gray-400 uppercase tracking-widest">Performance</th>
-                        <th class="px-8 py-5 text-right text-[10px] font-black text-gray-400 uppercase tracking-widest">Actions</th>
+                        <th class="px-10 py-6 text-left text-[10px] font-black text-slate-400 uppercase tracking-widest">Instance_Name</th>
+                        <th class="px-10 py-6 text-left text-[10px] font-black text-slate-400 uppercase tracking-widest">Analytics</th>
+                        <th class="px-10 py-6 text-right text-[10px] font-black text-slate-400 uppercase tracking-widest">Control_Panel</th>
                     </tr>
                 </thead>
-                <tbody class="bg-white divide-y divide-gray-50">
-                    <tr v-for="page in pages" :key="page.id" class="hover:bg-gray-50/50 transition-colors">
-                        <td class="px-8 py-6">
+                <tbody class="divide-y divide-black/5 dark:divide-white/5">
+                    <tr v-for="page in pages" :key="page.id" class="group hover:bg-zinc-50 dark:hover:bg-zinc-900/50 transition-colors">
+                        <td class="px-10 py-8">
                             <div class="flex items-center">
-                                <div class="h-10 w-10 bg-indigo-100 text-indigo-600 rounded-xl flex items-center justify-center font-bold mr-4">
+                                <div class="h-12 w-12 bg-zinc-100 dark:bg-zinc-900 text-zinc-950 dark:text-meetrix-orange rounded-2xl flex items-center justify-center font-black text-lg border border-black/5 dark:border-white/5 shadow-sm group-hover:scale-110 transition-transform">
                                     {{ page.title.charAt(0) }}
                                 </div>
+                                <div class="ml-6 flex flex-col">
+                                    <div class="text-sm font-black text-zinc-950 dark:text-white uppercase tracking-tight">{{ page.title }}</div>
+                                    <a :href="'/p/' + page.slug" target="_blank" class="text-[10px] font-bold text-slate-400 hover:text-meetrix-orange transition-colors uppercase tracking-widest mt-1">meetrix.pro/p/{{ page.slug }}</a>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-10 py-8">
+                            <div class="flex gap-8">
                                 <div>
-                                    <div class="text-sm font-bold text-gray-900">{{ page.title }}</div>
-                                    <a :href="'/p/' + page.slug" target="_blank" class="text-xs text-indigo-500 hover:underline">meetrix.io/p/{{ page.slug }}</a>
+                                    <div class="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1">Views</div>
+                                    <div class="text-xl font-black text-zinc-950 dark:text-white tabular-nums tracking-tighter">{{ page.views || 0 }}</div>
                                 </div>
                             </div>
                         </td>
-                        <td class="px-8 py-6">
-                            <div class="flex space-x-4">
-                                <div class="text-center">
-                                    <div class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Views</div>
-                                    <div class="text-sm font-bold text-gray-900">{{ page.views || 0 }}</div>
-                                </div>
-                            </div>
-                        </td>
-                        <td class="px-8 py-6 text-right">
-                            <div class="flex justify-end space-x-2">
-                                <router-link :to="'/dashboard/editor/' + page.slug" class="px-3 py-2 text-xs font-bold bg-white border border-gray-100 text-gray-600 rounded-lg hover:bg-gray-50">
-                                    Edit
+                        <td class="px-10 py-8 text-right">
+                            <div class="flex justify-end items-center gap-4">
+                                <router-link :to="'/dashboard/editor/' + page.slug" class="px-5 py-2.5 text-[10px] font-black bg-zinc-100 dark:bg-zinc-800 text-zinc-950 dark:text-white rounded-xl border border-black/5 dark:border-white/5 hover:bg-zinc-950 hover:text-white dark:hover:bg-white dark:hover:text-zinc-950 transition-all uppercase tracking-widest">
+                                    EDITOR
                                 </router-link>
-                                <button @click="deletePage(page.id)" class="px-3 py-2 text-slate-400 hover:text-red-500 transition-colors">
+                                <button @click="deletePage(page.id)" class="w-10 h-10 flex items-center justify-center text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-xl transition-all">
                                     <i class="fas fa-trash-alt"></i>
                                 </button>
                             </div>
@@ -68,19 +71,19 @@
         </div>
 
         <!-- Create Modal -->
-        <div v-if="showCreateModal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm p-4">
-            <div class="bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl animate-in zoom-in-95 duration-200">
-                <h3 class="text-2xl font-black text-gray-900 mb-6">New Booking Page</h3>
-                <div class="space-y-4">
-                    <div class="space-y-1">
-                        <label class="text-xs font-bold text-gray-400 uppercase tracking-widest px-1">Internal Name</label>
-                        <input v-model="newPage.title" type="text" placeholder="e.g. Sales Consultation" class="w-full px-5 py-4 rounded-xl border-2 border-gray-100 focus:border-indigo-600 outline-none">
+        <div v-if="showCreateModal" class="fixed inset-0 z-50 flex items-center justify-center bg-zinc-950/40 backdrop-blur-sm p-4">
+            <div class="bg-white dark:bg-zinc-900 rounded-[40px] p-12 max-w-md w-full shadow-premium animate-in zoom-in-95 duration-200 border border-black/5 dark:border-white/5">
+                <h3 class="text-3xl font-black text-zinc-950 dark:text-white mb-6 uppercase tracking-tighter">{{ $t('onboarding.page_title') }} // NEW</h3>
+                <div class="space-y-6">
+                    <div class="space-y-2">
+                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">Internal Name</label>
+                        <input v-model="newPage.title" type="text" placeholder="e.g. Sales Consultation" class="w-full px-6 py-4 rounded-2xl bg-zinc-50 dark:bg-zinc-950 border-2 border-black/5 dark:border-white/5 focus:border-meetrix-orange outline-none text-zinc-950 dark:text-white font-bold transition-all">
                     </div>
                 </div>
-                <div class="mt-8 flex space-x-3">
-                    <button @click="showCreateModal = false" class="flex-1 py-4 font-bold text-gray-500 hover:bg-gray-50 rounded-xl">Cancel</button>
-                    <button @click="createPage" :disabled="creating" class="flex-1 btn-primary">
-                        {{ creating ? 'Creating...' : 'Create' }}
+                <div class="mt-12 flex gap-4">
+                    <button @click="showCreateModal = false" class="flex-1 py-4 font-black text-[10px] uppercase tracking-widest text-slate-400 hover:text-zinc-950 dark:hover:text-white transition-colors">Cancel</button>
+                    <button @click="createPage" :disabled="creating" class="flex-1 py-4 bg-meetrix-orange text-zinc-950 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-lg shadow-meetrix-orange/20">
+                        {{ creating ? 'INITIALIZING...' : 'ACTIVATE' }}
                     </button>
                 </div>
             </div>

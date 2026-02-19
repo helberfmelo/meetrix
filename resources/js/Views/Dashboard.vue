@@ -110,10 +110,10 @@
                                     </div>
                                 </div>
                                 <div class="flex gap-2">
-                                     <a :href="`/p/${page.slug}`" target="_blank" class="p-2 bg-zinc-950 dark:bg-zinc-800 rounded-xl border border-white/5 text-white/50 hover:text-white transition-colors">
+                                     <a :href="`/p/${page.slug}`" target="_blank" class="p-2 bg-zinc-100 dark:bg-zinc-800 rounded-xl border border-black/5 dark:border-white/5 text-zinc-400 hover:text-zinc-950 dark:hover:text-white transition-colors">
                                         <i class="fas fa-external-link-alt text-xs"></i>
                                     </a>
-                                    <router-link :to="`/dashboard/editor/${page.slug}`" class="p-2 bg-white dark:bg-zinc-800 rounded-xl border border-black/5 dark:border-white/5 text-slate-400 hover:text-zinc-950 dark:hover:text-white transition-colors">
+                                    <router-link :to="`/dashboard/editor/${page.slug}`" class="p-2 bg-zinc-100 dark:bg-zinc-800 rounded-xl border border-black/5 dark:border-white/5 text-zinc-400 hover:text-zinc-950 dark:hover:text-white transition-colors">
                                         <i class="fas fa-edit text-xs"></i>
                                     </router-link>
                                 </div>

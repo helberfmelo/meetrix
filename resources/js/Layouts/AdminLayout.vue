@@ -10,11 +10,11 @@
             <nav class="mt-12 flex-1 px-4 space-y-2">
                 <router-link v-for="item in navItems" :key="item.path" :to="item.path" 
                     class="group flex items-center gap-4 px-6 py-4 rounded-3xl transition-all relative overflow-hidden"
-                    active-class="bg-zinc-950 text-white dark:bg-white dark:text-zinc-950 shadow-premium"
+                    active-class="bg-zinc-200 text-zinc-950 dark:bg-zinc-800 dark:text-white shadow-premium"
                     :class="[route.path === item.path ? '' : 'text-slate-500 hover:text-zinc-950 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5']"
                 >
                     <div v-if="route.path === item.path" class="absolute left-0 top-2 bottom-2 w-1 bg-meetrix-orange rounded-full"></div>
-                    <i :class="[item.icon, 'text-lg grayscale group-hover:grayscale-0 transition-all']"></i>
+                    <i :class="[item.icon, 'text-lg group-hover:scale-110 transition-all']"></i>
                     <span class="hidden lg:block text-[10px] font-black uppercase tracking-[0.2em]">{{ item.label }}</span>
                 </router-link>
             </nav>
@@ -33,19 +33,21 @@
                 <div class="flex items-center gap-4">
                     <span class="text-[10px] font-black text-slate-600 uppercase tracking-[0.4em]">{{ breadcrumb }}</span>
                 </div>
-                <div class="flex items-center gap-8 ml-4">
-                    <LanguageSwitcher />
-                    <div class="flex items-center gap-3 pl-8 border-l border-black/10 dark:border-white/10 group cursor-pointer relative">
+                <div class="flex items-center gap-6">
+                    <div class="flex items-center gap-3 group cursor-pointer relative pr-6 border-r border-black/10 dark:border-white/10">
                         <div class="text-right hidden sm:block">
                             <p class="text-[10px] font-black text-zinc-950 dark:text-white uppercase tracking-widest leading-none">{{ user?.name }}</p>
                             <p class="text-[8px] font-black text-slate-400 dark:text-slate-600 uppercase tracking-widest mt-1">Sovereign_Node</p>
                         </div>
-                        <!-- Profile/Node Icon: Clearer interactivity -->
                         <div class="w-10 h-10 rounded-2xl bg-zinc-100 dark:bg-zinc-900 border border-black/5 dark:border-white/5 flex items-center justify-center text-zinc-400 dark:text-white/50 group-hover:border-meetrix-orange group-hover:text-meetrix-orange group-hover:scale-105 transition-all font-black shadow-sm group-active:scale-95">
                             {{ user?.name?.charAt(0) }}
                         </div>
                     </div>
-                    <ThemeToggle />
+
+                    <div class="flex flex-col items-center gap-1 bg-zinc-100/40 dark:bg-zinc-900/40 backdrop-blur-md p-1 rounded-2xl border border-black/5 dark:border-white/5 shadow-premium">
+                        <ThemeToggle />
+                        <LanguageSwitcher />
+                    </div>
                 </div>
             </header>
             

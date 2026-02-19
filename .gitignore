@@ -28,3 +28,4 @@ schema_output.txt
 migration_error.txt
 status_report.md
 update_locales_v2.py
+/.agent/

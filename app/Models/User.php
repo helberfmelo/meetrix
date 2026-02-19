@@ -28,6 +28,7 @@ class User extends Authenticatable
         'trial_ends_at',
         'subscription_ends_at',
         'country_code',
+        'is_super_admin',
     ];
 
     /**

@@ -1,66 +1,68 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Meetrix.pro — Sovereign Scheduling Protocol
 
 <p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
+    <img src="https://meetrix.opentshost.com/images/logo.png" width="200" alt="Meetrix Logo">
 </p>
 
-## About Laravel
+Meetrix is a premium, world-class SaaS scheduling platform (inspired by YouCanBookMe) designed for high-performance teams. Built with a focus on aesthetic excellence, sovereign control, and multi-language accessibility.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 🚀 Key Features
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- **Sovereign Dashboard**: Full control over your booking pages, availability, and bookings.
+- **Premium Multi-language Engine**: Native support for 11 languages (EN, ES, FR, DE, PT-BR, PT, ZH, JA, KO, IT, RU).
+- **Aesthetic Refinement**: High-contrast, dark-mode-first design using the zinc/orange sovereign palette.
+- **Onboarding Protocol**: 6-step guided setup for new users.
+- **Public Booking Suite**: Glassmorphic, responsive scheduling pages for clients.
+- **Master Admin Access**: Dedicated infrastructure for system-level management.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## 🛠 Tech Stack
 
-## Learning Laravel
+- **Backend**: Laravel 11 (PHP 8.2+) with Sanctum API Authentication.
+- **Frontend**: Vue 3 (SPA) + Vite + Tailwind CSS 4 + Pinia + Vue-I18n.
+- **Database**: MySQL 8.
+- **Iconography**: Font Awesome 6 Pro (CDN).
+- **Deployment**: automated via GitHub Actions (CI/CD) to HostGator / OpenTS Host.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## 📁 Documentation
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+Detailed documentation can be found in the `docs/` directory:
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- [Technical Concept](file:///d:/Projetos/meetrix/docs/Documento%20T%C3%A9cnico%20Conceitual.md): Comprehensive system architecture and logic.
+- [Implementation Plan](file:///d:/Projetos/meetrix/docs/PLAN.md): Roadmap and phase-by-phase development history.
+- [Infrastructure](file:///d:/Projetos/meetrix/docs/INFRASTRUCTURE.md): Server details, credentials, and deployment secrets.
 
-## Laravel Sponsors
+## ⚙️ Installation & Development
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### Prerequistes
+- PHP 8.2+
+- Node.js 18+
+- MySQL 8
 
-### Premium Partners
+### Setup
+1. Clone the repository.
+2. Install dependencies:
+   ```bash
+   composer install
+   npm install
+   ```
+3. Configure `.env`:
+   ```bash
+   cp .env.example .env
+   php artisan key:generate
+   ```
+4. Run migrations:
+   ```bash
+   php artisan migrate --seed
+   ```
+5. Start development:
+   ```bash
+   npm run dev
+   php artisan serve
+   ```
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+## 🔐 Security & Protocols
 
-## Contributing
+Meetrix follows strict security standards, including JWT-based API protection and centralized master-admin provisioning via database migrations.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+---
+© 2026 Meetrix | Developed by [OTS - Open Tecnologia e Serviços](https://opents.com.br)

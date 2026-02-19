@@ -1,40 +1,41 @@
-name: Deploy Meetrix
+﻿name: Deploy Meetrix
 
 on:
   push:
-    branches: ["main"]
+    branches:
+      - main
 
 jobs:
   web-deploy:
-    name: 🎉 Deploy
+    name: Deploy
     runs-on: ubuntu-latest
 
     steps:
-      - name: 🚚 Get latest code
+      - name: Get latest code
         uses: actions/checkout@v4
 
-      - name: 🧰 Setup PHP
+      - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: "8.2"
           extensions: mbstring, intl, pdo_mysql
 
-      - name: 🧰 Setup Node
+      - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: "20"
           cache: "npm"
 
-      - name: 📦 Install Composer (CI)
+      - name: Install Composer dependencies (CI)
         run: composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader
 
-      - name: 📦 Install Node deps (CI)
+      - name: Install Node.js dependencies (CI)
         run: npm ci
 
-      - name: 🔨 Build Frontend (CI)
+      - name: Build Frontend (CI)
         run: npm run build
 
-      - name: 📂 Sync files (FTP)
+      - name: Sync files (FTP)
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ${{ secrets.FTP_HOST }}
@@ -55,7 +56,7 @@ jobs:
             phpunit.xml
             storage/**
 
-      - name: 🚀 Post-deploy (SSH): Composer + caches
+      - name: Post-deploy (SSH): Composer + caches
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.SSH_HOST }}
@@ -65,11 +66,8 @@ jobs:
           script: |
             set -e
             cd ~/public_html/meetrix
-
-            # Composer local (user-space) - já instalado por você
             ~/composer install --no-dev --optimize-autoloader --no-interaction
 
-            # Ajuste o PHP path se necessário (cpanel)
             PHP_BIN="/opt/cpanel/ea-php83/root/usr/bin/php"
             if [ -x "$PHP_BIN" ]; then
               $PHP_BIN artisan config:cache

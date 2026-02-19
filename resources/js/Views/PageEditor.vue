@@ -89,12 +89,12 @@ import { useRoute } from 'vue-router';
 import { usePageStore } from '../stores/page';
 
 // Placeholder section components
-import EditorSectionWhat from '../components/Editor/EditorSectionWhat.vue';
-import EditorSectionWhen from '../components/Editor/EditorSectionWhen.vue';
-import EditorSectionTypes from '../components/Editor/EditorSectionTypes.vue';
-import EditorSectionForm from '../components/Editor/EditorSectionForm.vue';
-import EditorSectionAnalytics from '../components/Editor/EditorSectionAnalytics.vue';
-import EditorSectionBranding from '../components/Editor/EditorSectionBranding.vue';
+import EditorSectionWhat from '../Components/Editor/EditorSectionWhat.vue';
+import EditorSectionWhen from '../Components/Editor/EditorSectionWhen.vue';
+import EditorSectionTypes from '../Components/Editor/EditorSectionTypes.vue';
+import EditorSectionForm from '../Components/Editor/EditorSectionForm.vue';
+import EditorSectionAnalytics from '../Components/Editor/EditorSectionAnalytics.vue';
+import EditorSectionBranding from '../Components/Editor/EditorSectionBranding.vue';
 
 const route = useRoute();
 const pageStore = usePageStore();

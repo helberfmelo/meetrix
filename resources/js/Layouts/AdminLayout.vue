@@ -51,6 +51,13 @@
             <div class="flex-1 px-12 pb-12 overflow-y-auto">
                 <router-view></router-view>
             </div>
+
+            <footer class="py-12 px-12 flex justify-between items-center text-[8px] font-black uppercase tracking-[0.4em] text-slate-500 border-t border-black/5 dark:border-white/5 bg-zinc-50/50 dark:bg-zinc-950/50 backdrop-blur-sm">
+                <div>MEETRIX // SOVEREIGN_NODE</div>
+                <div>
+                    © {{ new Date().getFullYear() }} // <a href="https://opents.com.br" target="_blank" class="hover:text-meetrix-orange transition-colors">OTS - Open Tecnologia e Serviços Ltda.</a>
+                </div>
+            </footer>
         </main>
     </div>
 </template>

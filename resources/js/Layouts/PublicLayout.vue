@@ -27,7 +27,7 @@ import ThemeToggle from '../Components/ThemeToggle.vue';
         <footer class="py-24 px-6 lg:px-24 flex flex-col md:flex-row justify-between items-center gap-12 text-[10px] font-black uppercase tracking-[0.4em] text-slate-700 border-t border-white/5 bg-zinc-950">
             <div>{{ $t('home.footer_tagline') }}</div>
             <div class="flex gap-12">
-                <span class="text-slate-800">© {{ new Date().getFullYear() }} // SOVEREIGN_PRO</span>
+                <span class="text-slate-800">© {{ new Date().getFullYear() }} // SOVEREIGN_PRO // <a href="https://opents.com.br" target="_blank" class="hover:text-meetrix-orange transition-colors">OTS - Open Tecnologia e Serviços Ltda.</a></span>
                 <div class="flex gap-6">
                     <a href="#" class="hover:text-meetrix-orange transition-colors">TW</a>
                     <a href="#" class="hover:text-meetrix-orange transition-colors">LI</a>

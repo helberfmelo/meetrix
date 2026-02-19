@@ -1,6 +1,6 @@
 <template>
     <button @click="toggleTheme" 
-        class="relative flex items-center justify-center p-2 text-zinc-500 hover:text-meetrix-orange dark:text-slate-400 dark:hover:text-white transition-all active:scale-90"
+        class="relative flex items-center justify-center p-1 text-zinc-500 hover:text-meetrix-orange dark:text-slate-400 dark:hover:text-white transition-all active:scale-90"
         aria-label="Toggle Theme">
         
         <!-- Icon: Show Moon in Light Mode (to switch to Dark), Sun in Dark Mode (to switch to Light) -->

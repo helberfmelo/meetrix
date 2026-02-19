@@ -44,7 +44,7 @@
                         </div>
                     </div>
 
-                    <div class="flex flex-col items-center gap-1">
+                    <div class="flex flex-col items-center gap-0">
                         <ThemeToggle />
                         <LanguageSwitcher />
                     </div>

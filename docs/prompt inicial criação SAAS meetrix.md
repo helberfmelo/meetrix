@@ -1,4 +1,15 @@
-# Prompt para criação do SaaS Meetrix (Laravel + Vue.js + MySQL, sem Docker)
+# Meetrix.pro — Visão do Fundador & Protocolo Original
+
+## Visão Geral
+Este documento preserva a essência original do Meetrix, transformando o "prompt" inicial em uma constituição de projeto.
+
+## O Desafio Soberano
+O objetivo é transcender as limitações de ferramentas genéricas como YouCanBookMe (YCBM). O Meetrix não é apenas um clonador; é um protocolo de agendamento que prioriza a soberania sobre os dados e a excelência estética.
+
+## Pilares Fundamentais
+1. **Estética Superior**: O usuário deve se sentir em uma interface de luxo, com contrastes precisos e animações sutis.
+2. **Acessibilidade Universal**: O sistema deve falar a língua do cliente, de Tóquio a São Paulo.
+3. **Robustez Laravel/Vue**: Uma base técnica moderna que permita escala infinita sem comprometer a performance.
 
 ## Contexto e base de referência
 

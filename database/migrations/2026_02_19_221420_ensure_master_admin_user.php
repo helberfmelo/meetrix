@@ -15,7 +15,7 @@ return new class extends Migration
             ['email' => 'admin@meetrix.pro'],
             [
                 'name' => 'Master Admin',
-                'password' => \Illuminate\Support\Facades\Hash::make('password'),
+                'password' => \Illuminate\Support\Facades\Hash::make('MeetrixMaster2026Sovereign!#'),
                 'is_master_admin' => true,
                 'email_verified_at' => now(),
             ]

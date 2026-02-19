@@ -25,21 +25,27 @@
 
                         <div class="mt-8 space-y-6 pt-8 border-t border-white/5">
                             <div v-if="selectedType" class="flex items-center text-slate-300">
-                                <span class="w-8 h-8 flex items-center justify-center bg-white/5 rounded-lg mr-3 text-lg">⏱️</span>
+                                <span class="w-8 h-8 flex items-center justify-center bg-white/5 rounded-lg mr-3 text-lg">
+                                    <i class="fas fa-clock"></i>
+                                </span>
                                 <div>
                                     <p class="text-[9px] uppercase font-black tracking-[0.2em] text-slate-500">{{ $t('booking.duration') }}</p>
                                     <p class="font-bold text-sm">{{ selectedType.duration_minutes }} min</p>
                                 </div>
                             </div>
                             <div v-if="selectedDate" class="flex items-center text-slate-300">
-                                <span class="w-8 h-8 flex items-center justify-center bg-white/5 rounded-lg mr-3 text-lg">📅</span>
+                                <span class="w-8 h-8 flex items-center justify-center bg-white/5 rounded-lg mr-3 text-lg">
+                                    <i class="fas fa-calendar-alt"></i>
+                                </span>
                                 <div>
                                     <p class="text-[9px] uppercase font-black tracking-[0.2em] text-slate-500">{{ $t('booking.date') }}</p>
                                     <p class="font-bold text-sm">{{ formatDate(selectedDate) }}</p>
                                 </div>
                             </div>
                             <div v-if="selectedSlot" class="flex items-center text-slate-300 animate-in fade-in slide-in-from-left-4">
-                                <span class="w-8 h-8 flex items-center justify-center bg-white/5 rounded-lg mr-3 text-lg">🕒</span>
+                                <span class="w-8 h-8 flex items-center justify-center bg-white/5 rounded-lg mr-3 text-lg">
+                                    <i class="fas fa-clock"></i>
+                                </span>
                                 <div>
                                     <p class="text-[9px] uppercase font-black tracking-[0.2em] text-slate-500">{{ $t('booking.time') }}</p>
                                     <p class="font-bold text-sm">{{ selectedSlot }}</p>
@@ -191,8 +197,10 @@
 
                     <!-- Success State -->
                     <div v-if="step === 'success'" class="flex-1 flex flex-col items-center justify-center text-center animate-in zoom-in-90 duration-700">
-                        <div class="w-24 h-24 rounded-full flex items-center justify-center text-5xl mb-8 border-4 shadow-xl"
-                            :style="{ color: primaryColor, borderColor: primaryColor + '22', backgroundColor: primaryColor + '11' }">✓</div>
+                        <div class="w-24 h-24 rounded-full flex items-center justify-center text-4xl mb-8 border-4 shadow-xl"
+                            :style="{ color: primaryColor, borderColor: primaryColor + '22', backgroundColor: primaryColor + '11' }">
+                            <i class="fas fa-check"></i>
+                        </div>
                         <h2 class="text-4xl font-black text-slate-900 mb-4 tracking-tighter">{{ $t('booking.success_title') }}</h2>
                         <p class="text-slate-500 max-w-sm mb-12 leading-tight font-bold whitespace-pre-wrap uppercase text-xs tracking-widest">
                             {{ page.confirmation_message || $t('booking.success_msg') }}

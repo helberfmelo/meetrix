@@ -124,9 +124,9 @@
                         :disabled="loading || (step === 1 && !form.name)"
                         class="flex-1 py-5 rounded-2xl font-black text-[10px] uppercase tracking-[0.3em] bg-zinc-950 text-white dark:bg-white dark:text-zinc-950 hover:scale-105 active:scale-95 transition-all shadow-premium flex items-center justify-center gap-4 group disabled:bg-zinc-200 dark:disabled:bg-zinc-800 disabled:text-slate-400 dark:disabled:text-slate-600"
                     >
-                        <span v-if="loading" class="animate-spin text-lg">🌀</span>
+                        <i v-if="loading" class="fas fa-circle-notch fa-spin text-lg"></i>
                         {{ step === 3 ? $t('onboarding.finish') : $t('onboarding.continue') }}
-                        <span class="group-hover:translate-x-2 transition-transform">→</span>
+                        <i class="fas fa-arrow-right group-hover:translate-x-2 transition-transform"></i>
                     </button>
                 </div>
             </div>

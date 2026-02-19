@@ -44,7 +44,7 @@
                         </div>
                     </div>
 
-                    <div class="flex flex-col items-center gap-1 bg-zinc-100/40 dark:bg-zinc-900/40 backdrop-blur-md p-1 rounded-2xl border border-black/5 dark:border-white/5 shadow-premium">
+                    <div class="flex flex-col items-center gap-1">
                         <ThemeToggle />
                         <LanguageSwitcher />
                     </div>

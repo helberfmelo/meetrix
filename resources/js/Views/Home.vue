@@ -2,7 +2,7 @@
 <template>
 
         <!-- Hero Section: Asymmetric Tension -->
-        <section class="relative pt-64 pb-32 px-6 lg:px-24 min-h-[80vh] flex items-center overflow-hidden">
+        <section class="relative pt-32 lg:pt-64 pb-32 px-6 lg:px-24 min-h-[80vh] flex items-center overflow-hidden">
             <div class="max-w-screen-2xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24 items-center w-full">
                 <div class="lg:col-span-8 animate-in fade-in slide-in-from-left-8 duration-1000">
                     <h1 class="text-[clamp(2.5rem,6vw,5.5rem)] leading-[0.85] font-black text-zinc-950 dark:text-white font-outfit tracking-tighter uppercase mb-8 max-w-4xl">
@@ -14,12 +14,19 @@
                     <p class="text-xl md:text-2xl text-slate-500 dark:text-slate-400 max-w-md leading-tight font-medium">
                         {{ $t('home.hero_subtitle') }}
                     </p>
-                    <router-link to="/onboarding" class="group flex items-center gap-4 text-zinc-950 dark:text-white hover:text-meetrix-orange transition-colors">
-                        <span class="w-16 h-16 rounded-full border border-black/10 dark:border-white/20 flex items-center justify-center group-hover:border-meetrix-orange group-hover:bg-meetrix-orange transition-all duration-500">
-                            <svg class="w-6 h-6 group-hover:text-zinc-950 text-zinc-950 dark:text-white" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
-                        </span>
-                        <span class="text-sm font-black uppercase tracking-widest">{{ $t('home.get_started') }}</span>
-                    </router-link>
+                    <div class="flex items-center gap-6">
+                        <!-- Swapped Login to left of Get Started -->
+                        <router-link to="/login" class="text-sm font-black uppercase tracking-widest text-zinc-600 dark:text-slate-400 hover:text-zinc-950 dark:hover:text-white transition-colors">
+                            {{ $t('login.title') }}
+                        </router-link>
+                        
+                        <router-link to="/onboarding" class="group flex items-center gap-4 text-zinc-950 dark:text-white hover:text-meetrix-orange transition-colors">
+                            <span class="w-12 h-12 rounded-full border border-black/10 dark:border-white/20 flex items-center justify-center group-hover:border-meetrix-orange group-hover:bg-meetrix-orange transition-all duration-500">
+                                <svg class="w-5 h-5 group-hover:text-zinc-950 text-zinc-950 dark:text-white" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                            </span>
+                            <span class="text-sm font-black uppercase tracking-widest">{{ $t('home.get_started') }}</span>
+                        </router-link>
+                    </div>
                 </div>
             </div>
 
@@ -35,25 +42,26 @@
         </section>
 
         <!-- Dynamic Content: Feature Fragments -->
-        <section class="py-32 px-6 lg:px-24 border-t border-white/5">
+        <section class="py-32 px-6 lg:px-24 border-t border-black/5 dark:border-white/5">
             <div class="max-w-screen-2xl mx-auto">
-                <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
-                    <div class="lg:col-span-4 sticky top-32 h-fit">
-                        <h2 class="text-4xl font-black text-white uppercase tracking-tighter mb-6">{{ $t('home.features_title') }}</h2>
-                        <p class="text-slate-500 font-medium">{{ $t('home.features_subtitle') }}</p>
-                    </div>
-                    <div class="lg:col-span-8 space-y-32">
-                        <div v-for="i in 3" :key="i" class="group relative py-12 border-b border-white/5 last:border-0 reveal-on-scroll">
-                            <div class="flex flex-col md:flex-row md:items-center justify-between gap-8 translate-y-8 opacity-0 transition-all duration-1000 group-[.in-view]:translate-y-0 group-[.in-view]:opacity-100"
-                                :style="{ transitionDelay: `${i * 100}ms` }">
-                                <div class="max-w-md">
-                                    <span class="text-meetrix-orange font-black text-xs uppercase tracking-[0.3em] mb-4 block">0{{ i }} // MOD</span>
-                                    <h3 class="text-3xl font-black text-zinc-950 dark:text-white mb-4 uppercase font-outfit">{{ $t(`home.feature_${i}_title`) }}</h3>
-                                    <p class="text-lg text-slate-500 leading-snug">{{ $t(`home.feature_${i}_desc`) }}</p>
-                                </div>
-                                <div class="w-24 h-24 rounded-4xl border border-white/5 flex items-center justify-center group-hover:border-meetrix-orange/50 transition-all duration-500">
-                                    <div class="w-12 h-12 bg-white/5 rounded-3xl group-hover:bg-meetrix-orange group-hover:scale-110 transition-all duration-500"></div>
-                                </div>
+                <!-- Full Width Title -->
+                <div class="mb-24 text-center max-w-4xl mx-auto">
+                    <h2 class="text-[clamp(2.5rem,5vw,4.5rem)] font-black text-zinc-950 dark:text-white uppercase tracking-tighter mb-8 leading-[0.9]">{{ $t('home.features_title') }}</h2>
+                    <p class="text-xl text-slate-500 font-medium leading-relaxed">{{ $t('home.features_subtitle') }}</p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+                    <div v-for="i in 3" :key="i" class="reveal-on-scroll h-full">
+                        <div class="group h-full bg-zinc-50 dark:bg-zinc-900/40 p-12 rounded-[3.5rem] border border-black/5 dark:border-white/5 hover:border-meetrix-orange/30 hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-all duration-700 flex flex-col justify-between translate-y-8 opacity-0 group-[.in-view]:translate-y-0 group-[.in-view]:opacity-100"
+                            :style="{ transitionDelay: `${i * 150}ms` }">
+                            <div>
+                                <span class="text-meetrix-orange font-black text-[10px] uppercase tracking-[0.4em] mb-12 block">0{{ i }} // NODE_MODULE</span>
+                                <h3 class="text-3xl font-black text-zinc-950 dark:text-white mb-6 uppercase font-outfit leading-none">{{ $t(`home.feature_${i}_title`) }}</h3>
+                                <p class="text-lg text-slate-500 leading-snug font-medium mb-12">{{ $t(`home.feature_${i}_desc`) }}</p>
+                            </div>
+                            <!-- Small aesthetic marker instead of big mystery box -->
+                            <div class="w-8 h-8 rounded-full border border-black/10 dark:border-white/20 flex items-center justify-center opacity-40 group-hover:opacity-100 group-hover:border-meetrix-orange transition-all duration-500">
+                                <div class="w-2 h-2 rounded-full bg-zinc-400 dark:bg-zinc-600 group-hover:bg-meetrix-orange transition-all"></div>
                             </div>
                         </div>
                     </div>
@@ -97,7 +105,7 @@
                                 </li>
                             </ul>
                         </div>
-                        <router-link to="/onboarding" class="w-full py-4 text-center border-2 border-zinc-950 dark:border-white/20 dark:text-white font-black text-xs uppercase tracking-widest hover:bg-zinc-950 hover:text-white dark:hover:bg-white dark:hover:text-zinc-950 transition-all">
+                        <router-link to="/onboarding" class="w-full py-4 text-center border-2 border-zinc-950 dark:border-white text-zinc-950 dark:text-white font-black text-xs uppercase tracking-widest hover:bg-zinc-950 hover:text-white dark:hover:bg-white dark:hover:text-zinc-950 active:scale-95 transition-all">
                             {{ $t('home.get_started') }}
                         </router-link>
                     </div>
@@ -121,7 +129,7 @@
                                 </li>
                             </ul>
                         </div>
-                        <router-link to="/onboarding" class="relative z-10 w-full py-4 text-center bg-meetrix-orange text-zinc-950 font-black text-xs uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-xl shadow-meetrix-orange/30">
+                        <router-link to="/onboarding" class="relative z-10 w-full py-4 text-center bg-meetrix-orange text-zinc-950 font-black text-xs uppercase tracking-widest hover:bg-meetrix-orange/90 hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl shadow-meetrix-orange/30">
                             {{ $t('home.get_trial') }}
                         </router-link>
                     </div>

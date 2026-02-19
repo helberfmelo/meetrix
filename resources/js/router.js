@@ -12,6 +12,7 @@ import Home from './Views/Home.vue';
 
 import PageEditor from './Views/PageEditor.vue';
 import OnboardingWizard from './Views/OnboardingWizard.vue';
+import BookingsView from './Views/BookingsView.vue';
 
 const routes = [
     {
@@ -42,6 +43,7 @@ const routes = [
         children: [
             { path: '', component: Dashboard },
             { path: 'pages', component: PagesList },
+            { path: 'bookings', component: BookingsView },
             { path: 'editor/:slug', component: PageEditor },
             { path: 'teams', component: () => import('./Views/TeamsView.vue') },
             { path: 'integrations', component: () => import('./Views/IntegrationsView.vue') },

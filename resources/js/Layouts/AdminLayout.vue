@@ -29,30 +29,33 @@
 
         <!-- Main Content -->
         <main class="flex-1 flex flex-col min-w-0">
-            <header class="py-10 px-12 flex justify-between items-center mix-blend-difference relative z-[1000]">
+            <header class="py-10 px-6 md:px-12 flex justify-between items-center mix-blend-difference relative z-[1000]">
                 <div class="flex items-center gap-4">
                     <span class="text-[10px] font-black text-slate-600 uppercase tracking-[0.4em]">{{ breadcrumb }}</span>
                 </div>
-                <div class="flex items-center gap-8">
+                <div class="flex flex-col items-center gap-4">
                     <ThemeToggle />
                     <LanguageSwitcher />
-                    <div class="flex items-center gap-3 pl-8 border-l border-black/10 dark:border-white/10 group cursor-pointer">
+                </div>
+                <div class="flex items-center gap-8 ml-4">
+                    <div class="flex items-center gap-3 pl-8 border-l border-black/10 dark:border-white/10 group cursor-pointer relative">
                         <div class="text-right hidden sm:block">
                             <p class="text-[10px] font-black text-zinc-950 dark:text-white uppercase tracking-widest leading-none">{{ user?.name }}</p>
                             <p class="text-[8px] font-black text-slate-400 dark:text-slate-600 uppercase tracking-widest mt-1">Sovereign_Node</p>
                         </div>
-                        <div class="w-10 h-10 rounded-2xl bg-zinc-100 dark:bg-zinc-900 border border-black/5 dark:border-white/5 flex items-center justify-center text-zinc-400 dark:text-white/50 group-hover:border-meetrix-orange transition-all font-black">
+                        <!-- Profile/Node Icon: Clearer interactivity -->
+                        <div class="w-10 h-10 rounded-2xl bg-zinc-100 dark:bg-zinc-900 border border-black/5 dark:border-white/5 flex items-center justify-center text-zinc-400 dark:text-white/50 group-hover:border-meetrix-orange group-hover:text-meetrix-orange group-hover:scale-105 transition-all font-black shadow-sm group-active:scale-95">
                             {{ user?.name?.charAt(0) }}
                         </div>
                     </div>
                 </div>
             </header>
             
-            <div class="flex-1 px-12 pb-12 overflow-y-auto">
+            <div class="flex-1 px-6 md:px-12 pb-12 overflow-y-auto">
                 <router-view></router-view>
             </div>
 
-            <footer class="py-8 px-12 flex justify-between items-center text-[10px] font-medium uppercase tracking-wider text-slate-500 border-t border-black/5 dark:border-white/5 bg-zinc-50/50 dark:bg-zinc-950/50 backdrop-blur-sm">
+            <footer class="py-8 px-6 md:px-12 flex flex-col md:flex-row justify-between items-center gap-4 text-[10px] font-medium uppercase tracking-wider text-slate-500 border-t border-black/5 dark:border-white/5 bg-zinc-50/50 dark:bg-zinc-950/50 backdrop-blur-sm">
                 <div>MEETRIX <span class="mx-2 text-slate-300 dark:text-slate-700">|</span> SOVEREIGN NODE</div>
                 <div>
                     © {{ new Date().getFullYear() }} <span class="mx-2 text-slate-300 dark:text-slate-700">|</span> <a href="https://opents.com.br" target="_blank" class="hover:text-meetrix-orange transition-colors">OTS - Open Tecnologia e Serviços Ltda.</a>

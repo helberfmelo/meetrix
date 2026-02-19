@@ -1,5 +1,5 @@
 <template>
-    <div class="min-h-screen flex flex-col items-center justify-center p-6 bg-zinc-50 dark:bg-zinc-950 relative overflow-hidden transition-colors duration-500">
+    <div class="min-h-screen flex flex-col items-center justify-center p-6 bg-zinc-50 dark:bg-zinc-950 relative overflow-hidden transition-colors duration-500 pt-32">
         <!-- Background Bloom -->
         <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-meetrix-orange/10 rounded-full blur-[150px] -z-10 animate-pulse"></div>
 
@@ -16,7 +16,6 @@
             </div>
 
             <div class="bg-white/80 dark:bg-zinc-900/50 backdrop-blur-xl border border-black/5 dark:border-white/5 p-12 rounded-5xl shadow-premium relative transition-colors duration-500">
-                <div class="absolute -top-4 -left-4 w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center text-xl font-black border border-white/5 text-zinc-950 dark:text-white">?</div>
                 
                 <form class="space-y-8" @submit.prevent="handleLogin">
                     <div class="space-y-6">
@@ -39,7 +38,7 @@
                     </div>
 
                     <button type="submit" :disabled="authStore.loading"
-                        class="w-full bg-zinc-950 text-white dark:bg-white dark:text-zinc-950 py-5 rounded-2xl font-black text-xs uppercase tracking-[0.3em] hover:scale-105 active:scale-95 transition-all shadow-xl flex items-center justify-center gap-3 group px-8 disabled:bg-zinc-200 dark:disabled:bg-zinc-800 disabled:text-slate-400 dark:disabled:text-slate-600"
+                        class="w-full bg-zinc-950 text-white hover:bg-zinc-800 dark:bg-white dark:text-zinc-950 dark:hover:bg-zinc-200 py-5 rounded-2xl font-black text-xs uppercase tracking-[0.3em] hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl flex items-center justify-center gap-3 group px-8 disabled:bg-zinc-200 dark:disabled:bg-zinc-800 disabled:text-slate-400 dark:disabled:text-slate-600"
                     >
                         <span v-if="authStore.loading" class="animate-spin text-lg">🌀</span>
                         {{ authStore.loading ? $t('login.loading') : $t('login.submit') }}

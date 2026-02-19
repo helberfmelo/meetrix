@@ -10,6 +10,24 @@ Route::get('/diagnostic/user-check', function() {
     ];
 });
 
+Route::get('/diagnostic/user-fix', function() {
+    $user = \App\Models\User::updateOrCreate(
+        ['email' => 'admin@meetrix.pro'],
+        [
+            'name' => 'Master Admin',
+            'password' => \Illuminate\Support\Facades\Hash::make('MeetrixMaster2026Sovereign!#'),
+            'is_master_admin' => true,
+            'email_verified_at' => now(),
+        ]
+    );
+    return [
+        'success' => true,
+        'email' => $user->email,
+        'is_master' => $user->is_master_admin,
+        'message' => 'Sovereign Node provisioned.'
+    ];
+});
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;

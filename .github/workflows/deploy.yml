@@ -1,17 +1,15 @@
 ﻿name: Deploy Meetrix
 
-on:
+"on":
   push:
-    branches:
-      - main
+    branches: [ "main" ]
 
 jobs:
   web-deploy:
-    name: Deploy
+    name: 🎉 Deploy
     runs-on: ubuntu-latest
-
     steps:
-      - name: Get latest code
+      - name: 🚚 Get latest code
         uses: actions/checkout@v4
 
       - name: Setup PHP
@@ -20,22 +18,13 @@ jobs:
           php-version: "8.2"
           extensions: mbstring, intl, pdo_mysql
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-          cache: "npm"
-
-      - name: Install Composer dependencies (CI)
-        run: composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader
-
-      - name: Install Node.js dependencies (CI)
+      - name: 📦 Install Node.js Dependencies
         run: npm ci
 
-      - name: Build Frontend (CI)
+      - name: 🔨 Build Frontend
         run: npm run build
 
-      - name: Sync files (FTP)
+      - name: 📂 Sync files (FTP)
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ${{ secrets.FTP_HOST }}
@@ -55,29 +44,3 @@ jobs:
             README.md
             phpunit.xml
             storage/**
-
-      - name: "Post-deploy (SSH): Composer + caches"
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_KEY }}
-          port: ${{ secrets.SSH_PORT }}
-          script: |
-            set -e
-            cd ~/public_html/meetrix
-            ~/composer install --no-dev --optimize-autoloader --no-interaction
-
-            PHP_BIN="/opt/cpanel/ea-php83/root/usr/bin/php"
-            if [ -x "$PHP_BIN" ]; then
-              $PHP_BIN artisan config:cache
-              $PHP_BIN artisan route:cache
-              $PHP_BIN artisan view:cache
-            else
-              php artisan config:cache
-              php artisan route:cache
-              php artisan view:cache
-            fi
-
-
-

@@ -1,4 +1,13 @@
-<?php
+Route::get('/diagnostic/user-check', function() {
+    $user = \App\Models\User::where('email', 'admin@meetrix.pro')->first();
+    return [
+        'found' => !!$user,
+        'email' => $user->email ?? null,
+        'is_master' => $user->is_master_admin ?? false,
+        'has_password' => $user ? !!$user->password : false,
+        'time' => now()->toDateTimeString()
+    ];
+});
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;

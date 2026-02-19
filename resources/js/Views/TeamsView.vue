@@ -1,0 +1,128 @@
+<template>
+    <div class="space-y-6">
+        <div class="flex justify-between items-center">
+            <h1 class="text-3xl font-black text-gray-900">Teams</h1>
+            <button @click="showCreateModal = true" class="btn-primary">
+                + Create Team
+            </button>
+        </div>
+
+        <!-- Teams List -->
+        <div v-if="loading" class="flex justify-center py-12">
+            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
+        </div>
+
+        <div v-else-if="teams.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div v-for="team in teams" :key="team.id" class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+                <div class="flex justify-between items-start mb-4">
+                    <div class="h-12 w-12 bg-indigo-100 text-indigo-600 rounded-xl flex items-center justify-center text-xl font-bold">
+                        {{ team.name.charAt(0) }}
+                    </div>
+                    <span class="px-2 py-1 bg-gray-100 text-gray-500 text-[10px] font-bold uppercase rounded">
+                        {{ team.pivot.role }}
+                    </span>
+                </div>
+                <h3 class="text-xl font-bold text-gray-900 mb-1">{{ team.name }}</h3>
+                <p class="text-xs text-gray-400 font-mono mb-4">slug: {{ team.slug }}</p>
+                
+                <div class="flex items-center space-x-2 mb-6">
+                    <div class="flex -space-x-2">
+                        <div v-for="i in 3" :key="i" class="h-6 w-6 rounded-full border-2 border-white bg-gray-200"></div>
+                    </div>
+                    <span class="text-xs text-gray-500 font-medium">Coming soon: Members list</span>
+                </div>
+
+                <div class="flex space-x-2">
+                    <button @click="inviteMember(team)" class="flex-1 py-2 text-xs font-bold border-2 border-gray-100 rounded-lg hover:border-indigo-200 hover:text-indigo-600 transition-all">
+                        Invite
+                    </button>
+                    <router-link :to="'/teams/' + team.id" class="flex-1 py-2 text-xs font-bold bg-gray-50 text-gray-600 text-center rounded-lg hover:bg-gray-100">
+                        Settings
+                    </router-link>
+                </div>
+            </div>
+        </div>
+
+        <div v-else class="bg-white p-12 text-center rounded-3xl border-2 border-dashed border-gray-100">
+            <div class="text-5xl mb-4">🤝</div>
+            <h2 class="text-xl font-bold text-gray-900 mb-2">No teams yet</h2>
+            <p class="text-gray-500 max-w-sm mx-auto mb-8">
+                Create a team to collaborate with other professionals and manage shared scheduling pages.
+            </p>
+            <button @click="showCreateModal = true" class="btn-primary">
+                Create your first team
+            </button>
+        </div>
+
+        <!-- Create Modal (Simple prompt for now) -->
+        <div v-if="showCreateModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+            <div class="bg-white w-full max-w-md rounded-3xl shadow-2xl p-8 animate-in zoom-in-95 duration-200">
+                <h2 class="text-2xl font-black text-gray-900 mb-6">Create New Team</h2>
+                <div class="space-y-4">
+                    <div class="space-y-1">
+                        <label class="text-xs font-bold text-gray-400 uppercase tracking-wider px-1">Team Name</label>
+                        <input v-model="newTeam.name" type="text" placeholder="e.g. Sales Team" class="w-full px-5 py-4 rounded-xl border-2 border-gray-100 focus:border-indigo-600 outline-none transition-all">
+                    </div>
+                </div>
+                <div class="flex space-x-3 mt-8">
+                    <button @click="showCreateModal = false" class="flex-1 py-4 font-bold text-gray-400 hover:text-gray-600">Cancel</button>
+                    <button @click="createTeam" :disabled="creating" class="flex-1 btn-primary py-4">
+                        {{ creating ? 'Creating...' : 'Create Team' }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script setup>
+import { ref, onMounted } from 'vue';
+import axios from '../axios';
+
+const teams = ref([]);
+const loading = ref(true);
+const creating = ref(false);
+const showCreateModal = ref(false);
+const newTeam = ref({ name: '' });
+
+const fetchTeams = async () => {
+    loading.value = true;
+    try {
+        const response = await axios.get('/api/teams');
+        teams.value = response.data;
+    } catch (e) {
+        console.error(e);
+    } finally {
+        loading.value = false;
+    }
+};
+
+const createTeam = async () => {
+    if (!newTeam.value.name) return;
+    creating.value = true;
+    try {
+        await axios.post('/api/teams', newTeam.value);
+        showCreateModal.value = false;
+        newTeam.value.name = '';
+        fetchTeams();
+    } catch (e) {
+        alert("Failed to create team");
+    } finally {
+        creating.value = false;
+    }
+};
+
+const inviteMember = async (team) => {
+    const email = prompt("Enter member email address:");
+    if (!email) return;
+
+    try {
+        await axios.post(`/api/teams/${team.id}/invite`, { email });
+        alert("Member invited successfully!");
+    } catch (e) {
+        alert(e.response?.data?.message || "Invitation failed");
+    }
+};
+
+onMounted(fetchTeams);
+</script>

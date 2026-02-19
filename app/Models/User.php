@@ -21,6 +21,13 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'onboarding_completed_at',
+        'subscription_tier',
+        'billing_cycle',
+        'stripe_id',
+        'trial_ends_at',
+        'subscription_ends_at',
+        'country_code',
     ];
 
     /**
@@ -33,14 +40,48 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+    protected $casts = [
+        'onboarding_completed_at' => 'datetime',
+        'trial_ends_at' => 'datetime',
+        'subscription_ends_at' => 'datetime',
+    ];
+
     public function tenant()
     {
         return $this->hasOne(Tenant::class);
     }
     
-    // Helper to get pages through tenant
-    public function pages()
+    /**
+     * Get all scheduling pages for the user.
+     */
+    public function schedulingPages()
     {
-        return $this->hasManyThrough(Page::class, Tenant::class);
+        return $this->hasMany(SchedulingPage::class);
+    }
+
+    /**
+     * The teams that the user belongs to.
+     */
+    public function teams()
+    {
+        return $this->belongsToMany(Team::class)
+            ->withPivot('role')
+            ->withTimestamps();
+    }
+
+    /**
+     * Get the user's integrations (Google, Outlook, etc).
+     */
+    public function integrations()
+    {
+        return $this->hasMany(Integration::class);
+    }
+
+    /**
+     * Get the user's meeting polls.
+     */
+    public function polls()
+    {
+        return $this->hasMany(Poll::class);
     }
 }

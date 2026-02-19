@@ -1,0 +1,99 @@
+<template>
+    <div class="space-y-6">
+        <h1 class="text-3xl font-black text-gray-900">Integrations</h1>
+        <p class="text-gray-500 max-w-2xl">
+            Connect your personal calendars to automatically prevent double-bookings 
+            and sync your Meetrix appointments.
+        </p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Google Calendar -->
+            <div class="bg-white p-8 rounded-3xl border border-gray-100 shadow-sm flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center justify-between mb-6">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Google_Calendar_icon_%282020%29.svg" class="h-10 w-10" alt="Google Calendar">
+                        <span v-if="isGoogleConnected" class="px-3 py-1 bg-green-100 text-green-700 text-xs font-bold rounded-full">Connected</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-2">Google Calendar</h3>
+                    <p class="text-sm text-gray-500 leading-relaxed mb-6">
+                        Sync your appointments to Google Calendar and check for availability conflicts.
+                    </p>
+                </div>
+                
+                <div v-if="!isGoogleConnected">
+                    <button @click="connectGoogle" :disabled="loading" class="w-full py-4 bg-white border-2 border-gray-100 rounded-xl font-bold hover:border-blue-400 hover:text-blue-600 transition-all flex items-center justify-center">
+                        <span v-if="loading" class="animate-spin mr-2">🌀</span>
+                        Connect Google Calendar
+                    </button>
+                </div>
+                <div v-else class="space-y-3">
+                    <div class="p-4 bg-gray-50 rounded-xl text-xs font-medium text-gray-600 flex justify-between items-center">
+                        <span>{{ googleIntegration?.meta?.email || 'Connected Account' }}</span>
+                        <button @click="disconnect(googleIntegration.id)" class="text-red-500 hover:underline">Disconnect</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Microsoft Outlook -->
+            <div class="bg-white p-8 rounded-3xl border border-gray-100 shadow-sm flex flex-col justify-between opacity-50 grayscale">
+                <div>
+                    <div class="flex items-center justify-between mb-6">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/d/df/Microsoft_Office_Outlook_%282018%E2%80%93present%29.svg" class="h-10 w-10" alt="Outlook">
+                        <span class="px-3 py-1 bg-gray-200 text-gray-600 text-xs font-bold rounded-full text-nowrap">Coming Soon</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-2">Outlook Calendar</h3>
+                    <p class="text-sm text-gray-500 leading-relaxed mb-6">
+                        Connect your Microsoft 365 or Outlook.com account.
+                    </p>
+                </div>
+                <button disabled class="w-full py-4 bg-gray-50 border-2 border-gray-100 rounded-xl font-bold text-gray-400 cursor-not-allowed">
+                    Soon
+                </button>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script setup>
+import { ref, onMounted, computed } from 'vue';
+import axios from '../axios';
+
+const integrations = ref([]);
+const loading = ref(false);
+
+const isGoogleConnected = computed(() => integrations.value.some(i => i.service === 'google'));
+const googleIntegration = computed(() => integrations.value.find(i => i.service === 'google'));
+
+const fetchIntegrations = async () => {
+    try {
+        const response = await axios.get('/api/integrations');
+        integrations.value = response.data;
+    } catch (e) {
+        console.error(e);
+    }
+};
+
+const connectGoogle = async () => {
+    loading.value = true;
+    try {
+        const response = await axios.get('/api/integrations/google/redirect');
+        window.location.href = response.data.url;
+    } catch (e) {
+        alert("Failed to start Google OAuth");
+    } finally {
+        loading.value = false;
+    }
+};
+
+const disconnect = async (id) => {
+    if (!confirm("Are you sure you want to disconnect?")) return;
+    try {
+        await axios.delete(`/api/integrations/${id}`);
+        fetchIntegrations();
+    } catch (e) {
+        alert("Failed to disconnect");
+    }
+};
+
+onMounted(fetchIntegrations);
+</script>

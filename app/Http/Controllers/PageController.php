@@ -2,8 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Page;
-use App\Models\Tenant;
+use App\Models\SchedulingPage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -15,24 +14,12 @@ class PageController extends Controller
     public function index(Request $request)
     {
         $user = $request->user();
-        if (!$user) {
-            return response()->json(['message' => 'Unauthorized'], 401);
-        }
+        $teamIds = $user->teams->pluck('id');
 
-        // Assuming user has one tenant for now, or we get tenant from context
-        // For MVP, let's say user->tenant relationship exists or we find the tenant for the user
-        $tenant = Tenant::where('user_id', $user->id)->first();
-        
-        if (!$tenant) {
-             // Auto-create tenant for new users if not exists (Onboarding logic might handle this, but fail-safe)
-             $tenant = Tenant::create([
-                'user_id' => $user->id,
-                'name' => $user->name . "'s Team",
-                'slug' => Str::slug($user->name . ' ' . Str::random(4)),
-             ]);
-        }
-
-        $pages = Page::where('tenant_id', $tenant->id)->get();
+        // Fetch pages owned by user OR belonging to user's teams
+        $pages = SchedulingPage::where('user_id', $user->id)
+            ->orWhereIn('team_id', $teamIds)
+            ->get();
 
         return response()->json($pages);
     }
@@ -44,18 +31,17 @@ class PageController extends Controller
     {
         $request->validate([
             'title' => 'required|string|max:255',
-            'slug' => 'required|string|max:255|unique:pages,slug',
-            'description' => 'nullable|string',
+            'slug' => 'required|string|max:255|unique:scheduling_pages,slug',
+            'intro_text' => 'nullable|string',
         ]);
 
         $user = $request->user();
-        $tenant = Tenant::where('user_id', $user->id)->firstOrFail();
 
-        $page = Page::create([
-            'tenant_id' => $tenant->id,
+        $page = SchedulingPage::create([
+            'user_id' => $user->id,
             'title' => $request->title,
             'slug' => $request->slug,
-            'description' => $request->description,
+            'intro_text' => $request->intro_text,
             'is_active' => true,
             'config' => [], // Default empty config
         ]);
@@ -68,16 +54,24 @@ class PageController extends Controller
      */
     public function show(string $slug)
     {
-        $page = Page::where('slug', $slug)->where('is_active', true)->firstOrFail();
+        $page = SchedulingPage::where('slug', $slug)
+            ->where('is_active', true)
+            ->with(['appointmentTypes', 'availabilityRules'])
+            ->firstOrFail();
+
+        $page->increment('views');
         
-        // Publicly accessible details
-        return response()->json([
-            'title' => $page->title,
-            'description' => $page->description,
-            'slug' => $page->slug,
-            'config' => $page->config,
-            'tenant_name' => $page->tenant->name,
-        ]);
+        return response()->json($page);
+    }
+
+    /**
+     * Record a click on a time slot.
+     */
+    public function recordClick(string $slug)
+    {
+        $page = SchedulingPage::where('slug', $slug)->firstOrFail();
+        $page->increment('slot_clicks');
+        return response()->json(['success' => true]);
     }
 
     /**
@@ -86,18 +80,22 @@ class PageController extends Controller
     public function update(Request $request, string $id)
     {
         $user = $request->user();
-        $tenant = Tenant::where('user_id', $user->id)->firstOrFail();
+        $teamIds = $user->teams->pluck('id');
         
-        $page = Page::where('id', $id)->where('tenant_id', $tenant->id)->firstOrFail();
+        $page = SchedulingPage::where('id', $id)
+            ->where(function($q) use ($user, $teamIds) {
+                $q->where('user_id', $user->id)
+                  ->orWhereIn('team_id', $teamIds);
+            })->firstOrFail();
 
         $request->validate([
             'title' => 'sometimes|string|max:255',
-            'description' => 'nullable|string',
+            'intro_text' => 'nullable|string',
             'config' => 'nullable|array',
             'is_active' => 'boolean',
         ]);
 
-        $page->update($request->only(['title', 'description', 'config', 'is_active']));
+        $page->update($request->only(['title', 'intro_text', 'config', 'is_active', 'team_id', 'confirmation_message', 'redirect_url']));
 
         return response()->json($page);
     }
@@ -107,6 +105,17 @@ class PageController extends Controller
      */
     public function destroy(string $id)
     {
-        // Implement soft delete or hard delete
+        $user = request()->user();
+        $teamIds = $user->teams->pluck('id');
+
+        $page = SchedulingPage::where('id', $id)
+            ->where(function($q) use ($user, $teamIds) {
+                $q->where('user_id', $user->id)
+                  ->orWhereIn('team_id', $teamIds);
+            })->firstOrFail();
+        
+        $page->delete();
+
+        return response()->json(['message' => 'Page deleted successfully']);
     }
 }

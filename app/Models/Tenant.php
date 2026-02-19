@@ -14,6 +14,8 @@ class Tenant extends Model
         'slug',
         'user_id',
         'settings',
+        'region',
+        'currency',
     ];
 
     protected $casts = [

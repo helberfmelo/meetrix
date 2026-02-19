@@ -1,3 +1,4 @@
+<?php
 Route::get('/diagnostic/user-check', function() {
     $user = \App\Models\User::where('email', 'admin@meetrix.pro')->first();
     return [

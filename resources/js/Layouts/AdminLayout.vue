@@ -29,17 +29,17 @@
 
         <!-- Main Content -->
         <main class="flex-1 flex flex-col min-w-0">
-            <header class="py-10 px-6 md:px-12 flex justify-between items-center mix-blend-difference relative z-[1000]">
+            <header class="py-10 px-6 md:px-12 flex justify-between items-center relative z-[1000] bg-zinc-50/50 dark:bg-zinc-950/50 backdrop-blur-md border-b border-black/5 dark:border-white/5">
                 <div class="flex items-center gap-4">
-                    <span class="text-[10px] font-black text-slate-600 uppercase tracking-[0.4em]">{{ breadcrumb }}</span>
+                    <span class="text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-[0.4em]">{{ breadcrumb }}</span>
                 </div>
                 <div class="flex items-center gap-6">
                     <div class="flex items-center gap-3 group cursor-pointer relative pr-6 border-r border-black/10 dark:border-white/10">
                         <div class="text-right hidden sm:block">
                             <p class="text-[10px] font-black text-zinc-950 dark:text-white uppercase tracking-widest leading-none">{{ user?.name }}</p>
-                            <p class="text-[8px] font-black text-slate-400 dark:text-slate-600 uppercase tracking-widest mt-1">Sovereign_Node</p>
+                            <p class="text-[8px] font-black text-meetrix-orange/80 dark:text-meetrix-orange uppercase tracking-widest mt-1">Sovereign_Node</p>
                         </div>
-                        <div class="w-10 h-10 rounded-2xl bg-zinc-100 dark:bg-zinc-900 border border-black/5 dark:border-white/5 flex items-center justify-center text-zinc-400 dark:text-white/50 group-hover:border-meetrix-orange group-hover:text-meetrix-orange group-hover:scale-105 transition-all font-black shadow-sm group-active:scale-95">
+                        <div class="w-10 h-10 rounded-2xl bg-white dark:bg-zinc-900 border border-black/10 dark:border-white/10 flex items-center justify-center text-zinc-950 dark:text-white group-hover:border-meetrix-orange group-hover:text-meetrix-orange group-hover:scale-105 transition-all font-black shadow-sm group-active:scale-95">
                             {{ user?.name?.charAt(0) }}
                         </div>
                     </div>

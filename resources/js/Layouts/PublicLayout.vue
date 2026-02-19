@@ -8,8 +8,18 @@ import ThemeToggle from '../Components/ThemeToggle.vue';
         <!-- Unified Sovereign Navigation -->
         <nav class="fixed top-0 w-full z-[5000] px-6 py-6 flex justify-between items-center pointer-events-none">
             <div class="text-2xl font-black tracking-tighter text-zinc-950 dark:text-white font-outfit pointer-events-auto bg-white/10 dark:bg-black/10 backdrop-blur-sm px-4 py-2 rounded-2xl">MEETRIX<span class="text-meetrix-orange">.PRO</span></div>
-            <div class="flex items-center gap-6 pointer-events-auto mt-4 sm:mt-0">
-                <router-link to="/login" class="text-[10px] uppercase font-black tracking-widest text-zinc-500 hover:text-zinc-950 dark:text-white/50 dark:hover:text-white transition-colors bg-white/10 dark:bg-black/10 backdrop-blur-sm px-4 py-2 rounded-2xl">{{ $t('home.login') }}</router-link>
+            <div class="flex items-center gap-8 pointer-events-auto mt-4 sm:mt-0">
+                <!-- Dynamic Login Heading: Only on /login -->
+                <div v-if="$route.path === '/login'" class="hidden md:flex flex-col items-end">
+                    <h2 class="text-xl font-black text-zinc-950 dark:text-white uppercase tracking-tighter leading-none">
+                        {{ $t('login.title').split(' ')[0] }} <span class="text-meetrix-orange">{{ $t('login.title').split(' ').slice(1).join(' ') }}</span>
+                    </h2>
+                    <p class="text-[8px] font-black uppercase tracking-[0.3em] text-slate-500 mt-1">
+                        {{ $t('login.or') }} <router-link to="/onboarding" class="text-zinc-400 hover:text-meetrix-orange transition-colors">{{ $t('login.trial_link') }}</router-link>
+                    </p>
+                </div>
+
+                <router-link v-if="$route.path !== '/login'" to="/login" class="text-[10px] uppercase font-black tracking-widest text-zinc-500 hover:text-zinc-950 dark:text-white/50 dark:hover:text-white transition-colors bg-white/10 dark:bg-black/10 backdrop-blur-sm px-4 py-2 rounded-2xl">{{ $t('home.login') }}</router-link>
                 <router-link to="/onboarding" class="px-6 py-3 bg-meetrix-orange text-zinc-950 dark:bg-white dark:text-zinc-950 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-xl shadow-meetrix-orange/20">
                     {{ $t('home.get_started') }}
                 </router-link>

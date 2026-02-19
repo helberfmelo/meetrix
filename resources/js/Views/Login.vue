@@ -1,19 +1,6 @@
 <template>
-    <div class="min-h-screen flex flex-col items-center justify-center p-6 bg-zinc-50 dark:bg-zinc-950 relative overflow-hidden transition-colors duration-500 pt-32">
-        <!-- Background Bloom -->
-        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-meetrix-orange/10 rounded-full blur-[150px] -z-10 animate-pulse"></div>
-
-        <div class="max-w-xl w-full space-y-12 animate-in zoom-in-95 duration-1000">
-            <div class="text-center">
-                <h1 class="text-7xl font-black text-zinc-950 dark:text-white tracking-tighter uppercase font-outfit mb-4">
-                    {{ $t('login.title').split(' ')[0] }}<br/>
-                    <span class="text-meetrix-orange">{{ $t('login.title').split(' ').slice(1).join(' ') }}</span>
-                </h1>
-                <p class="text-[10px] font-black uppercase tracking-[0.4em] text-slate-500">
-                    {{ $t('login.or') }}
-                    <router-link to="/onboarding" class="text-zinc-600 dark:text-white hover:text-meetrix-orange transition-colors">{{ $t('login.trial_link') }}</router-link>
-                </p>
-            </div>
+        <div class="max-w-xl w-full space-y-8 animate-in zoom-in-95 duration-1000 relative z-10 transition-all">
+            <!-- Form Card -->
 
             <div class="bg-white/80 dark:bg-zinc-900/50 backdrop-blur-xl border border-black/5 dark:border-white/5 p-12 rounded-5xl shadow-premium relative transition-colors duration-500">
                 

@@ -24,7 +24,7 @@ import ThemeToggle from '../Components/ThemeToggle.vue';
                     {{ $t('home.get_started') }}
                 </router-link>
 
-                <div class="flex flex-col items-center gap-0 pointer-events-auto">
+                <div class="flex items-center gap-4 pointer-events-auto">
                     <ThemeToggle />
                     <LanguageSwitcher />
                 </div>

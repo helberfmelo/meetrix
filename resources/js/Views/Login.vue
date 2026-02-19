@@ -1,4 +1,7 @@
-<template>
+    <div class="min-h-screen flex flex-col items-center p-6 bg-zinc-50 dark:bg-zinc-950 relative overflow-hidden transition-colors duration-500 pt-32">
+        <!-- Background Bloom -->
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-meetrix-orange/10 rounded-full blur-[150px] -z-10 animate-pulse"></div>
+
         <div class="max-w-xl w-full space-y-8 animate-in zoom-in-95 duration-1000 relative z-10 transition-all">
             <!-- Form Card -->
 

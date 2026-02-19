@@ -1,19 +1,30 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import PublicLayout from '../Layouts/PublicLayout.vue';
-import AdminLayout from '../Layouts/AdminLayout.vue';
-import Dashboard from '../Views/Dashboard.vue';
+import PublicLayout from './Layouts/PublicLayout.vue';
+import AdminLayout from './Layouts/AdminLayout.vue';
+import Dashboard from './Views/Dashboard.vue';
 
-import PagesList from '../Views/PagesList.vue';
-import BookingPage from '../Views/BookingPage.vue';
+import PagesList from './Views/PagesList.vue';
+import BookingPage from './Views/BookingPage.vue';
+
+import Login from './Views/Login.vue';
+
+import Home from './Views/Home.vue';
+
+import PageEditor from './Views/PageEditor.vue';
+import OnboardingWizard from './Views/OnboardingWizard.vue';
 
 const routes = [
+    {
+        path: '/onboarding',
+        component: OnboardingWizard
+    },
     {
         path: '/',
         component: PublicLayout,
         children: [
             {
                 path: '',
-                component: { template: '<div class="text-center py-20"><h1 class="text-4xl font-bold mb-4">Scheduling Infrastructure for Everyone</h1><p class="text-xl text-gray-600">Meetrix copies YCBM perfectly.</p></div>' }
+                component: Home
             },
             {
                 path: 'p/:slug',
@@ -21,7 +32,7 @@ const routes = [
             },
             {
                 path: 'login',
-                component: { template: '<div class="max-w-md mx-auto mt-20 p-6 bg-white shadow rounded">Login Form Placeholder</div>' }
+                component: Login
             }
         ]
     },
@@ -29,15 +40,21 @@ const routes = [
         path: '/dashboard',
         component: AdminLayout,
         children: [
-            {
-                path: '',
-                component: Dashboard
-            },
-            {
-                path: '/pages',
-                component: PagesList
-            }
+            { path: '', component: Dashboard },
+            { path: 'pages', component: PagesList },
+            { path: 'editor/:slug', component: PageEditor },
+            { path: 'teams', component: () => import('./Views/TeamsView.vue') },
+            { path: 'integrations', component: () => import('./Views/IntegrationsView.vue') },
+            { path: 'integrations/:service/callback', component: () => import('./Views/IntegrationCallbackView.vue') },
+            { path: 'polls', component: () => import('./Views/PollsView.vue') },
+            { path: 'polls/create', component: () => import('./Views/PollCreator.vue') },
+            { path: 'coupons', component: () => import('./Views/Coupons.vue') }
         ]
+    },
+    {
+        path: '/vote/:slug',
+        name: 'public-poll',
+        component: () => import('./Views/PublicPoll.vue')
     }
 ];
 

@@ -17,3 +17,14 @@ yarn-error.log
 /.fleet
 /.idea
 /.vscode
+client_secret_*.json
+*.json.json
+push_error.txt
+remote_router.js
+staged_diff.txt
+test_output.txt
+webhook_test_output.txt
+schema_output.txt
+migration_error.txt
+status_report.md
+update_locales_v2.py

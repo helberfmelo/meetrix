@@ -24,13 +24,15 @@
   - melhoria de contraste em dark mode e cobertura de traduções em páginas-chave;
   - módulo Master Admin entregue (clientes, pagamentos, cupons, atividade e ações administrativas seguras);
   - área de conta entregue para usuários (perfil, senha, preferências e histórico de cobrança);
-  - correção da falha de agendamento com atualização de schema e testes.
+  - correção da falha de agendamento com atualização de schema e testes;
+  - hotfix para e-mail de confirmação sem bloquear confirmação do booking;
+  - deploys `#94` e `#95` (GitHub Actions) concluídos e validados em produção.
 
 ## Pendências Prioritárias
 
-1. Validar em produção os novos fluxos de Master Admin e Conta após deploy.
-2. Evoluir backlog do benchmark YCBM:
+1. Evoluir backlog do benchmark YCBM:
    - referência: `docs/YCBM_BENCHMARK_GAPS_2026-02-20.md`.
+2. Expandir testes E2E visuais para cobrir os novos módulos administrativos e de conta.
 
 ## Notas de Documentação
 

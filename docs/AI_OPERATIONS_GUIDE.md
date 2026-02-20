@@ -27,6 +27,8 @@ Este guia define os procedimentos operacionais padrão para a IA no projeto Meet
 - Página pública `/p/{slug}` restaurada (ex.: `/p/helber`).
 - Layout mobile do sistema ajustado no topo direito: tema, idioma e sair.
 - Editor de página atualizado para prefixo público `meetrix.opentshost.com/p/`.
+- Deploy desta fase concluído em verde no GitHub Actions:
+  - run `#94` (feature principal) e run `#95` (hotfix booking-mail).
 
 ## Estado da Implementação Atual (2026-02-20)
 
@@ -38,12 +40,18 @@ Este guia define os procedimentos operacionais padrão para a IA no projeto Meet
 - Correção aplicada para erro de agendamento (`Falha no agendamento...`):
   - ajuste de schema da tabela `bookings`;
   - validações de consistência entre página e tipo de serviço;
-  - testes automatizados cobrindo fluxo com cupom 100% sem gateway.
+  - testes automatizados cobrindo fluxo com cupom 100% sem gateway;
+  - hotfix para não bloquear confirmação quando houver falha de e-mail.
+- Validação funcional em produção concluída:
+  - `/`, `/login`, `/dashboard`, `/p/helber` respondendo `200`;
+  - login Master Admin + APIs `/api/account/summary` e `/api/super-admin/overview` funcionando;
+  - criação real de booking em produção confirmada com status `confirmed`;
+  - fluxo de novo usuário (registro -> página -> onboarding complete -> checkout cupom100) confirmado.
 
 ## Pendências Abertas
 
-1. Validar visual e funcionalmente os novos módulos em produção após deploy.
-2. Avançar roadmap de lacunas mapeadas no benchmark YCBM (`docs/YCBM_BENCHMARK_GAPS_2026-02-20.md`).
+1. Avançar roadmap de lacunas mapeadas no benchmark YCBM (`docs/YCBM_BENCHMARK_GAPS_2026-02-20.md`).
+2. Evoluir cobertura E2E visual automatizada para os novos módulos (`Master Admin` e `Conta`).
 
 ## Credenciais de Referência
 

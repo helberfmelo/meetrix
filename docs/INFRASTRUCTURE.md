@@ -35,6 +35,13 @@
 4. APIs novas disponíveis para operação SaaS:
    - `/api/super-admin/*` (visão global, clientes, pagamentos, atividade).
    - `/api/account/*` (perfil, preferências, segurança e cobrança do usuário).
+5. Deploy validado em produção na execução de 2026-02-20:
+   - GitHub Actions run `#94` e run `#95` com conclusão `success`.
+6. Testes funcionais em produção confirmados:
+   - login/admin, account summary, super-admin overview;
+   - fluxo novo usuário e fluxo usuário existente;
+   - criação de agendamento pública em `/api/bookings`;
+   - cupom `cupom100` confirmando checkout sem operadora.
 
 ## Pendências Técnicas Relevantes
 

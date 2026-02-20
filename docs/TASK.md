@@ -9,8 +9,8 @@
 - [x] Organizar documentação na pasta `docs/`
 
 ## Em Andamento [/]
-- [/] Restaurar execução de PHP no servidor de produção (Bug de .htaccess)
-- [/] Sincronizar banco de dados de produção (Migrate nuclear)
+- [x] Restaurar execução de PHP no servidor de produção (Bug de .htaccess)
+- [x] Sincronizar banco de dados de produção (Migrate nuclear)
 
 ## Pendente
 - [ ] Validar cadastro de novo cliente em produção

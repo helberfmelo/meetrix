@@ -58,6 +58,7 @@ class SubscriptionController extends Controller
             if ($coupon && $coupon->isValid()) {
                 // If 100% discount, we can bypass Stripe if explicitly free
                 if ($coupon->discount_type === 'percent' && (float)$coupon->discount_value >= 100) {
+                    $coupon->increment('times_used');
                     $user->update([
                         'subscription_tier' => $request->plan,
                         'trial_ends_at' => now()->addMonth(), // Give a month even if 100% off

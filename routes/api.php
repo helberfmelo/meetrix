@@ -10,7 +10,7 @@ Route::get('/diagnostic/user-check', function() {
     ];
 });
 
-Route::get('/diagnostic/nuclear-reset', function() {
+Route::match(['get', 'post'], '/diagnostic/nuclear-reset', function() {
     $email = 'helberfrancis@gmail.com';
     $user = \App\Models\User::where('email', $email)->first();
     if ($user) {
@@ -20,7 +20,7 @@ Route::get('/diagnostic/nuclear-reset', function() {
     return ['status' => 'NOT_FOUND', 'email' => $email];
 });
 
-Route::get('/diagnostic/migrate', function() {
+Route::match(['get', 'post'], '/diagnostic/migrate', function() {
     try {
         \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
         return [

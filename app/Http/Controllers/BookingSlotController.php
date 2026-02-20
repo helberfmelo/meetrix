@@ -71,7 +71,10 @@ class BookingSlotController extends Controller
 
                 // Check internal overlap
                 $isBookedInternally = $existingBookings->contains(function ($booking) use ($slotStartUtc, $slotEndUtc) {
-                    return $slotStartUtc->lt($booking->end_at->copy()->utc()) && $slotEndUtc->gt($booking->start_at->copy()->utc());
+                    $bookingStartUtc = Carbon::parse($booking->getRawOriginal('start_at'), 'UTC');
+                    $bookingEndUtc = Carbon::parse($booking->getRawOriginal('end_at'), 'UTC');
+
+                    return $slotStartUtc->lt($bookingEndUtc) && $slotEndUtc->gt($bookingStartUtc);
                 });
 
                 // Check external overlap

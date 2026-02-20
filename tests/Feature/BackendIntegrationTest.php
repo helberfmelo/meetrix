@@ -129,6 +129,8 @@ class BackendIntegrationTest extends TestCase
 
     public function test_slots_endpoint_hides_booked_slot_using_request_timezone(): void
     {
+        config(['app.timezone' => 'America/Sao_Paulo']);
+
         $user = User::factory()->create();
 
         $page = SchedulingPage::create([

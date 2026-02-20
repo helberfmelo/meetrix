@@ -300,6 +300,7 @@
         "success_msg": "Your booking has been confirmed. Check your email for details.",
         "back_home": "BACK TO HOME",
         "failed_alert": "Booking failed. Please try again.",
+        "slot_taken_alert": "This time slot has just been booked. Please pick another available time.",
         "minutes_short": "MIN",
         "duration_unknown": "Duration unavailable",
         "date_unknown": "Date unavailable",

@@ -312,7 +312,8 @@ const selectDate = async (date) => {
         const response = await axios.get(`/api/p/${route.params.slug}/slots`, {
             params: {
                 date: date,
-                appointment_type_id: selectedType.value.id
+                appointment_type_id: selectedType.value.id,
+                timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
             }
         });
         slots.value = response.data;
@@ -355,7 +356,16 @@ const submitBooking = async () => {
             }, 3000);
         }
     } catch (error) {
-        alert(t('booking.failed_alert'));
+        if (error.response?.status === 409) {
+            alert(t('booking.slot_taken_alert'));
+            if (selectedDate.value) {
+                await selectDate(selectedDate.value);
+                step.value = 'date';
+            }
+            return;
+        }
+
+        alert(error.response?.data?.message || t('booking.failed_alert'));
     } finally {
         submitting.value = false;
     }

@@ -2,10 +2,13 @@
 
 namespace Tests\Feature;
 
+use App\Models\AvailabilityRule;
 use App\Models\AppointmentType;
+use App\Models\Booking;
 use App\Models\SchedulingPage;
 use App\Models\Tenant;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Mail;
 use Laravel\Sanctum\Sanctum;
@@ -122,5 +125,56 @@ class BackendIntegrationTest extends TestCase
             'source' => 'booking',
             'status' => 'paid',
         ]);
+    }
+
+    public function test_slots_endpoint_hides_booked_slot_using_request_timezone(): void
+    {
+        $user = User::factory()->create();
+
+        $page = SchedulingPage::create([
+            'user_id' => $user->id,
+            'title' => 'Timezone Page',
+            'slug' => 'timezone-page',
+            'is_active' => true,
+        ]);
+
+        $type = AppointmentType::create([
+            'scheduling_page_id' => $page->id,
+            'name' => 'Strategy Session',
+            'duration_minutes' => 60,
+            'price' => 0,
+            'currency' => 'BRL',
+            'is_active' => true,
+        ]);
+
+        $dateLocal = Carbon::create(2026, 3, 2, 0, 0, 0, 'America/Sao_Paulo');
+
+        AvailabilityRule::create([
+            'scheduling_page_id' => $page->id,
+            'days_of_week' => [$dateLocal->dayOfWeek],
+            'start_time' => '09:00:00',
+            'end_time' => '12:00:00',
+            'timezone' => 'America/Sao_Paulo',
+        ]);
+
+        $bookingStartUtc = $dateLocal->copy()->setTime(10, 0)->utc();
+
+        Booking::create([
+            'scheduling_page_id' => $page->id,
+            'appointment_type_id' => $type->id,
+            'customer_name' => 'Booked Customer',
+            'customer_email' => 'booked@example.com',
+            'start_at' => $bookingStartUtc,
+            'end_at' => $bookingStartUtc->copy()->addMinutes(60),
+            'status' => 'pending',
+        ]);
+
+        $response = $this->getJson('/api/p/timezone-page/slots?date=' . $dateLocal->format('Y-m-d') . '&appointment_type_id=' . $type->id . '&timezone=America/Sao_Paulo');
+
+        $response->assertOk();
+
+        $slots = $response->json();
+        $this->assertContains('09:00', $slots);
+        $this->assertNotContains('10:00', $slots);
     }
 }

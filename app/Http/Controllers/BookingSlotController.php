@@ -19,6 +19,7 @@ class BookingSlotController extends Controller
         $request->validate([
             'date' => 'required|date_format:Y-m-d',
             'appointment_type_id' => 'required|exists:appointment_types,id',
+            'timezone' => 'nullable|timezone',
         ]);
 
         $date = Carbon::parse($request->date);
@@ -39,40 +40,50 @@ class BookingSlotController extends Controller
             return response()->json([]);
         }
 
+        $viewerTimezone = $request->input('timezone') ?: ($rules->first()->timezone ?: config('app.timezone', 'UTC'));
+        $dayStartUtc = Carbon::createFromFormat('Y-m-d H:i:s', $request->date . ' 00:00:00', $viewerTimezone)->utc();
+        $dayEndUtc = Carbon::createFromFormat('Y-m-d H:i:s', $request->date . ' 23:59:59', $viewerTimezone)->utc();
+
         // Get internal bookings
         $existingBookings = Booking::where('scheduling_page_id', $page->id)
-            ->whereDate('start_at', $date->toDateString())
             ->whereIn('status', ['confirmed', 'pending'])
+            ->where(function ($query) use ($dayStartUtc, $dayEndUtc) {
+                $query->where('start_at', '<', $dayEndUtc)
+                    ->where('end_at', '>', $dayStartUtc);
+            })
             ->get();
 
         // Get external busy slots
         $syncService = new \App\Services\Calendar\CalendarSyncService();
-        $externalBusy = $syncService->getAllBusySlots($page->user, $date->copy()->startOfDay(), $date->copy()->endOfDay());
+        $externalBusy = $syncService->getAllBusySlots($page->user, $dayStartUtc->copy(), $dayEndUtc->copy());
 
         $availableSlots = [];
         $duration = $appointmentType->duration_minutes;
 
         foreach ($rules as $rule) {
-            $startTime = Carbon::createFromFormat('Y-m-d H:i:s', $date->toDateString() . ' ' . $rule->start_time);
-            $endTime = Carbon::createFromFormat('Y-m-d H:i:s', $date->toDateString() . ' ' . $rule->end_time);
+            $startTime = Carbon::createFromFormat('Y-m-d H:i:s', $request->date . ' ' . $rule->start_time, $viewerTimezone);
+            $endTime = Carbon::createFromFormat('Y-m-d H:i:s', $request->date . ' ' . $rule->end_time, $viewerTimezone);
 
             $current = $startTime->copy();
             while ($current->copy()->addMinutes($duration)->lte($endTime)) {
-                $slotStart = $current->copy();
-                $slotEnd = $current->copy()->addMinutes($duration);
+                $slotStartUtc = $current->copy()->utc();
+                $slotEndUtc = $current->copy()->addMinutes($duration)->utc();
 
                 // Check internal overlap
-                $isBookedInternally = $existingBookings->contains(function ($booking) use ($slotStart, $slotEnd) {
-                    return $slotStart->lt($booking->end_at) && $slotEnd->gt($booking->start_at);
+                $isBookedInternally = $existingBookings->contains(function ($booking) use ($slotStartUtc, $slotEndUtc) {
+                    return $slotStartUtc->lt($booking->end_at->copy()->utc()) && $slotEndUtc->gt($booking->start_at->copy()->utc());
                 });
 
                 // Check external overlap
-                $isBookedExternally = collect($externalBusy)->contains(function ($busy) use ($slotStart, $slotEnd) {
-                    return $slotStart->lt($busy['end']) && $slotEnd->gt($busy['start']);
+                $isBookedExternally = collect($externalBusy)->contains(function ($busy) use ($slotStartUtc, $slotEndUtc) {
+                    $busyStartUtc = ($busy['start'] instanceof Carbon ? $busy['start']->copy() : Carbon::parse($busy['start']))->utc();
+                    $busyEndUtc = ($busy['end'] instanceof Carbon ? $busy['end']->copy() : Carbon::parse($busy['end']))->utc();
+
+                    return $slotStartUtc->lt($busyEndUtc) && $slotEndUtc->gt($busyStartUtc);
                 });
 
                 if (!$isBookedInternally && !$isBookedExternally) {
-                    $availableSlots[] = $slotStart->format('H:i');
+                    $availableSlots[] = $current->format('H:i');
                 }
 
                 $current->addMinutes(15);

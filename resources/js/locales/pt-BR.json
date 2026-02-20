@@ -301,6 +301,7 @@
         "success_msg": "Seu agendamento foi confirmado. Verifique seu e-mail para mais detalhes.",
         "back_home": "VOLTAR PARA HOME",
         "failed_alert": "Falha no agendamento. Por favor, tente novamente.",
+        "slot_taken_alert": "Este horário acabou de ser reservado. Escolha outro horário disponível.",
         "minutes_short": "MIN",
         "duration_unknown": "Duração indisponível",
         "date_unknown": "Data indisponível",

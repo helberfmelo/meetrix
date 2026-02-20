@@ -68,7 +68,8 @@
             "Pagamenti via Stripe",
             "Branding Personalizzato",
             "Supporto Prioritario"
-        ]
+        ],
+        "feature_label": "FUNZIONE"
     },
     "dashboard": {
         "title": "Dashboard",
@@ -83,7 +84,7 @@
         "conversion_arch": "ARCHITETTURA DI CONVERSIONE",
         "live_stream": "PROTOCOLLO_LIVE_STREAM",
         "waiting_pages": "In attesa della prima pagina...",
-        "node_status": "CONTROLLO_IT // ONLINE",
+        "node_status": "SISTEMA // ONLINE",
         "views_index": "Indice di Visualizzazioni",
         "upcoming": "In arrivo",
         "recent_bookings": "Prenotazioni Recenti",
@@ -98,7 +99,7 @@
         "success_booking": "SUCCESSO_PRENOTAZIONE"
     },
     "admin": {
-        "sovereign_node": "Nodo_Sovrano",
+        "sovereign_node": "Centro di Controllo",
         "breadcrumb_prefix": "SISTEMA //",
         "overview": "PANORAMICA",
         "export_csv": "Esporta_CSV",
@@ -243,11 +244,11 @@
         "step_2": "Pagina",
         "step_3": "Disponibilità",
         "welcome_title": "Benvenuto in Meetrix!",
-        "welcome_subtitle": "Iniziamo configurando il tuo nodo.",
-        "name_label": "La Tua Identità",
-        "name_placeholder": "Nome Completo",
+        "welcome_subtitle": "Iniziamo configurando il tuo spazio di prenotazione.",
+        "name_label": "Nome visibile (tuo nome o azienda)",
+        "name_placeholder": "Es: Ana Silva o ACME Consulting",
         "timezone_label": "Fuso Orario",
-        "page_title": "Nodo di Accesso",
+        "page_title": "Pagina di Prenotazione",
         "page_subtitle": "Configura il tuo motore di pianificazione primario.",
         "p_title_label": "Titolo Interfaccia",
         "p_title_placeholder": "es. Consulenza Direzionale",
@@ -257,7 +258,8 @@
         "start_time": "Apertura Finestra",
         "end_time": "Chiusura Finestra",
         "finish": "Sincronizza",
-        "continue": "Procedi"
+        "continue": "Procedi",
+        "tooltip_name": "Usa il nome che i clienti devono vedere (il tuo nome personale o quello dell'azienda)."
     },
     "poll": {
         "by": "Da",

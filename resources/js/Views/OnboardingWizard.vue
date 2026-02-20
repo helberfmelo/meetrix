@@ -20,8 +20,8 @@
             </div>
 
             <!-- Card: High-Depth Fragment -->
-            <div class="bg-white/80 dark:bg-zinc-900/40 backdrop-blur-3xl rounded-5xl border border-black/5 dark:border-white/5 p-16 min-h-[550px] flex flex-col justify-between shadow-premium relative group overflow-hidden transition-colors duration-500">
-                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-meetrix-orange to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-1000"></div>
+            <div class="bg-white/80 dark:bg-zinc-900/40 backdrop-blur-3xl rounded-5xl border border-black/5 dark:border-white/5 p-16 min-h-[550px] flex flex-col justify-between shadow-premium relative group/card overflow-hidden transition-colors duration-500">
+                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-meetrix-orange to-transparent opacity-0 group-hover/card:opacity-100 transition-opacity duration-1000"></div>
                 
                 <div v-if="step === 1" class="animate-in fade-in slide-in-from-bottom-8 duration-700">
                     <h2 class="text-5xl font-black text-zinc-950 dark:text-white mb-4 uppercase tracking-tighter font-outfit">{{ $t('onboarding.welcome_title') }}</h2>
@@ -31,9 +31,9 @@
                         <div class="space-y-4">
                             <div class="flex items-center justify-between">
                                 <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">{{ $t('onboarding.name_label') }}</label>
-                                <div class="group relative">
+                                <div class="group/tooltip relative">
                                     <i class="fas fa-circle-info text-slate-400 cursor-help"></i>
-                                    <div class="absolute bottom-full right-0 mb-3 w-48 p-3 bg-zinc-950 text-white text-[9px] font-bold rounded-xl opacity-0 group-hover:opacity-100 transition-all pointer-events-none z-50 shadow-2xl border border-white/10 uppercase tracking-wider">
+                                    <div class="absolute bottom-full right-0 mb-3 w-48 p-3 bg-zinc-950 text-white text-[9px] font-bold rounded-xl opacity-0 group-hover/tooltip:opacity-100 transition-all pointer-events-none z-50 shadow-2xl border border-white/10 uppercase tracking-wider">
                                         {{ $t('onboarding.tooltip_name') }}
                                     </div>
                                 </div>
@@ -82,9 +82,9 @@
                         <div class="space-y-4">
                             <div class="flex items-center justify-between">
                                 <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">{{ $t('onboarding.timezone_label') }}</label>
-                                <div class="group relative">
+                                <div class="group/tooltip relative">
                                     <i class="fas fa-circle-info text-slate-400 cursor-help"></i>
-                                    <div class="absolute bottom-full right-0 mb-3 w-48 p-3 bg-zinc-950 text-white text-[9px] font-bold rounded-xl opacity-0 group-hover:opacity-100 transition-all pointer-events-none z-50 shadow-2xl border border-white/10 uppercase tracking-wider">
+                                    <div class="absolute bottom-full right-0 mb-3 w-48 p-3 bg-zinc-950 text-white text-[9px] font-bold rounded-xl opacity-0 group-hover/tooltip:opacity-100 transition-all pointer-events-none z-50 shadow-2xl border border-white/10 uppercase tracking-wider">
                                         {{ $t('onboarding.tooltip_timezone') }}
                                     </div>
                                 </div>
@@ -110,9 +110,9 @@
                         <div class="space-y-4">
                             <div class="flex items-center justify-between">
                                 <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">{{ $t('onboarding.p_title_label') }}</label>
-                                <div class="group relative">
+                                <div class="group/tooltip relative">
                                     <i class="fas fa-circle-info text-slate-400 cursor-help"></i>
-                                    <div class="absolute bottom-full right-0 mb-3 w-48 p-3 bg-zinc-950 text-white text-[9px] font-bold rounded-xl opacity-0 group-hover:opacity-100 transition-all pointer-events-none z-50 shadow-2xl border border-white/10 uppercase tracking-wider">
+                                    <div class="absolute bottom-full right-0 mb-3 w-48 p-3 bg-zinc-950 text-white text-[9px] font-bold rounded-xl opacity-0 group-hover/tooltip:opacity-100 transition-all pointer-events-none z-50 shadow-2xl border border-white/10 uppercase tracking-wider">
                                         {{ $t('onboarding.tooltip_page_title') }}
                                     </div>
                                 </div>
@@ -128,9 +128,9 @@
                         <div class="space-y-4">
                             <div class="flex items-center justify-between">
                                 <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">{{ $t('onboarding.p_url_label') }}</label>
-                                <div class="group relative">
+                                <div class="group/tooltip relative">
                                     <i class="fas fa-circle-info text-slate-400 cursor-help"></i>
-                                    <div class="absolute bottom-full right-0 mb-3 w-48 p-3 bg-zinc-950 text-white text-[9px] font-bold rounded-xl opacity-0 group-hover:opacity-100 transition-all pointer-events-none z-50 shadow-2xl border border-white/10 uppercase tracking-wider">
+                                    <div class="absolute bottom-full right-0 mb-3 w-48 p-3 bg-zinc-950 text-white text-[9px] font-bold rounded-xl opacity-0 group-hover/tooltip:opacity-100 transition-all pointer-events-none z-50 shadow-2xl border border-white/10 uppercase tracking-wider">
                                         {{ $t('onboarding.tooltip_page_url') }}
                                     </div>
                                 </div>

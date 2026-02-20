@@ -67,7 +67,8 @@
             "Pagamentos via Stripe",
             "Branding Customizado",
             "Suporte Prioritário"
-        ]
+        ],
+        "feature_label": "RECURSO"
     },
     "dashboard": {
         "title": "Painel",
@@ -82,7 +83,7 @@
         "conversion_arch": "ARQUITETURA DE CONVERSÃO",
         "live_stream": "PROTOCOLO_LIVE_STREAM",
         "waiting_pages": "Aguardando primeira página...",
-        "node_status": "PT_NODE // ONLINE",
+        "node_status": "SISTEMA // ONLINE",
         "views_index": "Índice de Visualizações",
         "upcoming": "Próximos",
         "recent_bookings": "Agendamentos Recentes",
@@ -97,7 +98,7 @@
         "success_booking": "SUCESSO_AGENDAMENTO"
     },
     "admin": {
-        "sovereign_node": "Nó_Soberano",
+        "sovereign_node": "Centro de Controlo",
         "breadcrumb_prefix": "SISTEMA //",
         "overview": "VISÃO GERAL",
         "export_csv": "Exportar_CSV",
@@ -137,11 +138,11 @@
         "step_2": "Página",
         "step_3": "Disponibilidade",
         "welcome_title": "Bem-vindo ao Meetrix!",
-        "welcome_subtitle": "Vamos começar por configurar o seu nó.",
-        "name_label": "A Sua Identidade",
-        "name_placeholder": "Nome Completo",
+        "welcome_subtitle": "Vamos começar por configurar o seu espaço de agendamento.",
+        "name_label": "Nome de exibição (o seu nome ou empresa)",
+        "name_placeholder": "Ex: Ana Silva ou Consultoria XYZ",
         "timezone_label": "Fuso Horário",
-        "page_title": "Nó de Acesso",
+        "page_title": "Página de Agendamento",
         "page_subtitle": "Configure o seu motor de agendamento primário.",
         "p_title_label": "Título da Interface",
         "p_title_placeholder": "ex: Consultoria Executiva",
@@ -151,6 +152,7 @@
         "start_time": "Abertura da Janela",
         "end_time": "Fecho da Janela",
         "finish": "Sincronizar",
-        "continue": "Prosseguir"
+        "continue": "Prosseguir",
+        "tooltip_name": "Use o nome que os clientes devem ver (o seu nome pessoal ou o nome da empresa)."
     }
 }

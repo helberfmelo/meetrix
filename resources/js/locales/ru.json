@@ -68,7 +68,8 @@
             "Платежи через Stripe",
             "Персональный брендинг",
             "Приоритетная поддержка"
-        ]
+        ],
+        "feature_label": "ФУНКЦИЯ"
     },
     "dashboard": {
         "title": "Панель",
@@ -83,7 +84,7 @@
         "conversion_arch": "АРХИТЕКТУРА КОНВЕРСИИ",
         "live_stream": "PROTOCOLO_LIVE_STREAM",
         "waiting_pages": "Ожидание первой страницы...",
-        "node_status": "CONTROL_RU // ОНЛАЙН",
+        "node_status": "СИСТЕМА // ОНЛАЙН",
         "views_index": "Индекс просмотров",
         "upcoming": "Предстоящие",
         "recent_bookings": "Последние бронирования",
@@ -98,7 +99,7 @@
         "success_booking": "УСПЕШНОЕ_БРОНИРОВАНИЕ"
     },
     "admin": {
-        "sovereign_node": "Суверенный_узел",
+        "sovereign_node": "Центр управления",
         "breadcrumb_prefix": "СИСТЕМА //",
         "overview": "ОБЗОР",
         "export_csv": "Экспорт_CSV",
@@ -243,11 +244,11 @@
         "step_2": "Страница",
         "step_3": "Доступность",
         "welcome_title": "Добро пожаловать в Meetrix!",
-        "welcome_subtitle": "Давайте начнем с настройки вашего суверенного узла.",
-        "name_label": "Ваша личность",
-        "name_placeholder": "Полное имя",
+        "welcome_subtitle": "Давайте начнем с настройки вашего пространства записи.",
+        "name_label": "Отображаемое имя (ваше имя или компания)",
+        "name_placeholder": "Например: Ana Silva или ACME Consulting",
         "timezone_label": "Часовой пояс",
-        "page_title": "Узел доступа",
+        "page_title": "Страница записи",
         "page_subtitle": "Настройте ваш основной движок планирования.",
         "p_title_label": "Заголовок интерфейса",
         "p_title_placeholder": "напр., Консультация для руководителей",
@@ -257,7 +258,8 @@
         "start_time": "Окно открывается",
         "end_time": "Окно закрывается",
         "finish": "Синхронизировать",
-        "continue": "Продолжить"
+        "continue": "Продолжить",
+        "tooltip_name": "Используйте имя, которое должны видеть клиенты (ваше личное имя или название компании)."
     },
     "poll": {
         "by": "От",

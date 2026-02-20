@@ -68,7 +68,8 @@
             "Zahlungen via Stripe",
             "Individuelles Branding",
             "Prioritärer Support"
-        ]
+        ],
+        "feature_label": "FUNKTION"
     },
     "dashboard": {
         "title": "Dashboard",
@@ -83,7 +84,7 @@
         "conversion_arch": "KONVERSIONS-ARCHITEKTUR",
         "live_stream": "PROTOKOLL_LIVE_STREAM",
         "waiting_pages": "Warten auf erste Seite...",
-        "node_status": "KONTROLLE_DE // ONLINE",
+        "node_status": "SYSTEM // ONLINE",
         "views_index": "Aufrufe-Index",
         "upcoming": "Anstehend",
         "recent_bookings": "Aktuelle Buchungen",
@@ -98,7 +99,7 @@
         "success_booking": "BUCHUNGSERFOLG"
     },
     "admin": {
-        "sovereign_node": "Souveräner_Knoten",
+        "sovereign_node": "Kontrollzentrum",
         "breadcrumb_prefix": "SYSTEM //",
         "overview": "ÜBERSICHT",
         "export_csv": "Export_CSV",
@@ -243,11 +244,11 @@
         "step_2": "Seite",
         "step_3": "Verfügbarkeit",
         "welcome_title": "Willkommen bei Meetrix!",
-        "welcome_subtitle": "Lassen Sie uns mit der Konfiguration Ihres Knotens beginnen.",
-        "name_label": "Ihre Identität",
-        "name_placeholder": "Vollständiger Name",
+        "welcome_subtitle": "Beginnen wir mit der Einrichtung Ihres Terminbereichs.",
+        "name_label": "Anzeigename (Ihr Name oder Unternehmen)",
+        "name_placeholder": "z. B. Ana Silva oder ACME Consulting",
         "timezone_label": "Zeitzone",
-        "page_title": "Zugangsknoten",
+        "page_title": "Buchungsseite",
         "page_subtitle": "Konfigurieren Sie Ihre primäre Planungs-Engine.",
         "p_title_label": "Schnittstellentitel",
         "p_title_placeholder": "z. B. Executive Beratung",
@@ -257,7 +258,8 @@
         "start_time": "Fenster öffnen",
         "end_time": "Fenster schließen",
         "finish": "Synchronisieren",
-        "continue": "Weiter"
+        "continue": "Weiter",
+        "tooltip_name": "Verwenden Sie den Namen, den Ihre Kunden sehen sollen (Ihr persönlicher Name oder Ihr Firmenname)."
     },
     "poll": {
         "by": "Von",

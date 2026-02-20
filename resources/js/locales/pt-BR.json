@@ -68,7 +68,8 @@
             "Pagamentos via Stripe",
             "Branding Customizado",
             "Suporte Prioritário"
-        ]
+        ],
+        "feature_label": "RECURSO"
     },
     "dashboard": {
         "title": "Painel",
@@ -83,7 +84,7 @@
         "conversion_arch": "ARQUITETURA DE CONVERSÃO",
         "live_stream": "PROTOCOLO_LIVE_STREAM",
         "waiting_pages": "Aguardando primeira página...",
-        "node_status": "CONTROLE_BR // ONLINE",
+        "node_status": "SISTEMA // ONLINE",
         "views_index": "Índice de Visualizações",
         "upcoming": "Próximos",
         "recent_bookings": "Agendamentos Recentes",
@@ -98,7 +99,7 @@
         "success_booking": "SUCESSO_AGENDAMENTO"
     },
     "admin": {
-        "sovereign_node": "Nó_Soberano",
+        "sovereign_node": "Central de Controle",
         "breadcrumb_prefix": "SISTEMA //",
         "overview": "VISÃO GERAL",
         "export_csv": "Exportar_CSV",
@@ -243,11 +244,11 @@
         "step_2": "Página",
         "step_3": "Disponibilidade",
         "welcome_title": "Bem-vindo ao Meetrix!",
-        "welcome_subtitle": "Vamos começar configurando seu nó.",
-        "name_label": "Sua Identidade",
-        "name_placeholder": "Nome Completo",
+        "welcome_subtitle": "Vamos começar configurando seu espaço de agendamento.",
+        "name_label": "Nome de exibição (seu nome ou empresa)",
+        "name_placeholder": "Ex: Maria Silva ou Consultoria XYZ",
         "timezone_label": "Fuso Horário",
-        "page_title": "Nó de Acesso",
+        "page_title": "Página de Agendamento",
         "page_subtitle": "Configure seu motor de agendamento primário.",
         "p_title_label": "Título da Interface",
         "p_title_placeholder": "ex: Consultoria Executiva",
@@ -261,7 +262,7 @@
         "email_label": "Contato Direto (E-mail)",
         "password_label": "Chave de Acesso Soberana",
         "confirm_password_label": "Repita a Chave de Acesso",
-        "tooltip_name": "Insira seu nome profissional completo para identificação dos clientes.",
+        "tooltip_name": "Use o nome que os clientes devem ver (seu nome pessoal ou nome da empresa).",
         "tooltip_timezone": "Crucial para cálculos precisos de horários e disponibilidade global.",
         "tooltip_page_title": "Este será o cabeçalho principal na sua página pública de reservas.",
         "tooltip_page_url": "Seu identificador soberano único. Mantenha curto e memorável."

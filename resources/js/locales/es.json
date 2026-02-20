@@ -68,7 +68,8 @@
             "Pagos vía Stripe",
             "Branding Personalizado",
             "Soporte Prioritario"
-        ]
+        ],
+        "feature_label": "FUNCIÓN"
     },
     "dashboard": {
         "title": "Panel",
@@ -83,7 +84,7 @@
         "conversion_arch": "ARQUITECTURA DE CONVERSIÓN",
         "live_stream": "PROTOCOLO_LIVE_STREAM",
         "waiting_pages": "Esperando primera página...",
-        "node_status": "CONTROL_ES // ONLINE",
+        "node_status": "SISTEMA // ONLINE",
         "views_index": "Índice de Vistas",
         "upcoming": "Próximas",
         "recent_bookings": "Reservas Recientes",
@@ -98,7 +99,7 @@
         "success_booking": "EXITO_RESERVA"
     },
     "admin": {
-        "sovereign_node": "Nodo_Soberano",
+        "sovereign_node": "Centro de Control",
         "breadcrumb_prefix": "SISTEMA //",
         "overview": "VISTA GENERAL",
         "export_csv": "Exportar_CSV",
@@ -243,11 +244,11 @@
         "step_2": "Página",
         "step_3": "Disponibilidad",
         "welcome_title": "¡Bienvenido a Meetrix!",
-        "welcome_subtitle": "Empecemos configurando tu nodo.",
-        "name_label": "Tu Identidad",
-        "name_placeholder": "Nombre Completo",
+        "welcome_subtitle": "Empecemos configurando tu espacio de programación.",
+        "name_label": "Nombre visible (tu nombre o empresa)",
+        "name_placeholder": "Ej: Ana Silva o ACME Consulting",
         "timezone_label": "Zona Horaria",
-        "page_title": "Nodo de Acceso",
+        "page_title": "Página de Reservas",
         "page_subtitle": "Configura tu motor de programación primario.",
         "p_title_label": "Título de la Interfaz",
         "p_title_placeholder": "ej: Consultoría Ejecutiva",
@@ -257,7 +258,8 @@
         "start_time": "Apertura de Ventana",
         "end_time": "Cierre de Ventana",
         "finish": "Sincronizar",
-        "continue": "Proceder"
+        "continue": "Proceder",
+        "tooltip_name": "Usa el nombre que deben ver tus clientes (tu nombre personal o el de tu empresa)."
     },
     "poll": {
         "by": "Por",

@@ -68,7 +68,8 @@
             "Stripe Payments",
             "Custom Branding",
             "Priority Support"
-        ]
+        ],
+        "feature_label": "FEATURE"
     },
     "dashboard": {
         "title": "Dashboard",
@@ -83,7 +84,7 @@
         "conversion_arch": "CONVERSION ARCHITECTURE",
         "live_stream": "LIVE_STREAM_PROTOCOL",
         "waiting_pages": "Waiting for first page deployment...",
-        "node_status": "US_EAST_NODE // ONLINE",
+        "node_status": "SYSTEM // ONLINE",
         "views_index": "Views Index",
         "upcoming": "Upcoming",
         "recent_bookings": "Recent Bookings",
@@ -98,7 +99,7 @@
         "success_booking": "SUCCESS_BOOKING"
     },
     "admin": {
-        "sovereign_node": "Sovereign_Node",
+        "sovereign_node": "Control Center",
         "breadcrumb_prefix": "SYSTEM //",
         "overview": "OVERVIEW",
         "export_csv": "Export_CSV",
@@ -283,11 +284,11 @@
         "step_2": "Page",
         "step_3": "Availability",
         "welcome_title": "Welcome to Meetrix!",
-        "welcome_subtitle": "Let's start by configuring your node.",
-        "name_label": "Your Identity",
-        "name_placeholder": "Full Name",
+        "welcome_subtitle": "Let's start setting up your scheduling workspace.",
+        "name_label": "Display Name (your name or company)",
+        "name_placeholder": "e.g. Ana Silva or ACME Consulting",
         "timezone_label": "Temporal Zone",
-        "page_title": "Access Node",
+        "page_title": "Booking Page",
         "page_subtitle": "Configure your primary scheduling engine.",
         "p_title_label": "Interface Title",
         "p_title_placeholder": "e.g. Executive Consultation",
@@ -301,7 +302,7 @@
         "email_label": "Direct Contact (Email)",
         "password_label": "Sovereign Access Key",
         "confirm_password_label": "Repeat Access Key",
-        "tooltip_name": "Enter your full professional name for client recognition.",
+        "tooltip_name": "Use the name clients should see (your personal name or your company name).",
         "tooltip_timezone": "Critical for accurate slot calculations and global availability.",
         "tooltip_page_title": "This will be the main header on your public booking page.",
         "tooltip_page_url": "Your unique sovereign identifier. Keep it short and memorable."

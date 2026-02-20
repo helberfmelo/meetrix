@@ -68,7 +68,8 @@
             "Stripe決済連携",
             "カスタムブランディング",
             "優先サポート"
-        ]
+        ],
+        "feature_label": "機能"
     },
     "dashboard": {
         "title": "ダッシュボード",
@@ -83,7 +84,7 @@
         "conversion_arch": "コンバージョン・アーキテクチャ",
         "live_stream": "LIVE_STREAM_PROTOCOL",
         "waiting_pages": "最初のページを待機中...",
-        "node_status": "CONTROL_JP // ONLINE",
+        "node_status": "システム // ONLINE",
         "views_index": "閲覧インデックス",
         "upcoming": "予定",
         "recent_bookings": "最近の予約",
@@ -98,7 +99,7 @@
         "success_booking": "BOOKING_SUCCESS"
     },
     "admin": {
-        "sovereign_node": "主権ノード",
+        "sovereign_node": "コントロールセンター",
         "breadcrumb_prefix": "SYSTEM //",
         "overview": "概要",
         "export_csv": "CSVエクスポート",
@@ -243,11 +244,11 @@
         "step_2": "ページ設定",
         "step_3": "スケジュール",
         "welcome_title": "Meetrixへようこそ！",
-        "welcome_subtitle": "まずは主権ノードを設定しましょう。",
-        "name_label": "あなたの名前",
-        "name_placeholder": "氏名",
+        "welcome_subtitle": "まずは予約ワークスペースを設定しましょう。",
+        "name_label": "表示名（あなたの名前または会社名）",
+        "name_placeholder": "例: Ana Silva または ACME Consulting",
         "timezone_label": "タイムゾーン",
-        "page_title": "アクセスノード",
+        "page_title": "予約ページ",
         "page_subtitle": "メインのスケジューリング・エンジンを設定します。",
         "p_title_label": "インターフェース名",
         "p_title_placeholder": "例：エグゼクティブ・コンサルティング",
@@ -257,7 +258,8 @@
         "start_time": "開始時間",
         "end_time": "終了時間",
         "finish": "同期する",
-        "continue": "次へ"
+        "continue": "次へ",
+        "tooltip_name": "顧客に表示される名前を入力してください（個人名または会社名）。"
     },
     "poll": {
         "by": "作成者:",

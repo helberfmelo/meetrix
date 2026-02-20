@@ -68,7 +68,8 @@
             "Paiements via Stripe",
             "Branding Personnalisé",
             "Support Prioritaire"
-        ]
+        ],
+        "feature_label": "FONCTION"
     },
     "dashboard": {
         "title": "Tableau de bord",
@@ -83,7 +84,7 @@
         "conversion_arch": "ARCHITECTURE DE CONVERSION",
         "live_stream": "PROTOCOLE_LIVE_STREAM",
         "waiting_pages": "En attente de la première page...",
-        "node_status": "CONTROLE_FR // EN LIGNE",
+        "node_status": "SYSTÈME // EN LIGNE",
         "views_index": "Indice de Vues",
         "upcoming": "À venir",
         "recent_bookings": "Réservations Récentes",
@@ -98,7 +99,7 @@
         "success_booking": "SUCCÈS_RÉSERVATION"
     },
     "admin": {
-        "sovereign_node": "Nœud_Souverain",
+        "sovereign_node": "Centre de Contrôle",
         "breadcrumb_prefix": "SYSTÈME //",
         "overview": "VUE D'ENSEMBLE",
         "export_csv": "Exporter_CSV",
@@ -243,11 +244,11 @@
         "step_2": "Page",
         "step_3": "Disponibilité",
         "welcome_title": "Bienvenue sur Meetrix !",
-        "welcome_subtitle": "Commençons par configurer votre nœud.",
-        "name_label": "Votre Identité",
-        "name_placeholder": "Nom Complet",
+        "welcome_subtitle": "Commençons par configurer votre espace de planification.",
+        "name_label": "Nom affiché (votre nom ou entreprise)",
+        "name_placeholder": "Ex: Ana Silva ou ACME Consulting",
         "timezone_label": "Fuseau Horaire",
-        "page_title": "Nœud d'Accès",
+        "page_title": "Page de Réservation",
         "page_subtitle": "Configurez votre moteur de planification principal.",
         "p_title_label": "Titre de l'Interface",
         "p_title_placeholder": "ex: Consultation Exécutive",
@@ -257,7 +258,8 @@
         "start_time": "Ouverture Fenêtre",
         "end_time": "Fermeture Fenêtre",
         "finish": "Synchroniser",
-        "continue": "Continuer"
+        "continue": "Continuer",
+        "tooltip_name": "Utilisez le nom que vos clients doivent voir (votre nom personnel ou celui de votre entreprise)."
     },
     "poll": {
         "by": "Par",

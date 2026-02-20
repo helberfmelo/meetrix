@@ -56,7 +56,7 @@
                             :style="{ transitionDelay: `${i * 150}ms` }">
                             <div>
                                 <span class="text-meetrix-orange font-black text-[10px] uppercase tracking-[0.4em] mb-12 block">
-                                    <i class="fas fa-microchip mr-2"></i> 0{{ i }} // NODE_MODULE
+                                    <i class="fas fa-microchip mr-2"></i> 0{{ i }} // {{ $t('home.feature_label') }}
                                 </span>
                                 <h3 class="text-3xl font-black text-zinc-950 dark:text-white mb-6 uppercase font-outfit leading-none">{{ $t(`home.feature_${i}_title`) }}</h3>
                                 <p class="text-lg text-slate-500 leading-snug font-medium mb-12">{{ $t(`home.feature_${i}_desc`) }}</p>

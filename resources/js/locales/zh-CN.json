@@ -67,7 +67,8 @@
             "Stripe 支付",
             "自定义品牌",
             "优先支持"
-        ]
+        ],
+        "feature_label": "功能"
     },
     "dashboard": {
         "title": "控制面板",
@@ -82,7 +83,7 @@
         "conversion_arch": "转化架构",
         "live_stream": "LIVE_STREAM_PROTOCOL",
         "waiting_pages": "等待首个页面发布...",
-        "node_status": "CN_NODE // 在线",
+        "node_status": "系统 // 在线",
         "views_index": "视图指数",
         "upcoming": "即将到来",
         "recent_bookings": "近期预约",
@@ -97,7 +98,7 @@
         "success_booking": "预约成功"
     },
     "admin": {
-        "sovereign_node": "主权节点",
+        "sovereign_node": "控制中心",
         "breadcrumb_prefix": "系统 //",
         "overview": "概览",
         "export_csv": "导出_CSV",
@@ -137,11 +138,11 @@
         "step_2": "页面",
         "step_3": "空闲时间",
         "welcome_title": "欢迎使用 Meetrix！",
-        "welcome_subtitle": "让我们从配置您的节点开始。",
-        "name_label": "您的身份",
-        "name_placeholder": "全名",
+        "welcome_subtitle": "我们先来配置你的预约工作区。",
+        "name_label": "显示名称（你的名字或公司名）",
+        "name_placeholder": "例如：Ana Silva 或 ACME Consulting",
         "timezone_label": "时区",
-        "page_title": "访问节点",
+        "page_title": "预约页面",
         "page_subtitle": "配置您的主预约引擎。",
         "p_title_label": "界面标题",
         "p_title_placeholder": "例如：行政咨询",
@@ -151,6 +152,7 @@
         "start_time": "窗口开始",
         "end_time": "窗口结束",
         "finish": "同步",
-        "continue": "继续"
+        "continue": "继续",
+        "tooltip_name": "请使用客户看到的名称（你的个人姓名或公司名称）。"
     }
 }

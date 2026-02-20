@@ -12,7 +12,7 @@
                     <h1 class="text-6xl font-black text-zinc-950 dark:text-white uppercase tracking-tighter leading-none mb-4 font-outfit">
                         Finalize sua <span class="text-meetrix-orange">Assinatura</span>
                     </h1>
-                    <p class="text-slate-500 font-bold text-xs uppercase tracking-widest">Meetrix Sovereign Node // Pro Plan Initialization</p>
+                    <p class="text-slate-500 font-bold text-xs uppercase tracking-widest">Meetrix // Inicialização do Plano Profissional</p>
                 </header>
 
                 <div class="bg-white/80 dark:bg-zinc-900/40 backdrop-blur-3xl rounded-4xl p-12 border border-black/5 dark:border-white/5 shadow-premium space-y-8">
@@ -45,7 +45,7 @@
                     <div class="p-6 bg-white dark:bg-zinc-900/20 rounded-3xl border border-black/5 dark:border-white/5">
                         <i class="fas fa-bolt text-meetrix-orange mb-4 text-xl"></i>
                         <h4 class="text-[10px] font-black uppercase tracking-widest text-zinc-950 dark:text-white mb-2">Ativação Instantânea</h4>
-                        <p class="text-[8px] text-slate-500 leading-relaxed font-bold uppercase tracking-wider">Seu nó estará pronto em segundos.</p>
+                        <p class="text-[8px] text-slate-500 leading-relaxed font-bold uppercase tracking-wider">Sua conta profissional estará pronta em segundos.</p>
                     </div>
                 </div>
             </div>

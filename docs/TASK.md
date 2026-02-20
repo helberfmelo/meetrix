@@ -7,12 +7,15 @@
 - [x] Implementar SoftDeletes na tabela de Bookings
 - [x] Garantir Green Suite localmente (`CouponTest` e `DashboardTest`)
 - [x] Organizar documentação na pasta `docs/`
+- [x] Restaurar execução de PHP no servidor de produção (Bug de `.htaccess`)
+- [x] Sincronizar banco de dados de produção (migrate nuclear com seed)
+- [x] Validar cadastro de novo cliente em produção
+- [x] Validar cupom de 100% OFF (`cupom100`) em produção
+- [x] Validar redirecionamento e dados do Dashboard em produção
+- [x] Validar fluxo de relogin (cliente novo e existente) sem retorno indevido ao onboarding
 
 ## Em Andamento [/]
-- [x] Restaurar execução de PHP no servidor de produção (Bug de .htaccess)
-- [x] Sincronizar banco de dados de produção (Migrate nuclear)
+- [ ] Nenhum item crítico em andamento nesta fase
 
 ## Pendente
-- [ ] Validar cadastro de novo cliente em produção
-- [ ] Validar cupom de 100% OFF (cupom100) em produção
-- [ ] Validar redirecionamento e dados do Dashboard em produção
+- [ ] Monitoramento pós-estabilização (janela curta)

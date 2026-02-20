@@ -141,10 +141,12 @@
 <script setup>
 import { ref, reactive } from 'vue';
 import { useRouter } from 'vue-router';
+import { useI18n } from 'vue-i18n';
 import { useAuthStore } from '../stores/auth';
 import { usePageStore } from '../stores/page';
 import axios from '../axios';
 
+const { t } = useI18n();
 const router = useRouter();
 const authStore = useAuthStore();
 const pageStore = usePageStore();
@@ -217,7 +219,7 @@ const nextStep = async () => {
         router.push('/dashboard');
         
     } catch (error) {
-        alert("Failed to complete setup: " + (error.response?.data?.message || error.message));
+        alert(t('admin.save_failed') + ": " + (error.response?.data?.message || error.message));
     } finally {
         loading.value = false;
     }

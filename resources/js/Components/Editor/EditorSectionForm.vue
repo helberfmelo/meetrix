@@ -1,8 +1,7 @@
 <template>
     <div class="space-y-6">
         <p class="text-sm text-gray-500 leading-relaxed">
-            Customize the questions you ask your customers when they book with you. 
-            Default fields like Name and Email are managed automatically.
+            {{ $t('admin.form_description') }}
         </p>
 
         <div class="space-y-3">
@@ -16,22 +15,22 @@
                         <input 
                             v-model="field.label" 
                             class="flex-1 px-3 py-2 text-sm font-medium border-2 border-transparent focus:border-indigo-600 rounded-lg outline-none transition-all"
-                            placeholder="Field Label (e.g. Phone Number)"
+                            :placeholder="$t('admin.field_label_placeholder')"
                         >
                         <select 
                             v-model="field.type" 
                             class="px-3 py-2 text-sm border-2 border-transparent focus:border-indigo-600 rounded-lg outline-none bg-white"
                         >
-                            <option value="text">Text</option>
-                            <option value="email">Email</option>
-                            <option value="tel">Phone</option>
-                            <option value="textarea">Long Text</option>
+                            <option value="text">{{ $t('admin.text_field') }}</option>
+                            <option value="email">{{ $t('admin.email_field') }}</option>
+                            <option value="tel">{{ $t('admin.phone_field') }}</option>
+                            <option value="textarea">{{ $t('admin.long_text_field') }}</option>
                         </select>
                     </div>
                     <div class="flex items-center space-x-4 px-1">
                         <label class="flex items-center text-xs font-bold text-gray-500 cursor-pointer">
                             <input type="checkbox" v-model="field.required" class="mr-2 rounded text-indigo-600">
-                            Required
+                            {{ $t('admin.required_label') }}
                         </label>
                         <span class="text-[10px] text-gray-300 font-mono">ID: {{ field.name }}</span>
                     </div>
@@ -51,14 +50,16 @@
             @click="addField"
             class="w-full py-3 border-2 border-dashed border-gray-200 rounded-xl text-gray-400 font-bold hover:border-indigo-300 hover:text-indigo-600 transition-all text-sm"
         >
-            + Add Question
+            {{ $t('admin.add_question') }}
         </button>
     </div>
 </template>
 
 <script setup>
 import { ref, watch, onMounted } from 'vue';
+import { useI18n } from 'vue-i18n';
 
+const { t } = useI18n();
 const props = defineProps(['modelValue']);
 const emit = defineEmits(['update:modelValue', 'update']);
 
@@ -71,8 +72,8 @@ onMounted(() => {
     } else {
         // Default set
         fields.value = [
-            { name: 'customer_name', label: 'Full Name', type: 'text', required: true },
-            { name: 'customer_email', label: 'Email Address', type: 'email', required: true },
+            { name: 'customer_name', label: t('admin.full_name_label'), type: 'text', required: true },
+            { name: 'customer_email', label: t('admin.email_address_label'), type: 'email', required: true },
         ];
     }
 });
@@ -83,7 +84,7 @@ const addField = () => {
     const id = 'field_' + Math.random().toString(36).substr(2, 5);
     fields.value.push({
         name: id,
-        label: 'New Question',
+        label: t('admin.new_question_placeholder'),
         type: 'text',
         required: false
     });

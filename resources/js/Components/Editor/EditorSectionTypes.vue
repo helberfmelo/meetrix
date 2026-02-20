@@ -1,8 +1,8 @@
 <template>
     <div class="space-y-6">
         <div class="flex justify-between items-center">
-            <h4 class="font-medium text-gray-900">Service Types</h4>
-            <button @click="addType" class="text-sm text-indigo-600 hover:text-indigo-800 font-medium">+ Add New</button>
+            <h4 class="font-medium text-gray-900">{{ $t('admin.service_types') }}</h4>
+            <button @click="addType" class="text-sm text-indigo-600 hover:text-indigo-800 font-medium">{{ $t('admin.add_new') }}</button>
         </div>
 
         <div class="space-y-4">
@@ -13,7 +13,7 @@
                 
                 <div class="grid grid-cols-1 gap-4">
                     <div>
-                        <label class="block text-xs font-semibold text-gray-500 uppercase">Service Name</label>
+                        <label class="block text-xs font-semibold text-gray-500 uppercase">{{ $t('admin.service_name') }}</label>
                         <input 
                             type="text" 
                             v-model="type.name"
@@ -23,7 +23,7 @@
                     </div>
                     <div class="grid grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-xs font-semibold text-gray-500 uppercase">Duration (mins)</label>
+                            <label class="block text-xs font-semibold text-gray-500 uppercase">{{ $t('admin.duration_mins') }}</label>
                             <input 
                                 type="number" 
                                 v-model.number="type.duration_minutes"
@@ -32,7 +32,7 @@
                             >
                         </div>
                         <div>
-                            <label class="block text-xs font-semibold text-gray-500 uppercase">Price (BRL)</label>
+                            <label class="block text-xs font-semibold text-gray-500 uppercase">{{ $t('admin.price_currency', { currency: type.currency || 'BRL' }) }}</label>
                             <input 
                                 type="number" 
                                 v-model.number="type.price"
@@ -45,13 +45,16 @@
             </div>
 
             <div v-if="modelValue.appointmentTypes.length === 0" class="text-center py-8 border-2 border-dashed border-gray-200 rounded-lg">
-                <p class="text-sm text-gray-400">No services defined. Add one to start booking.</p>
+                <p class="text-sm text-gray-400">{{ $t('admin.no_services_defined') }}</p>
             </div>
         </div>
     </div>
 </template>
 
 <script setup>
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 const props = defineProps({
     modelValue: {
         type: Object,
@@ -68,7 +71,7 @@ const update = () => {
 
 const addType = () => {
     const newTypes = [...props.modelValue.appointmentTypes, {
-        name: 'New Service',
+        name: t('admin.new_service_placeholder'),
         duration_minutes: 30,
         price: 0,
         currency: 'BRL',

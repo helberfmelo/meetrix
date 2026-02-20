@@ -9,8 +9,8 @@
                 <h1 class="text-2xl font-black mb-2">{{ poll.title }}</h1>
                 <p class="text-indigo-100 text-sm opacity-80">{{ poll.description }}</p>
                 <div class="mt-4 flex items-center text-xs font-bold text-indigo-200 uppercase tracking-widest">
-                    <span class="mr-2">By</span>
-                    <span class="text-white">{{ poll.user?.name || 'Meetrix User' }}</span>
+                    <span class="mr-2">{{ $t('poll.by') }}</span>
+                    <span class="text-white">{{ poll.user?.name || $t('poll.anonymous_user') }}</span>
                 </div>
             </div>
 
@@ -18,24 +18,24 @@
                 <!-- Customer Info -->
                 <div class="grid grid-cols-2 gap-4">
                     <div class="space-y-1">
-                        <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest px-1">Your Name</label>
-                        <input v-model="voter.customer_name" type="text" placeholder="John Doe" class="w-full px-4 py-3 rounded-xl border-2 border-gray-50 focus:border-indigo-600 outline-none">
+                        <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest px-1">{{ $t('poll.your_name') }}</label>
+                        <input v-model="voter.customer_name" type="text" :placeholder="$t('poll.name_placeholder')" class="w-full px-4 py-3 rounded-xl border-2 border-gray-50 focus:border-indigo-600 outline-none">
                     </div>
                     <div class="space-y-1">
-                        <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest px-1">Your Email</label>
-                        <input v-model="voter.customer_email" type="email" placeholder="john@example.com" class="w-full px-4 py-3 rounded-xl border-2 border-gray-50 focus:border-indigo-600 outline-none">
+                        <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest px-1">{{ $t('poll.your_email') }}</label>
+                        <input v-model="voter.customer_email" type="email" :placeholder="$t('poll.email_placeholder')" class="w-full px-4 py-3 rounded-xl border-2 border-gray-50 focus:border-indigo-600 outline-none">
                     </div>
                 </div>
 
                 <div class="space-y-3">
                     <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest px-1 flex justify-between">
-                        Choose your availability
-                        <span>{{ totalVotes }} votes so far</span>
+                        {{ $t('poll.choose_availability') }}
+                        <span>{{ $t('poll.votes_count', { count: totalVotes }) }}</span>
                     </h3>
                     
                     <div v-for="option in poll.options" :key="option.id" class="relative group">
                         <label 
-                            :class="[votedOptions.has(option.id) ? 'border-indigo-600 bg-indigo-50/30' : 'border-gray-50 hover:border-gray-200']"
+                            :class="[selectedOptions.includes(option.id) ? 'border-indigo-600 bg-indigo-50/30' : 'border-gray-50 hover:border-gray-200']"
                             class="flex items-center p-5 rounded-2xl border-2 cursor-pointer transition-all"
                         >
                             <input type="checkbox" :value="option.id" v-model="selectedOptions" class="hidden">
@@ -49,14 +49,14 @@
                             </div>
                             <div class="flex flex-col items-end">
                                 <span class="text-xs font-black text-gray-900">{{ option.votes_count }}</span>
-                                <span class="text-[10px] text-gray-400 uppercase font-bold">votes</span>
+                                <span class="text-[10px] text-gray-400 uppercase font-bold">{{ $t('poll.votes_label') }}</span>
                             </div>
                         </label>
                     </div>
                 </div>
 
-                <button @click="submitVotes" :disabled="submitting || !selectedOptions.length" class="w-full btn-primary py-5 shadow-lg shadow-indigo-100 disabled:opacity-50">
-                    {{ submitting ? 'Submitting...' : 'Submit My Availability' }}
+                <button @click="submitVotes" :disabled="submitting || !selectedOptions.length" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-5 rounded-2xl shadow-lg shadow-indigo-100 disabled:opacity-50 transition-all">
+                    {{ submitting ? $t('poll.submitting') : $t('poll.submit_availability') }}
                 </button>
             </div>
         </div>
@@ -66,8 +66,10 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue';
 import { useRoute } from 'vue-router';
+import { useI18n } from 'vue-i18n';
 import axios from '../axios';
 
+const { t, locale } = useI18n();
 const route = useRoute();
 const poll = ref(null);
 const loading = ref(true);
@@ -75,7 +77,6 @@ const submitting = ref(false);
 
 const voter = ref({ customer_name: '', customer_email: '' });
 const selectedOptions = ref([]);
-const votedOptions = ref(new Set()); // Local tracking for immediate feedback
 
 const totalVotes = computed(() => {
     if (!poll.value) return 0;
@@ -87,23 +88,23 @@ const fetchPoll = async () => {
         const response = await axios.get(`/api/p/polls/${route.params.slug}`);
         poll.value = response.data;
     } catch (e) {
-        alert("Poll not found or inactive");
+        alert(t('poll.not_found'));
     } finally {
         loading.value = false;
     }
 };
 
 const formatDate = (date) => {
-    return new Date(date).toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' });
+    return new Date(date).toLocaleDateString(locale.value, { weekday: 'long', month: 'short', day: 'numeric' });
 };
 
 const formatTime = (date) => {
-    return new Date(date).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+    return new Date(date).toLocaleTimeString(locale.value, { hour: 'numeric', minute: '2-digit' });
 };
 
 const submitVotes = async () => {
     if (!voter.value.customer_name || !voter.value.customer_email) {
-        return alert("Please enter your name and email");
+        return alert(t('poll.enter_info_alert'));
     }
 
     submitting.value = true;
@@ -112,11 +113,11 @@ const submitVotes = async () => {
         for (const optionId of selectedOptions.value) {
             await axios.post(`/api/poll-options/${optionId}/vote`, voter.value);
         }
-        alert("Thank you for your response!");
+        alert(t('poll.thanks_alert'));
         fetchPoll(); // Refresh counts
         selectedOptions.value = [];
     } catch (e) {
-        alert("Submission failed. You might have already voted for these options.");
+        alert(t('poll.submit_failed_alert'));
     } finally {
         submitting.value = false;
     }

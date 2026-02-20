@@ -1,9 +1,9 @@
 <template>
     <div class="space-y-6">
         <div class="flex justify-between items-center">
-            <h1 class="text-3xl font-black text-gray-900">Teams</h1>
+            <h1 class="text-3xl font-black text-gray-900">{{ $t('common.teams') }}</h1>
             <button @click="showCreateModal = true" class="btn-primary">
-                + Create Team
+                + {{ $t('admin.create_team') }}
             </button>
         </div>
 
@@ -29,15 +29,15 @@
                     <div class="flex -space-x-2">
                         <div v-for="i in 3" :key="i" class="h-6 w-6 rounded-full border-2 border-white bg-gray-200"></div>
                     </div>
-                    <span class="text-xs text-gray-500 font-medium">Coming soon: Members list</span>
+                    <span class="text-xs text-gray-500 font-medium">{{ $t('admin.members_coming_soon') }}</span>
                 </div>
 
                 <div class="flex space-x-2">
                     <button @click="inviteMember(team)" class="flex-1 py-2 text-xs font-bold border-2 border-gray-100 rounded-lg hover:border-indigo-200 hover:text-indigo-600 transition-all">
-                        Invite
+                        {{ $t('admin.invite_member') }}
                     </button>
                     <router-link :to="'/teams/' + team.id" class="flex-1 py-2 text-xs font-bold bg-gray-50 text-gray-600 text-center rounded-lg hover:bg-gray-100">
-                        Settings
+                        {{ $t('common.settings') }}
                     </router-link>
                 </div>
             </div>
@@ -45,29 +45,29 @@
 
         <div v-else class="bg-white dark:bg-zinc-900/50 p-12 text-center rounded-[40px] border border-black/5 dark:border-white/5 shadow-premium">
             <div class="text-5xl mb-4 text-meetrix-orange"><i class="fas fa-users-viewfinder"></i></div>
-            <h2 class="text-xl font-bold text-gray-900 mb-2">No teams yet</h2>
+            <h2 class="text-xl font-bold text-gray-900 mb-2">{{ $t('admin.no_teams_yet') }}</h2>
             <p class="text-gray-500 max-w-sm mx-auto mb-8">
-                Create a team to collaborate with other professionals and manage shared scheduling pages.
+                {{ $t('admin.teams_description') }}
             </p>
             <button @click="showCreateModal = true" class="btn-primary">
-                Create your first team
+                {{ $t('admin.create_first_team') }}
             </button>
         </div>
 
-        <!-- Create Modal (Simple prompt for now) -->
+        <!-- Create Modal -->
         <div v-if="showCreateModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
             <div class="bg-white w-full max-w-md rounded-3xl shadow-2xl p-8 animate-in zoom-in-95 duration-200">
-                <h2 class="text-2xl font-black text-gray-900 mb-6">Create New Team</h2>
+                <h2 class="text-2xl font-black text-gray-900 mb-6">{{ $t('admin.create_new_team') }}</h2>
                 <div class="space-y-4">
                     <div class="space-y-1">
-                        <label class="text-xs font-bold text-gray-400 uppercase tracking-wider px-1">Team Name</label>
-                        <input v-model="newTeam.name" type="text" placeholder="e.g. Sales Team" class="w-full px-5 py-4 rounded-xl border-2 border-gray-100 focus:border-indigo-600 outline-none transition-all">
+                        <label class="text-xs font-bold text-gray-400 uppercase tracking-wider px-1">{{ $t('admin.team_name') }}</label>
+                        <input v-model="newTeam.name" type="text" :placeholder="$t('admin.team_name_placeholder')" class="w-full px-5 py-4 rounded-xl border-2 border-gray-100 focus:border-indigo-600 outline-none transition-all">
                     </div>
                 </div>
                 <div class="flex space-x-3 mt-8">
-                    <button @click="showCreateModal = false" class="flex-1 py-4 font-bold text-gray-400 hover:text-gray-600">Cancel</button>
+                    <button @click="showCreateModal = false" class="flex-1 py-4 font-bold text-gray-400 hover:text-gray-600">{{ $t('admin.cancel') }}</button>
                     <button @click="createTeam" :disabled="creating" class="flex-1 btn-primary py-4">
-                        {{ creating ? 'Creating...' : 'Create Team' }}
+                        {{ creating ? $t('admin.creating') : $t('admin.create_team') }}
                     </button>
                 </div>
             </div>
@@ -78,7 +78,9 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import axios from '../axios';
+import { useI18n } from 'vue-i18n';
 
+const { t } = useI18n();
 const teams = ref([]);
 const loading = ref(true);
 const creating = ref(false);
@@ -106,21 +108,21 @@ const createTeam = async () => {
         newTeam.value.name = '';
         fetchTeams();
     } catch (e) {
-        alert("Failed to create team");
+        alert(t('admin.failed_create_team'));
     } finally {
         creating.value = false;
     }
 };
 
 const inviteMember = async (team) => {
-    const email = prompt("Enter member email address:");
+    const email = prompt(t('admin.enter_email'));
     if (!email) return;
 
     try {
         await axios.post(`/api/teams/${team.id}/invite`, { email });
-        alert("Member invited successfully!");
+        alert(t('admin.invited_success'));
     } catch (e) {
-        alert(e.response?.data?.message || "Invitation failed");
+        alert(e.response?.data?.message || t('admin.invitation_failed'));
     }
 };
 

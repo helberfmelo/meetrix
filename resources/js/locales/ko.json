@@ -8,7 +8,11 @@
         "settings": "설정",
         "profile": "프로필",
         "back": "뒤로",
-        "loading": "로딩 중..."
+        "loading": "로딩 중...",
+        "teams": "팀",
+        "integrations": "연동",
+        "polls": "투표",
+        "coupons": "쿠폰"
     },
     "login": {
         "title": "계정에 로그인",
@@ -82,7 +86,35 @@
         "views_index": "조회수 지수",
         "upcoming": "예정된 일정",
         "recent_bookings": "최근 예약",
-        "no_bookings": "아직 예약이 없습니다."
+        "no_bookings": "아직 예약이 없습니다.",
+        "retention": "유지율",
+        "waiting_first_page": "첫 페이지 배포 대기 중...",
+        "impressions": "총 노출 수",
+        "page_reach": "페이지 도달",
+        "intent_signals": "의도 신호",
+        "slot_interaction": "슬롯 상호작용",
+        "confirmed_conversions": "확정 전환",
+        "success_booking": "예약 성공"
+    },
+    "admin": {
+        "sovereign_node": "소버린_노드",
+        "breadcrumb_prefix": "시스템 //",
+        "overview": "개요",
+        "export_csv": "CSV_내보내기",
+        "historical_data": "기록 데이터 프로토콜 // 시스템 메모리",
+        "client": "고객",
+        "service": "서비스",
+        "date_time": "날짜 / 시간",
+        "status": "상태",
+        "instance_name": "인스턴스_이름",
+        "analytics": "분석",
+        "control_panel": "제어_판넬",
+        "editor": "에디터",
+        "active_deployments": "활성 배포 채널",
+        "internal_name": "내부 이름",
+        "new_instance": "신규",
+        "initializing": "초기화 중...",
+        "activate": "활성화"
     },
     "booking": {
         "select_service": "서비스 선택",

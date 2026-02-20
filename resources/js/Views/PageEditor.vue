@@ -3,19 +3,19 @@
         <!-- Sidebar (Editor Controls) -->
         <div :class="[isPreviewMode ? 'hidden lg:flex' : 'flex']" class="w-80 bg-white border-r border-gray-200 flex-col z-20 shadow-xl">
             <div class="p-4 border-b border-gray-100 flex items-center justify-between">
-                <h2 class="font-bold text-gray-800">Editor</h2>
+                <h2 class="font-bold text-gray-800">{{ $t('admin.editor') }}</h2>
                 <div class="flex items-center space-x-2">
                     <button @click="isPreviewMode = !isPreviewMode" class="lg:hidden text-xs font-bold text-indigo-600">
-                        {{ isPreviewMode ? 'Back to Edit' : 'Preview' }}
+                        {{ isPreviewMode ? $t('admin.back_to_edit') : $t('admin.preview') }}
                     </button>
-                    <router-link to="/dashboard" class="text-sm text-gray-500 hover:text-indigo-600">Exit</router-link>
+                    <router-link to="/dashboard" class="text-sm text-gray-500 hover:text-indigo-600">{{ $t('admin.exit') }}</router-link>
                 </div>
             </div>
             
             <!-- Tabs/Sections -->
             <nav class="flex-1 overflow-y-auto p-4 space-y-2">
                 <button 
-                    v-for="section in sections" 
+                    v-for="section in translatedSections" 
                     :key="section.id"
                     @click="activeSection = section.id"
                     :class="[
@@ -31,7 +31,7 @@
             <div class="p-4 border-t border-black/5 dark:border-white/5">
                 <button @click="saveChanges" class="w-full bg-zinc-950 text-white dark:bg-meetrix-orange dark:text-zinc-950 py-3 rounded-xl font-black text-[10px] uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-xl flex justify-center items-center gap-2">
                     <i v-if="saving" class="fas fa-circle-notch fa-spin"></i>
-                    {{ saving ? 'Saving...' : 'Save Changes' }}
+                    {{ saving ? $t('admin.saving') : $t('admin.save_changes') }}
                 </button>
             </div>
         </div>
@@ -53,7 +53,7 @@
         <!-- Live Preview Area -->
         <div class="flex-1 bg-gray-100 flex items-center justify-center p-4 lg:p-8 relative overflow-hidden">
             <div class="absolute top-4 right-4 bg-white/80 backdrop-blur px-3 py-1 rounded-full text-xs font-mono text-gray-500 z-10">
-                Live Preview
+                {{ $t('admin.live_preview') }}
             </div>
             
             <!-- Mock Device/Window -->
@@ -87,6 +87,7 @@
 import { ref, computed, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { usePageStore } from '../stores/page';
+import { useI18n } from 'vue-i18n';
 
 // Placeholder section components
 import EditorSectionWhat from '../Components/Editor/EditorSectionWhat.vue';
@@ -96,9 +97,11 @@ import EditorSectionForm from '../Components/Editor/EditorSectionForm.vue';
 import EditorSectionAnalytics from '../Components/Editor/EditorSectionAnalytics.vue';
 import EditorSectionBranding from '../Components/Editor/EditorSectionBranding.vue';
 
+const { t } = useI18n();
 const route = useRoute();
 const pageStore = usePageStore();
 const saving = ref(false);
+const isPreviewMode = ref(false);
 
 const pageConfig = ref({
     title: '',
@@ -113,15 +116,20 @@ const pageConfig = ref({
 const activeSection = ref('what');
 
 const sections = [
-    { id: 'what', label: 'Basic Info', icon: 'fas fa-info-circle', component: EditorSectionWhat },
-    { id: 'when', label: 'Availability', icon: 'fas fa-calendar-alt', component: EditorSectionWhen },
-    { id: 'types', label: 'Services', icon: 'fas fa-tags', component: EditorSectionTypes },
-    { id: 'form', label: 'Booking Form', icon: 'fas fa-list-alt', component: EditorSectionForm },
-    { id: 'analytics', label: 'Analytics', icon: 'fas fa-chart-line', component: EditorSectionAnalytics },
-    { id: 'branding', label: 'Branding', icon: 'fas fa-palette', component: EditorSectionBranding },
+    { id: 'what', labelKey: 'admin.basic_info', icon: 'fas fa-info-circle', component: EditorSectionWhat },
+    { id: 'when', labelKey: 'admin.availability', icon: 'fas fa-calendar-alt', component: EditorSectionWhen },
+    { id: 'types', labelKey: 'admin.services', icon: 'fas fa-tags', component: EditorSectionTypes },
+    { id: 'form', labelKey: 'admin.booking_form', icon: 'fas fa-list-alt', component: EditorSectionForm },
+    { id: 'analytics', labelKey: 'admin.analytics', icon: 'fas fa-chart-line', component: EditorSectionAnalytics },
+    { id: 'branding', labelKey: 'admin.branding', icon: 'fas fa-palette', component: EditorSectionBranding },
 ];
 
-const currentSection = computed(() => sections.find(s => s.id === activeSection.value));
+const translatedSections = computed(() => sections.map(s => ({
+    ...s,
+    label: t(s.labelKey)
+})));
+
+const currentSection = computed(() => translatedSections.value.find(s => s.id === activeSection.value));
 
 onMounted(async () => {
     if (route.params.slug) {
@@ -163,10 +171,10 @@ const saveChanges = async () => {
             await pageStore.updateAppointmentTypes(pageConfig.value.id, pageConfig.value.appointmentTypes);
         }
 
-        alert('Changes saved successfully!');
+        alert(t('admin.save_success'));
     } catch (error) {
         console.error("Save failed", error);
-        alert('Failed to save changes. Please check the console.');
+        alert(t('admin.save_failed'));
     } finally {
         saving.value = false;
     }

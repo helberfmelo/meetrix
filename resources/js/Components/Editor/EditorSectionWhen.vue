@@ -1,8 +1,8 @@
 <template>
     <div class="space-y-6">
         <div class="flex justify-between items-center">
-            <h4 class="font-medium text-gray-900">Weekly Availability</h4>
-            <button @click="addRule" class="text-sm text-indigo-600 hover:text-indigo-800 font-medium">+ Add Rule</button>
+            <h4 class="font-medium text-gray-900">{{ $t('admin.weekly_availability') }}</h4>
+            <button @click="addRule" class="text-sm text-indigo-600 hover:text-indigo-800 font-medium">{{ $t('admin.add_rule') }}</button>
         </div>
 
         <div class="space-y-4">
@@ -14,10 +14,10 @@
                 <div class="space-y-4">
                     <!-- Days Picker -->
                     <div>
-                        <label class="block text-xs font-semibold text-gray-500 uppercase mb-2">Days of Week</label>
+                        <label class="block text-xs font-semibold text-gray-500 uppercase mb-2">{{ $t('admin.days_of_week') }}</label>
                         <div class="flex flex-wrap gap-2">
                             <button 
-                                v-for="day in days" 
+                                v-for="day in translatedDays" 
                                 :key="day.id"
                                 @click="toggleDay(index, day.id)"
                                 :class="[
@@ -35,7 +35,7 @@
                     <!-- Times -->
                     <div class="grid grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-xs font-semibold text-gray-500 uppercase">Start Time</label>
+                            <label class="block text-xs font-semibold text-gray-500 uppercase">{{ $t('admin.start_time') }}</label>
                             <input 
                                 type="time" 
                                 v-model="rule.start_time"
@@ -44,7 +44,7 @@
                             >
                         </div>
                         <div>
-                            <label class="block text-xs font-semibold text-gray-500 uppercase">End Time</label>
+                            <label class="block text-xs font-semibold text-gray-500 uppercase">{{ $t('admin.end_time') }}</label>
                             <input 
                                 type="time" 
                                 v-model="rule.end_time"
@@ -57,7 +57,7 @@
             </div>
 
             <div v-if="rules.length === 0" class="text-center py-8 border-2 border-dashed border-gray-200 rounded-lg">
-                <p class="text-sm text-gray-400">No availability set. Add a rule to define when you can be booked.</p>
+                <p class="text-sm text-gray-400">{{ $t('admin.no_availability_set') }}</p>
             </div>
         </div>
     </div>
@@ -65,7 +65,9 @@
 
 <script setup>
 import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
 
+const { t } = useI18n();
 const props = defineProps({
     modelValue: {
         type: Object,
@@ -76,14 +78,19 @@ const props = defineProps({
 const emit = defineEmits(['update:modelValue', 'update']);
 
 const days = [
-    { id: 1, label: 'Monday' },
-    { id: 2, label: 'Tuesday' },
-    { id: 3, label: 'Wednesday' },
-    { id: 4, label: 'Thursday' },
-    { id: 5, label: 'Friday' },
-    { id: 6, label: 'Saturday' },
-    { id: 0, label: 'Sunday' },
+    { id: 1, labelKey: 'admin.monday' },
+    { id: 2, labelKey: 'admin.tuesday' },
+    { id: 3, labelKey: 'admin.wednesday' },
+    { id: 4, labelKey: 'admin.thursday' },
+    { id: 5, labelKey: 'admin.friday' },
+    { id: 6, labelKey: 'admin.saturday' },
+    { id: 0, labelKey: 'admin.sunday' },
 ];
+
+const translatedDays = computed(() => days.map(d => ({
+    ...d,
+    label: t(d.labelKey)
+})));
 
 const rules = computed(() => props.modelValue.availability);
 

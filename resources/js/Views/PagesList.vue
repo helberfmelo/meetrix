@@ -61,12 +61,12 @@
 
         <div v-else class="bg-white dark:bg-zinc-900/50 p-20 text-center rounded-[40px] border border-black/5 dark:border-white/5 shadow-premium">
             <div class="text-6xl mb-6 text-meetrix-orange"><i class="fas fa-magic-wand-sparkles"></i></div>
-            <h2 class="text-2xl font-black text-gray-900 mb-2">Build your first booking page</h2>
+            <h2 class="text-2xl font-black text-gray-900 dark:text-white mb-2">{{ $t('admin.build_first_page_title') }}</h2>
             <p class="text-gray-500 max-w-sm mx-auto mb-8">
-                Create a professional page to start accepting appointments in minutes.
+                {{ $t('admin.build_first_page_desc') }}
             </p>
-            <button @click="showCreateModal = true" class="btn-primary py-4 px-8 text-lg">
-                Get Started
+            <button @click="showCreateModal = true" class="px-8 py-4 bg-meetrix-orange text-zinc-950 rounded-2xl font-black text-xs uppercase tracking-[0.2em] hover:scale-105 active:scale-95 transition-all shadow-xl shadow-meetrix-orange/20">
+                {{ $t('home.get_started') }}
             </button>
         </div>
 
@@ -81,7 +81,7 @@
                     </div>
                 </div>
                 <div class="mt-12 flex gap-4">
-                    <button @click="showCreateModal = false" class="flex-1 py-4 font-black text-[10px] uppercase tracking-widest text-slate-400 hover:text-zinc-950 dark:hover:text-white transition-colors">Cancel</button>
+                    <button @click="showCreateModal = false" class="flex-1 py-4 font-black text-[10px] uppercase tracking-widest text-slate-400 hover:text-zinc-950 dark:hover:text-white transition-colors">{{ $t('common.cancel') }}</button>
                     <button @click="createPage" :disabled="creating" class="flex-1 py-4 bg-meetrix-orange text-zinc-950 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-lg shadow-meetrix-orange/20">
                         {{ creating ? $t('admin.initializing') : $t('admin.activate') }}
                     </button>
@@ -94,8 +94,10 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
+import { useI18n } from 'vue-i18n';
 import axios from '../axios';
 
+const { t } = useI18n();
 const pages = ref([]);
 const loading = ref(true);
 const showCreateModal = ref(false);
@@ -125,19 +127,19 @@ const createPage = async () => {
         showCreateModal.value = false;
         router.push(`/dashboard/editor/${response.data.slug}`);
     } catch (e) {
-        alert("Failed to create page. Try a different title.");
+        alert(t('admin.save_failed'));
     } finally {
         creating.value = false;
     }
 };
 
 const deletePage = async (id) => {
-    if (!confirm("Delete this page? This cannot be undone.")) return;
+    if (!confirm(t('admin.destroy_vector_confirm'))) return;
     try {
         await axios.delete(`/api/pages/${id}`);
         fetchPages();
     } catch (e) {
-        alert("Delete failed");
+        alert(t('admin.save_failed'));
     }
 };
 

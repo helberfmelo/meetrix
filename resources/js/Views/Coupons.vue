@@ -1,16 +1,16 @@
 <template>
     <div class="space-y-12 animate-in fade-in slide-in-from-bottom-8 duration-1000">
-        <!-- Header: Asymmetric Tension -->
+        <!-- Header -->
         <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-8 py-8 border-b border-black/5 dark:border-white/5 mb-12">
             <div class="max-w-2xl">
                 <h1 class="text-[clamp(2.5rem,8vw,5rem)] font-black text-zinc-950 dark:text-white uppercase tracking-tighter leading-[0.85] mb-4">
-                    DISCOUNT // <span class="text-meetrix-orange">VECTORS</span>
+                    DISCOUNT // <span class="text-meetrix-orange">{{ $t('common.coupons') }}</span>
                 </h1>
-                <p class="text-slate-500 font-medium tracking-tight text-sm">Manage promotional access and regional pricing overrides through secure coupon vectors.</p>
+                <p class="text-slate-500 font-medium tracking-tight text-sm">{{ $t('admin.coupons_description') }}</p>
             </div>
             <button @click="showCreateModal = true" 
                 class="px-8 py-4 bg-meetrix-orange text-zinc-950 font-black text-xs uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-xl shadow-meetrix-orange/20 rounded-full flex items-center gap-3">
-                <span>NEW_VECTOR</span>
+                <span>{{ $t('admin.new_vector') }}</span>
                 <span class="w-5 h-5 bg-zinc-950 text-white rounded-full flex items-center justify-center text-[10px]"><i class="fas fa-plus"></i></span>
             </button>
         </div>
@@ -22,11 +22,11 @@
                     <table class="w-full text-left">
                         <thead>
                             <tr class="border-b border-black/5 dark:border-white/5 bg-zinc-50 dark:bg-zinc-950">
-                                <th class="px-8 py-6 text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">Code</th>
-                                <th class="px-8 py-6 text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">Discount</th>
-                                <th class="px-8 py-6 text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">Usage</th>
-                                <th class="px-8 py-6 text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">Expires</th>
-                                <th class="px-8 py-6 text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 text-right">Actions</th>
+                                <th class="px-8 py-6 text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">{{ $t('admin.code') }}</th>
+                                <th class="px-8 py-6 text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">{{ $t('admin.discount') }}</th>
+                                <th class="px-8 py-6 text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">{{ $t('admin.usage') }}</th>
+                                <th class="px-8 py-6 text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">{{ $t('admin.expires') }}</th>
+                                <th class="px-8 py-6 text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 text-right">{{ $t('admin.actions') }}</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-black/5 dark:divide-white/5">
@@ -39,7 +39,7 @@
                                 </td>
                                 <td class="px-8 py-6">
                                     <span class="text-xs font-black px-3 py-1 bg-zinc-100 dark:bg-zinc-800 rounded-full text-zinc-600 dark:text-slate-400">
-                                        {{ coupon.discount_type === 'percent' ? `${coupon.discount_value}%` : `$${coupon.discount_value}` }} OFF
+                                        {{ coupon.discount_type === 'percent' ? `${coupon.discount_value}%` : `$${coupon.discount_value}` }} {{ $t('admin.off') }}
                                     </span>
                                 </td>
                                 <td class="px-8 py-6">
@@ -53,23 +53,23 @@
                                 </td>
                                 <td class="px-8 py-6">
                                     <span class="text-xs font-black" :class="isExpired(coupon.expires_at) ? 'text-red-500' : 'text-slate-400'">
-                                        {{ coupon.expires_at ? new Date(coupon.expires_at).toLocaleDateString() : 'NEVER' }}
+                                        {{ coupon.expires_at ? new Date(coupon.expires_at).toLocaleDateString() : $t('admin.never') }}
                                     </span>
                                 </td>
                                 <td class="px-8 py-6 text-right">
                                     <div class="flex items-center justify-end gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
                                         <button @click="toggleStatus(coupon)" class="p-2 hover:text-meetrix-orange transition-colors">
-                                            <span class="text-xs font-black uppercase tracking-tighter">{{ coupon.is_active ? 'DEACTIVATE' : 'ACTIVATE' }}</span>
+                                            <span class="text-xs font-black uppercase tracking-tighter">{{ coupon.is_active ? $t('admin.deactivate') : $t('admin.activate') }}</span>
                                         </button>
                                         <button @click="deleteCoupon(coupon)" class="p-2 hover:text-red-500 transition-colors">
-                                            <span class="text-xs font-black uppercase tracking-tighter">DELETE</span>
+                                            <span class="text-xs font-black uppercase tracking-tighter">{{ $t('admin.delete') }}</span>
                                         </button>
                                     </div>
                                 </td>
                             </tr>
                             <tr v-if="coupons.length === 0">
                                 <td colspan="5" class="px-8 py-20 text-center">
-                                    <p class="text-[10px] font-black uppercase tracking-[0.5em] text-slate-400">No active vectors detected.</p>
+                                    <p class="text-[10px] font-black uppercase tracking-[0.5em] text-slate-400">{{ $t('admin.no_active_vectors') }}</p>
                                 </td>
                             </tr>
                         </tbody>
@@ -78,32 +78,32 @@
             </div>
         </div>
 
-        <!-- Create Modal: Floating Sovereign -->
+        <!-- Create Modal -->
         <div v-if="showCreateModal" class="fixed inset-0 z-[10000] flex items-center justify-center p-6 bg-zinc-950/80 backdrop-blur-xl animate-in fade-in duration-300">
             <div class="bg-white dark:bg-zinc-900 w-full max-w-xl rounded-[40px] p-12 border border-white/5 shadow-2xl animate-in zoom-in-95 duration-500">
                 <div class="flex justify-between items-start mb-12">
-                    <h3 class="text-3xl font-black text-zinc-950 dark:text-white uppercase tracking-tighter">CREATE // VECTOR</h3>
+                    <h3 class="text-3xl font-black text-zinc-950 dark:text-white uppercase tracking-tighter">{{ $t('admin.create_vector') }}</h3>
                     <button @click="showCreateModal = false" class="text-slate-400 hover:text-zinc-950 dark:hover:text-white transition-colors text-2xl">×</button>
                 </div>
 
                 <form @submit.prevent="createCoupon" class="space-y-8">
                     <div class="space-y-2">
-                        <label class="text-[10px] font-black uppercase tracking-widest text-slate-500">Vector Code</label>
+                        <label class="text-[10px] font-black uppercase tracking-widest text-slate-500">{{ $t('admin.vector_code') }}</label>
                         <input v-model="form.code" type="text" placeholder="MEETRIXPRO20"
                             class="w-full bg-zinc-50 dark:bg-zinc-950 border border-black/5 dark:border-white/10 rounded-2xl px-6 py-4 text-sm font-black uppercase tracking-widest focus:border-meetrix-orange outline-none transition-all dark:text-white">
                     </div>
 
                     <div class="grid grid-cols-2 gap-8">
                         <div class="space-y-2">
-                            <label class="text-[10px] font-black uppercase tracking-widest text-slate-500">Type</label>
+                            <label class="text-[10px] font-black uppercase tracking-widest text-slate-500">{{ $t('admin.type') }}</label>
                             <select v-model="form.discount_type" 
                                 class="w-full bg-zinc-50 dark:bg-zinc-950 border border-black/5 dark:border-white/10 rounded-2xl px-6 py-4 text-sm font-black uppercase tracking-widest focus:border-meetrix-orange outline-none transition-all dark:text-white">
-                                <option value="percent">Percentage (%)</option>
-                                <option value="fixed">Fixed Amount ($)</option>
+                                <option value="percent">{{ $t('admin.percentage') }}</option>
+                                <option value="fixed">{{ $t('admin.fixed_amount') }}</option>
                             </select>
                         </div>
                         <div class="space-y-2">
-                            <label class="text-[10px] font-black uppercase tracking-widest text-slate-500">Value</label>
+                            <label class="text-[10px] font-black uppercase tracking-widest text-slate-500">{{ $t('admin.value') }}</label>
                             <input v-model="form.discount_value" type="number" 
                                 class="w-full bg-zinc-50 dark:bg-zinc-950 border border-black/5 dark:border-white/10 rounded-2xl px-6 py-4 text-sm font-black focus:border-meetrix-orange outline-none transition-all dark:text-white">
                         </div>
@@ -111,12 +111,12 @@
 
                     <div class="grid grid-cols-2 gap-8">
                         <div class="space-y-2">
-                            <label class="text-[10px] font-black uppercase tracking-widest text-slate-500">Max Usages</label>
-                            <input v-model="form.max_usages" type="number" placeholder="Leave empty for unlimited"
+                            <label class="text-[10px] font-black uppercase tracking-widest text-slate-500">{{ $t('admin.max_usages') }}</label>
+                            <input v-model="form.max_usages" type="number" :placeholder="$t('admin.unlimited_placeholder')"
                                 class="w-full bg-zinc-50 dark:bg-zinc-950 border border-black/5 dark:border-white/10 rounded-2xl px-6 py-4 text-sm font-black focus:border-meetrix-orange outline-none transition-all dark:text-white">
                         </div>
                         <div class="space-y-2">
-                            <label class="text-[10px] font-black uppercase tracking-widest text-slate-500">Expiry Date</label>
+                            <label class="text-[10px] font-black uppercase tracking-widest text-slate-500">{{ $t('admin.expiry_date') }}</label>
                             <input v-model="form.expires_at" type="date"
                                 class="w-full bg-zinc-50 dark:bg-zinc-950 border border-black/5 dark:border-white/10 rounded-2xl px-6 py-4 text-sm font-black focus:border-meetrix-orange outline-none transition-all dark:text-white">
                         </div>
@@ -125,7 +125,7 @@
                     <div class="pt-8">
                         <button type="submit" :disabled="loading"
                             class="w-full py-5 bg-zinc-950 dark:bg-white text-white dark:text-zinc-950 font-black text-xs uppercase tracking-widest rounded-3xl hover:bg-meetrix-orange dark:hover:bg-meetrix-orange transition-all disabled:opacity-50">
-                            {{ loading ? 'INITIALIZING...' : 'ACTIVATE VECTOR' }}
+                            {{ loading ? $t('admin.initializing') : $t('admin.activate_vector') }}
                         </button>
                     </div>
                 </form>
@@ -137,7 +137,9 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import axios from '../axios';
+import { useI18n } from 'vue-i18n';
 
+const { t } = useI18n();
 const coupons = ref([]);
 const showCreateModal = ref(false);
 const loading = ref(false);
@@ -183,7 +185,7 @@ const toggleStatus = async (coupon) => {
 };
 
 const deleteCoupon = async (coupon) => {
-    if (!confirm('Destroy this discount vector?')) return;
+    if (!confirm(t('admin.destroy_vector_confirm'))) return;
     try {
         await axios.delete(`/api/coupons/${coupon.id}`);
         fetchCoupons();

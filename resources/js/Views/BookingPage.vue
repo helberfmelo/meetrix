@@ -54,7 +54,7 @@
                         </div>
                     </div>
 
-                    <div class="mt-8 text-[9px] text-slate-600 font-black uppercase tracking-[0.4em]">
+                    <div class="mt-8 text-zinc-600 dark:text-zinc-400 font-black uppercase text-[8px] tracking-[0.4em] leading-none mb-1 opacity-50">
                         {{ $t('home.footer_tagline').split('//')[0] }} // <span class="text-white">{{ $t('home.footer_tagline').split('//')[1] }}</span>
                     </div>
                 </div>
@@ -218,8 +218,10 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue';
 import { useRoute } from 'vue-router';
+import { useI18n } from 'vue-i18n';
 import axios from 'axios';
 
+const { t, locale } = useI18n();
 const route = useRoute();
 const page = ref(null);
 const loading = ref(true);
@@ -260,9 +262,9 @@ const dateStyle = (date) => {
 
 const formFields = computed(() => {
     return page.value?.config?.form_fields || [
-        { name: 'customer_name', label: 'Nome Completo', type: 'text', required: true },
-        { name: 'customer_email', label: 'E-mail', type: 'email', required: true },
-        { name: 'phone', label: 'WhatsApp (com DDD)', type: 'text', required: true },
+        { name: 'customer_name', label: t('admin.full_name_label'), type: 'text', required: true },
+        { name: 'customer_email', label: t('admin.email_address_label'), type: 'email', required: true },
+        { name: 'phone', label: t('admin.phone_field'), type: 'text', required: true },
     ];
 });
 
@@ -353,19 +355,19 @@ const submitBooking = async () => {
             }, 3000);
         }
     } catch (error) {
-        alert("Agendamento falhou. Por favor, tente novamente.");
+        alert(t('booking.failed_alert'));
     } finally {
         submitting.value = false;
     }
 };
 
 const formatCurrency = (value) => {
-    return new Intl.NumberFormat(undefined, { style: 'currency', currency: page.value?.config?.currency || 'BRL' }).format(value);
+    return new Intl.NumberFormat(locale.value, { style: 'currency', currency: page.value?.config?.currency || 'BRL' }).format(value);
 };
 
 const getDayName = (dateStr) => {
     const date = new Date(dateStr);
-    return date.toLocaleDateString(undefined, { weekday: 'short' });
+    return date.toLocaleDateString(locale.value, { weekday: 'short' });
 };
 
 const getDayNum = (dateStr) => {
@@ -373,7 +375,7 @@ const getDayNum = (dateStr) => {
 };
 
 const formatDate = (dateStr) => {
-    return new Date(dateStr).toLocaleDateString(undefined, { 
+    return new Date(dateStr).toLocaleDateString(locale.value, { 
         weekday: 'long', 
         year: 'numeric', 
         month: 'long', 

@@ -1,9 +1,9 @@
 <template>
     <div class="space-y-6">
         <div class="flex justify-between items-center">
-            <h1 class="text-3xl font-black text-gray-900">Meeting Polls</h1>
+            <h1 class="text-3xl font-black text-gray-900">{{ $t('admin.meeting_polls') }}</h1>
             <router-link to="/dashboard/polls/create" class="btn-primary">
-                + New Poll
+                + {{ $t('admin.new_poll') }}
             </router-link>
         </div>
 
@@ -18,15 +18,15 @@
                         <i class="fas fa-poll-h"></i>
                     </div>
                     <span :class="poll.is_active ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600'" class="px-2 py-1 text-[10px] font-bold uppercase rounded-full">
-                        {{ poll.is_active ? 'Active' : 'Draft' }}
+                        {{ poll.is_active ? $t('admin.active') : $t('admin.draft') }}
                     </span>
                 </div>
                 <h3 class="text-lg font-bold text-gray-900 mb-1">{{ poll.title }}</h3>
-                <p class="text-xs text-gray-500 mb-4">{{ poll.options_count }} time options</p>
+                <p class="text-xs text-gray-500 mb-4">{{ poll.options_count }} {{ $t('admin.time_options') }}</p>
                 
                 <div class="flex space-x-2 pt-4 border-t border-gray-50">
                     <button @click="copyLink(poll.slug)" class="flex-1 py-2 text-xs font-bold bg-indigo-50 text-indigo-600 rounded-lg hover:bg-indigo-100">
-                        Copy Link
+                        {{ $t('admin.copy_link') }}
                     </button>
                     <button @click="deletePoll(poll.id)" class="px-3 py-2 text-slate-400 hover:text-red-500 transition-colors">
                         <i class="fas fa-trash-alt"></i>
@@ -37,12 +37,12 @@
 
         <div v-else class="bg-white dark:bg-zinc-900/50 p-12 text-center rounded-[40px] border border-black/5 dark:border-white/5 shadow-premium">
             <div class="text-5xl mb-4 text-meetrix-orange"><i class="fas fa-vote-yea"></i></div>
-            <h2 class="text-xl font-bold text-gray-900 mb-2">Create multiple options</h2>
+            <h2 class="text-xl font-bold text-gray-900 mb-2">{{ $t('admin.create_multiple_options') }}</h2>
             <p class="text-gray-500 max-w-sm mx-auto mb-8">
-                Not sure when to meet? Create a poll with several time options and let your invitees vote for the best one.
+                {{ $t('admin.poll_description') }}
             </p>
             <router-link to="/dashboard/polls/create" class="btn-primary">
-                Create a Poll
+                {{ $t('admin.create_a_poll') }}
             </router-link>
         </div>
     </div>
@@ -51,7 +51,9 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import axios from '../axios';
+import { useI18n } from 'vue-i18n';
 
+const { t } = useI18n();
 const polls = ref([]);
 const loading = ref(true);
 
@@ -69,16 +71,16 @@ const fetchPolls = async () => {
 const copyLink = (slug) => {
     const url = `${window.location.origin}/vote/${slug}`;
     navigator.clipboard.writeText(url);
-    alert("Poll link copied to clipboard!");
+    alert(t('admin.poll_copied'));
 };
 
 const deletePoll = async (id) => {
-    if (!confirm("Delete this poll?")) return;
+    if (!confirm(t('admin.delete_poll_confirm'))) return;
     try {
         await axios.delete(`/api/polls/${id}`);
         fetchPolls();
     } catch (e) {
-        alert("Failed to delete poll");
+        alert(t('admin.failed_delete_poll'));
     }
 };
 

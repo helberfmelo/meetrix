@@ -8,7 +8,11 @@
         "settings": "Definições",
         "profile": "Perfil",
         "back": "Voltar",
-        "loading": "A carregar..."
+        "loading": "A carregar...",
+        "teams": "Equipas",
+        "integrations": "Integrações",
+        "polls": "Sondagens",
+        "coupons": "Cupões"
     },
     "login": {
         "title": "Aceda à sua conta",
@@ -39,7 +43,7 @@
         "pricing_title_2": "Justo.",
         "pricing_title_3": "Impacto",
         "pricing_title_4": "Pro.",
-        "billing_monthly": "Faturação Mensal",
+        "billing_monthly": "Faturação Mensual",
         "billing_annual": "Faturação Anual",
         "plan_free": "Individual",
         "plan_pro": "Professional",
@@ -82,7 +86,35 @@
         "views_index": "Índice de Visualizações",
         "upcoming": "Próximos",
         "recent_bookings": "Agendamentos Recentes",
-        "no_bookings": "Nenhum agendamento ainda."
+        "no_bookings": "Nenhum agendamento ainda.",
+        "retention": "Retenção",
+        "waiting_first_page": "A aguardar o primeiro destacamento de página...",
+        "impressions": "Impressões Totais",
+        "page_reach": "ALCANCE_PAGINA",
+        "intent_signals": "Sinais de Intenção",
+        "slot_interaction": "INTERACAO_SLOT",
+        "confirmed_conversions": "Conversões Confirmadas",
+        "success_booking": "SUCESSO_AGENDAMENTO"
+    },
+    "admin": {
+        "sovereign_node": "Nó_Soberano",
+        "breadcrumb_prefix": "SISTEMA //",
+        "overview": "VISÃO GERAL",
+        "export_csv": "Exportar_CSV",
+        "historical_data": "Protocolo_Dados_Historicos // Memoria_Sistema",
+        "client": "Cliente",
+        "service": "Serviço",
+        "date_time": "Data / Hora",
+        "status": "Estado",
+        "instance_name": "Nome_Instancia",
+        "analytics": "Analíticos",
+        "control_panel": "Painel_Controlo",
+        "editor": "EDITOR",
+        "active_deployments": "Canais de Implementação Ativos",
+        "internal_name": "Nome Interno",
+        "new_instance": "NOVO",
+        "initializing": "A INICIALIZAR...",
+        "activate": "ATIVAR"
     },
     "booking": {
         "select_service": "Selecione o Serviço",

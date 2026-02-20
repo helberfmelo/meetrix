@@ -2,7 +2,7 @@
     <div class="space-y-8">
         <!-- Logo Upload (Mock) -->
         <div>
-            <label class="block text-sm font-bold text-gray-700 mb-2 uppercase tracking-widest">Logo URL</label>
+            <label class="block text-sm font-bold text-gray-700 mb-2 uppercase tracking-widest">{{ $t('admin.logo_url_label') }}</label>
             <input 
                 type="text" 
                 v-model="config.logo_url" 
@@ -10,12 +10,12 @@
                 placeholder="https://example.com/logo.png"
                 class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all outline-none"
             />
-            <p class="mt-2 text-[10px] text-gray-500 font-bold uppercase tracking-widest">Pro Tip: Use a transparent PNG for better results.</p>
+            <p class="mt-2 text-[10px] text-gray-500 font-bold uppercase tracking-widest">{{ $t('admin.logo_pro_tip') }}</p>
         </div>
 
         <!-- Primary Color -->
         <div>
-            <label class="block text-sm font-bold text-gray-700 mb-2 uppercase tracking-widest">Primary Color</label>
+            <label class="block text-sm font-bold text-gray-700 mb-2 uppercase tracking-widest">{{ $t('admin.primary_color_label') }}</label>
             <div class="flex items-center gap-4">
                 <input 
                     type="color" 
@@ -35,25 +35,25 @@
 
         <!-- Typography -->
         <div>
-            <label class="block text-sm font-bold text-gray-700 mb-2 uppercase tracking-widest">Typography</label>
+            <label class="block text-sm font-bold text-gray-700 mb-2 uppercase tracking-widest">{{ $t('admin.typography_label') }}</label>
             <select 
                 v-model="config.custom_font" 
                 @change="update"
                 class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500 transition-all outline-none appearance-none"
             >
-                <option value="Inter">Inter (Standard)</option>
-                <option value="Outfit">Outfit (Premium)</option>
-                <option value="system-ui">System Default</option>
+                <option value="Inter">{{ $t('admin.inter_standard') }}</option>
+                <option value="Outfit">{{ $t('admin.outfit_premium') }}</option>
+                <option value="system-ui">{{ $t('admin.system_default') }}</option>
             </select>
         </div>
 
         <!-- Pro Features (WhatsApp) -->
         <div class="p-6 bg-zinc-950 rounded-3xl text-white relative overflow-hidden">
-            <div class="absolute right-0 top-0 bg-meetrix-orange text-[8px] font-black px-2 py-1 uppercase tracking-widest">PRO FEATURE</div>
+            <div class="absolute right-0 top-0 bg-meetrix-orange text-[8px] font-black px-2 py-1 uppercase tracking-widest">{{ $t('admin.pro_feature_tag') }}</div>
             <div class="flex items-start gap-4">
                 <div class="flex-1">
-                    <h4 class="text-sm font-black uppercase tracking-widest mb-1 text-meetrix-orange">WhatsApp Pro</h4>
-                    <p class="text-xs text-slate-500 font-medium">Automatic reminders via WhatsApp.</p>
+                    <h4 class="text-sm font-black uppercase tracking-widest mb-1 text-meetrix-orange">{{ $t('admin.whatsapp_pro') }}</h4>
+                    <p class="text-xs text-slate-500 font-medium">{{ $t('admin.whatsapp_pro_desc') }}</p>
                 </div>
                 <label class="relative inline-flex items-center cursor-pointer">
                     <input type="checkbox" v-model="config.whatsapp_enabled" @change="update" class="sr-only peer">

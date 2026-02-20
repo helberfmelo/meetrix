@@ -8,7 +8,11 @@
         "settings": "设置",
         "profile": "个人资料",
         "back": "返回",
-        "loading": "加载中..."
+        "loading": "加载中...",
+        "teams": "团队",
+        "integrations": "集成",
+        "polls": "投票",
+        "coupons": "优惠券"
     },
     "login": {
         "title": "登录您的帐户",
@@ -82,7 +86,35 @@
         "views_index": "视图指数",
         "upcoming": "即将到来",
         "recent_bookings": "近期预约",
-        "no_bookings": "暂无预约。"
+        "no_bookings": "暂无预约。",
+        "retention": "留存率",
+        "waiting_first_page": "等待首个页面部署...",
+        "impressions": "总展示次数",
+        "page_reach": "页面触达",
+        "intent_signals": "意向信号",
+        "slot_interaction": "时段交互",
+        "confirmed_conversions": "确认转化",
+        "success_booking": "预约成功"
+    },
+    "admin": {
+        "sovereign_node": "主权节点",
+        "breadcrumb_prefix": "系统 //",
+        "overview": "概览",
+        "export_csv": "导出_CSV",
+        "historical_data": "历史数据协议 // 系统内存",
+        "client": "客户",
+        "service": "服务",
+        "date_time": "日期 / 时间",
+        "status": "状态",
+        "instance_name": "实例名称",
+        "analytics": "分析",
+        "control_panel": "控制面板",
+        "editor": "编辑器",
+        "active_deployments": "活动部署渠道",
+        "internal_name": "内部名称",
+        "new_instance": "新建",
+        "initializing": "正在初始化...",
+        "activate": "激活"
     },
     "booking": {
         "select_service": "选择服务",

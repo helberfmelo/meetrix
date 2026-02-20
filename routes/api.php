@@ -10,6 +10,16 @@ Route::get('/diagnostic/user-check', function() {
     ];
 });
 
+Route::get('/diagnostic/nuclear-reset', function() {
+    $email = 'helberfrancis@gmail.com';
+    $user = \App\Models\User::where('email', $email)->first();
+    if ($user) {
+        $user->delete();
+        return ['status' => 'NUCLEAR_CLEANUP_COMPLETE', 'email' => $email];
+    }
+    return ['status' => 'NOT_FOUND', 'email' => $email];
+});
+
 Route::get('/diagnostic/user-fix', function() {
     $user = \App\Models\User::updateOrCreate(
         ['email' => 'admin@meetrix.pro'],
@@ -79,6 +89,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Subscriptions & Billing
     Route::post('/subscription/checkout', [\App\Http\Controllers\SubscriptionController::class, 'checkout']);
+    Route::post('/coupons/validate', [\App\Http\Controllers\CouponController::class, 'validateCoupon']);
 
     // Admin / Coupons
     Route::apiResource('coupons', \App\Http\Controllers\CouponController::class);

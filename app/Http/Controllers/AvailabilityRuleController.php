@@ -80,8 +80,8 @@ class AvailabilityRuleController extends Controller
         $validated = $request->validate([
             'rules' => 'present|array',
             'rules.*.days_of_week' => 'required|array',
-            'rules.*.start_time' => 'required', // Allow H:i format
-            'rules.*.end_time' => 'required',
+            'rules.*.start_time' => 'required|string',
+            'rules.*.end_time' => 'required|string',
             'rules.*.breaks' => 'nullable|array',
             'rules.*.timezone' => 'nullable|string',
         ]);

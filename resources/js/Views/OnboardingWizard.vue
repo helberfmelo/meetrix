@@ -324,14 +324,14 @@ const nextStep = async () => {
         }]);
 
         // 3. Mark Onboarding as Complete
+        console.log('Finalizing onboarding status...');
         await axios.post('/api/onboarding/complete');
         
-        // Refresh user data to get onboarding_completed_at
-        // Re-using login logic or a dedicated user fetch if needed
-        // For now, redirection to dashboard will trigger the check
-        router.push('/dashboard');
-        
+        console.log('Step 3 Successful. Redirecting to Checkout...');
+        loading.value = false;
+        router.push('/checkout');
     } catch (error) {
+        console.error('Onboarding finalization error:', error);
         alert(t('admin.save_failed') + ": " + (error.response?.data?.message || error.message));
     } finally {
         loading.value = false;

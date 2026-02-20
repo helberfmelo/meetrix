@@ -158,6 +158,13 @@ onMounted(() => {
     }, { threshold: 0.1 });
 
     document.querySelectorAll('.reveal-on-scroll').forEach(el => observer.observe(el));
+
+    // Emergency Reveal: If observer fails or user doesn't scroll immediately
+    setTimeout(() => {
+        document.querySelectorAll('.reveal-on-scroll').forEach(el => {
+            el.classList.add('in-view');
+        });
+    }, 2000);
 });
 </script>
 

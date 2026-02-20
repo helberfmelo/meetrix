@@ -13,11 +13,16 @@ import Home from './Views/Home.vue';
 import PageEditor from './Views/PageEditor.vue';
 import OnboardingWizard from './Views/OnboardingWizard.vue';
 import BookingsView from './Views/BookingsView.vue';
+import Checkout from './Views/Checkout.vue';
 
 const routes = [
     {
         path: '/onboarding',
         component: OnboardingWizard
+    },
+    {
+        path: '/checkout',
+        component: Checkout
     },
     {
         path: '/',

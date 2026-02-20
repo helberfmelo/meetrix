@@ -59,4 +59,29 @@ class CouponController extends Controller
         $coupon->delete();
         return response()->json(null, 204);
     }
+
+    /**
+     * Validate a coupon code.
+     */
+    public function validateCoupon(Request $request)
+    {
+        $request->validate(['code' => 'required|string']);
+
+        $coupon = Coupon::where('code', $request->code)
+            ->where('is_active', true)
+            ->first();
+
+        if (!$coupon || !$coupon->isValid()) {
+            return response()->json(['message' => 'Invalid or expired coupon.'], 422);
+        }
+
+        return response()->json([
+            'valid' => true,
+            'coupon' => [
+                'code' => $coupon->code,
+                'type' => $coupon->discount_type,
+                'value' => (float) $coupon->discount_value,
+            ]
+        ]);
+    }
 }

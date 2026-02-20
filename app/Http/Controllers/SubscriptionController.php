@@ -56,11 +56,21 @@ class SubscriptionController extends Controller
         if ($request->filled('coupon_code')) {
             $coupon = Coupon::where('code', $request->coupon_code)->first();
             if ($coupon && $coupon->isValid()) {
-                // If 100% discount, we apply a Stripe coupon or a 100% discount trail
-                // For simplicity, we apply a Stripe Coupon ID linked to the code if exists
-                // Otherwise, we use a 100% discount trail (Stripe internally)
+                // If 100% discount, we can bypass Stripe if explicitly free
+                if ($coupon->type === 'percent' && $coupon->value == 100) {
+                    $user->update([
+                        'subscription_tier' => $request->plan,
+                        'trial_ends_at' => now()->addMonth(), // Give a month even if 100% off
+                    ]);
+                    return response()->json([
+                        'success' => true,
+                        'message' => 'Sovereign Node activated via 100% discount.',
+                        'redirect_url' => url('/dashboard?subscription=free_success')
+                    ]);
+                }
+
                 $sessionOptions['discounts'] = [[
-                    'coupon' => $coupon->code, // Assumes Stripe Coupon exists with same ID
+                    'coupon' => $coupon->code,
                 ]];
             }
         }

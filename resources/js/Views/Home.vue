@@ -95,7 +95,7 @@
                         </button>
                     </div>
                 </div>
-                <div class="lg:w-1/2 grid grid-cols-1 sm:grid-cols-2 gap-px bg-zinc-200 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-800 overflow-hidden rounded-5xl shadow-2xl">
+                <div class="w-full lg:w-1/2 grid grid-cols-1 sm:grid-cols-2 gap-px bg-zinc-200 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-800 overflow-hidden rounded-5xl shadow-2xl">
                     <!-- Free -->
                     <div class="bg-white dark:bg-zinc-900 p-8 sm:p-12 flex flex-col h-full justify-between">
                         <div>

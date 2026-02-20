@@ -244,7 +244,12 @@ class BookingController extends Controller
 
             DB::commit();
 
-            Mail::to($booking->customer_email)->send(new BookingConfirmation($booking));
+            try {
+                Mail::to($booking->customer_email)->send(new BookingConfirmation($booking));
+            } catch (\Throwable $mailException) {
+                // Booking is already committed. Mail failures should not invalidate the booking.
+                Log::error('Booking confirmation mail failed: ' . $mailException->getMessage());
+            }
 
             if ($page->config['whatsapp_enabled'] ?? false) {
                 try {

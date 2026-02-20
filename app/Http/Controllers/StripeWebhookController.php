@@ -58,7 +58,11 @@ class StripeWebhookController extends Controller
                     'amount_paid' => $amountTotal,
                 ]);
 
-                Mail::to($booking->customer_email)->send(new BookingConfirmation($booking));
+                try {
+                    Mail::to($booking->customer_email)->send(new BookingConfirmation($booking));
+                } catch (\Throwable $mailException) {
+                    Log::error('Booking confirmation mail failed via webhook: ' . $mailException->getMessage());
+                }
                 Log::info("Booking {$bookingId} marked as confirmed via Stripe Webhook.");
             }
         }

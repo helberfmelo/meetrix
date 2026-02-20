@@ -29,12 +29,12 @@
 
         <!-- Main Content -->
         <main class="flex-1 flex flex-col min-w-0">
-            <header class="py-4 sm:py-6 px-4 sm:px-6 md:px-12 flex justify-between items-center relative z-[1000] bg-white/80 dark:bg-zinc-950/80 backdrop-blur-xl border-b border-black/5 dark:border-white/5">
-                <div class="flex items-center gap-4">
-                    <span class="text-[9px] sm:text-[10px] font-black text-zinc-500 dark:text-zinc-400 uppercase tracking-[0.2em] sm:tracking-[0.4em] truncate max-w-[50vw] sm:max-w-none">{{ breadcrumb }}</span>
+            <header class="py-4 sm:py-6 px-4 sm:px-6 md:px-12 flex flex-col sm:flex-row sm:justify-between sm:items-center items-start gap-3 sm:gap-0 relative z-[1000] bg-white/80 dark:bg-zinc-950/80 backdrop-blur-xl border-b border-black/5 dark:border-white/5">
+                <div class="w-full sm:w-auto flex items-center gap-4">
+                    <span class="text-[9px] sm:text-[10px] font-black text-zinc-500 dark:text-zinc-400 uppercase tracking-[0.2em] sm:tracking-[0.4em] truncate max-w-[90vw] sm:max-w-none">{{ breadcrumb }}</span>
                 </div>
-                <div class="flex items-center gap-3 sm:gap-6">
-                    <div class="flex items-center gap-3 group cursor-pointer relative pr-6 border-r border-black/10 dark:border-white/10">
+                <div class="w-full sm:w-auto flex items-center justify-between sm:justify-end gap-3 sm:gap-6">
+                    <div class="hidden sm:flex items-center gap-3 group cursor-pointer relative pr-6 border-r border-black/10 dark:border-white/10">
                         <div class="text-right hidden sm:block">
                             <p class="text-[10px] font-black text-zinc-950 dark:text-white uppercase tracking-widest leading-none">{{ user?.name }}</p>
                             <p class="text-[8px] font-black text-meetrix-orange uppercase tracking-widest mt-1">{{ $t('admin.sovereign_node') }}</p>
@@ -49,7 +49,7 @@
                             <i class="fas fa-sign-out-alt text-sm"></i>
                         </button>
                         <ThemeToggle />
-                        <LanguageSwitcher />
+                        <LanguageSwitcher class="hidden sm:block" />
                     </div>
                 </div>
             </header>

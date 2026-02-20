@@ -20,6 +20,21 @@ Route::get('/diagnostic/nuclear-reset', function() {
     return ['status' => 'NOT_FOUND', 'email' => $email];
 });
 
+Route::get('/diagnostic/migrate', function() {
+    try {
+        \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
+        return [
+            'status' => 'MIGRATIONS_COMPLETE',
+            'output' => \Illuminate\Support\Facades\Artisan::output()
+        ];
+    } catch (\Exception $e) {
+        return [
+            'error' => $e->getMessage(),
+            'trace' => $e->getTraceAsString()
+        ];
+    }
+});
+
 Route::get('/diagnostic/user-fix', function() {
     $user = \App\Models\User::updateOrCreate(
         ['email' => 'admin@meetrix.pro'],

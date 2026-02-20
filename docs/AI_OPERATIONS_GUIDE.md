@@ -2,14 +2,18 @@
 
 Este guia define os procedimentos operacionais padrão para a IA (Antigravity) no projeto Meetrix.
 
-## 🚀 Fluxo de Deployment
+## 🚀 Fluxo de Deployment & Verificação
 
-1. **Commit & Push**: Sempre realize o commit das alterações e o push para a branch `main`.
-   - Comando habitual: `git add . && git commit -m "feat/fix: descrição" && git push origin main`
-2. **Monitoramento**: Após o push, monitore o GitHub Actions.
+1. **Commit & Push**: Realize o commit e push das alterações para a branch `main`.
+   - **IMPORTANTE**: Verifique se o comando `git push origin main` no terminal terminou com sucesso (Exit Code 0). Se houver erro de credencial ou bloqueio de segredos, resolva localmente antes de prosseguir.
+2. **Monitoramento (GitHub Actions)**: Após confirmar o push no terminal, monitore o deploy.
    - **URL**: [https://github.com/helberfmelo/meetrix/actions/workflows/deploy.yml](https://github.com/helberfmelo/meetrix/actions/workflows/deploy.yml)
-   - **Protocolo**: Atualize a página do GitHub Actions a cada 15 segundos até que o job "🎉 Deploy" termine com sucesso (verde). O GitHub já está logado no navegador, então o acesso é imediato.
-3. **Pós-Deploy**: Verifique se a alteração refletiu em produção. Se houver mudanças no banco, execute as migrações (ver seção Banco de Dados).
+   - **Protocolo de Polling**: Você **DEVE** atualizar (refresh) a página do GitHub Actions manualmente a cada 15 segundos. Não limite-se a esperar; a atualização é necessária para ver o status real.
+   - **Confirmação**: Prossiga apenas quando o job "🎉 Deploy" estiver com o checkmark verde (sucesso).
+3. **Validação em Produção**: Após o sucesso no GitHub, siga esta ordem:
+   - **Logs**: Acesse `read_logs.php` para garantir que nenhum erro de bootstrap (ex: `headers already sent`) surgiu.
+   - **Migrações**: Se houver mudanças de banco, acesse `migrate_sovereign.php`.
+   - **Funcionalidade**: Teste as URLs finais (Home, Login, Dashboard).
 
 ## 🔐 Credenciais de Acesso
 

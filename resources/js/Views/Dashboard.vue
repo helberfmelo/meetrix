@@ -182,6 +182,10 @@ const funnelData = computed(() => [
 ]);
 
 const checkOnboarding = () => {
+    if (authStore.user?.is_super_admin) {
+        return false;
+    }
+
     if (authStore.user && !authStore.user.onboarding_completed_at) {
         router.push('/onboarding');
         return true;

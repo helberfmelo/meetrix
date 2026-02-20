@@ -75,7 +75,7 @@
                         <div class="w-3 h-3 rounded-full bg-green-400"></div>
                     </div>
                     <div class="flex-1 bg-white border border-gray-200 rounded px-2 py-0.5 text-[10px] sm:text-xs text-center text-gray-400 truncate">
-                        meetrix.io/p/{{ pageConfig.slug }}
+                        meetrix.opentshost.com/p/{{ pageConfig.slug }}
                     </div>
                 </div>
                 

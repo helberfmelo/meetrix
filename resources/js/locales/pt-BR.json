@@ -220,7 +220,7 @@
         "system_default": "Padrão do Sistema",
         "pro_feature_tag": "RECURSO PRO",
         "whatsapp_pro": "WhatsApp Pro",
-        "whatsapp_pro_desc": "Lembretes automáticos via WhatsApp.",
+        "whatsapp_pro_desc": "Lembrete automático via WhatsApp.",
         "no_active_vectors": "Nenhum cupom ativo encontrado.",
         "create_vector": "CRIAR // CUPOM",
         "vector_code": "Código do cupom",
@@ -316,7 +316,8 @@
         "tooltip_name": "Use o nome que os clientes devem ver (seu nome pessoal ou nome da empresa).",
         "tooltip_timezone": "Crucial para cálculos precisos de horários e disponibilidade global.",
         "tooltip_page_title": "Este será o cabeçalho principal na sua página pública de reservas.",
-        "tooltip_page_url": "Seu identificador soberano único. Mantenha curto e memorável."
+        "tooltip_page_url": "Seu identificador soberano único. Mantenha curto e memorável.",
+        "avail_more_rules_hint": "Depois você poderá adicionar mais regras de disponibilidade no painel do sistema (por exemplo, um horário diferente para sábado)."
     },
     "poll": {
         "by": "Por",

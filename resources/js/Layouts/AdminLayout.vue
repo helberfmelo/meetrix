@@ -31,31 +31,38 @@
 
         <!-- Main Content -->
         <main class="flex-1 flex flex-col min-w-0">
-            <header class="py-4 sm:py-6 px-4 sm:px-6 md:px-12 flex flex-col sm:flex-row sm:justify-between sm:items-center items-start gap-3 sm:gap-0 relative z-[1000] bg-white/80 dark:bg-zinc-950/80 backdrop-blur-xl border-b border-black/5 dark:border-white/5">
-                <div class="w-full sm:w-auto flex items-center gap-4">
-                    <router-link :to="logoTarget" class="sm:hidden text-sm font-black tracking-tighter text-zinc-950 dark:text-white font-outfit uppercase">
-                        MEETRIX<span class="text-meetrix-orange">.PRO</span>
-                    </router-link>
-                    <span class="text-[9px] sm:text-[10px] font-black text-zinc-500 dark:text-zinc-400 uppercase tracking-[0.2em] sm:tracking-[0.4em] truncate max-w-[90vw] sm:max-w-none">{{ breadcrumb }}</span>
-                </div>
-                <div class="w-full sm:w-auto flex items-center justify-between sm:justify-end gap-3 sm:gap-6">
-                    <div class="hidden sm:flex items-center gap-3 group cursor-pointer relative pr-6 border-r border-black/10 dark:border-white/10">
-                        <div class="text-right hidden sm:block">
-                            <p class="text-[10px] font-black text-zinc-950 dark:text-white uppercase tracking-widest leading-none">{{ user?.name }}</p>
-                            <p class="text-[8px] font-black text-meetrix-orange uppercase tracking-widest mt-1">{{ $t('admin.sovereign_node') }}</p>
-                        </div>
-                        <div class="w-10 h-10 rounded-2xl bg-zinc-950 dark:bg-white border border-black/10 dark:border-white/10 flex items-center justify-center text-white dark:text-zinc-950 group-hover:border-meetrix-orange group-hover:bg-meetrix-orange group-hover:text-white group-hover:scale-105 transition-all font-black shadow-lg group-active:scale-95">
-                            {{ user?.name?.charAt(0) }}
-                        </div>
+            <header class="py-4 sm:py-6 px-4 sm:px-6 md:px-12 relative z-[1000] bg-white/80 dark:bg-zinc-950/80 backdrop-blur-xl border-b border-black/5 dark:border-white/5">
+                <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 sm:gap-0">
+                    <div class="w-full sm:w-auto flex items-center gap-4 pr-32 sm:pr-0">
+                        <router-link :to="logoTarget" class="sm:hidden text-sm font-black tracking-tighter text-zinc-950 dark:text-white font-outfit uppercase">
+                            MEETRIX<span class="text-meetrix-orange">.PRO</span>
+                        </router-link>
+                        <span class="text-[9px] sm:text-[10px] font-black text-zinc-500 dark:text-zinc-400 uppercase tracking-[0.2em] sm:tracking-[0.4em] truncate max-w-[90vw] sm:max-w-none">{{ breadcrumb }}</span>
                     </div>
+                    <div class="hidden sm:flex items-center justify-end gap-3 sm:gap-6">
+                        <div class="flex items-center gap-3 group cursor-pointer relative pr-6 border-r border-black/10 dark:border-white/10">
+                            <div class="text-right hidden sm:block">
+                                <p class="text-[10px] font-black text-zinc-950 dark:text-white uppercase tracking-widest leading-none">{{ user?.name }}</p>
+                                <p class="text-[8px] font-black text-meetrix-orange uppercase tracking-widest mt-1">{{ $t('admin.sovereign_node') }}</p>
+                            </div>
+                            <div class="w-10 h-10 rounded-2xl bg-zinc-950 dark:bg-white border border-black/10 dark:border-white/10 flex items-center justify-center text-white dark:text-zinc-950 group-hover:border-meetrix-orange group-hover:bg-meetrix-orange group-hover:text-white group-hover:scale-105 transition-all font-black shadow-lg group-active:scale-95">
+                                {{ user?.name?.charAt(0) }}
+                            </div>
+                        </div>
 
-                    <div class="flex items-center gap-3">
-                        <button @click="handleLogout" class="lg:hidden w-9 h-9 rounded-xl border border-black/10 dark:border-white/10 text-slate-500 hover:text-red-500 transition-colors flex items-center justify-center">
-                            <i class="fas fa-sign-out-alt text-sm"></i>
-                        </button>
-                        <ThemeToggle />
-                        <LanguageSwitcher />
+                        <div class="flex items-center gap-3">
+                            <ThemeToggle />
+                            <LanguageSwitcher />
+                        </div>
                     </div>
+                </div>
+
+                <div class="sm:hidden absolute top-4 right-4 flex items-center gap-2">
+                    <ThemeToggle />
+                    <LanguageSwitcher />
+                    <button @click="handleLogout" class="w-9 h-9 rounded-xl border border-black/10 dark:border-white/10 text-slate-500 hover:text-red-500 transition-colors flex items-center justify-center">
+                        <i class="fas fa-sign-out-alt text-sm"></i>
+                    </button>
                 </div>
             </header>
             

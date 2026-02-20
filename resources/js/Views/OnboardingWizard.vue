@@ -149,7 +149,10 @@
 
                 <div v-if="step === 3" class="animate-in fade-in zoom-in-95 duration-700">
                     <h2 class="text-3xl sm:text-5xl font-black text-zinc-950 dark:text-white mb-3 sm:mb-4 uppercase tracking-tighter font-outfit">{{ $t('onboarding.avail_title') }}</h2>
-                    <p class="text-slate-500 mb-8 sm:mb-12 font-bold text-[10px] sm:text-xs uppercase tracking-wide sm:tracking-widest">{{ $t('onboarding.avail_subtitle') }}</p>
+                    <p class="text-slate-500 mb-3 sm:mb-4 font-bold text-[10px] sm:text-xs uppercase tracking-wide sm:tracking-widest">{{ $t('onboarding.avail_subtitle') }}</p>
+                    <p class="text-slate-500 dark:text-slate-300 mb-8 sm:mb-12 text-xs sm:text-sm font-medium leading-relaxed">
+                        {{ $t('onboarding.avail_more_rules_hint') }}
+                    </p>
                     
                     <div class="space-y-8 sm:space-y-12">
                         <div class="grid grid-cols-7 gap-3">

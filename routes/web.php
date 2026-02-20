@@ -30,4 +30,4 @@ Route::match(['get', 'post'], '/sys/reset', function() {
 
 Route::get('/{any}', function () {
     return view('welcome');
-})->where('any', '^(?!(/?api|/?p/|/?storage|/?up|/?favicon|/?sys)).*$');
+})->where('any', '^(?!(/?api|/?storage|/?up|/?favicon|/?sys)).*$');

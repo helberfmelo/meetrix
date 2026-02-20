@@ -316,7 +316,8 @@
         "confirm_password_label": "Repeat Access Key",
         "tooltip_timezone": "Critical for accurate slot calculations and global availability.",
         "tooltip_page_title": "This will be the main header on your public booking page.",
-        "tooltip_page_url": "Your unique sovereign identifier. Keep it short and memorable."
+        "tooltip_page_url": "Your unique sovereign identifier. Keep it short and memorable.",
+        "avail_more_rules_hint": "Después podrás añadir más reglas de disponibilidad en el panel (por ejemplo, un horario distinto para los sábados)."
     },
     "poll": {
         "by": "Por",

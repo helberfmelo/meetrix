@@ -52,7 +52,7 @@
             <div class="absolute right-0 top-0 bg-meetrix-orange text-[8px] font-black px-2 py-1 uppercase tracking-widest">{{ $t('admin.pro_feature_tag') }}</div>
             <div class="flex items-start gap-4">
                 <div class="flex-1">
-                    <h4 class="text-sm font-black uppercase tracking-widest mb-1 text-meetrix-orange">{{ $t('admin.whatsapp_pro') }}</h4>
+                    <h4 class="text-sm font-black uppercase tracking-widest mb-1 text-meetrix-orange">{{ $t('admin.coming_soon') }}</h4>
                     <p class="text-xs text-slate-500 font-medium">{{ $t('admin.whatsapp_pro_desc') }}</p>
                 </div>
                 <label class="relative inline-flex items-center cursor-pointer">

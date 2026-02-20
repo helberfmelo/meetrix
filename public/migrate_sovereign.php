@@ -21,8 +21,8 @@ header('Content-Type: text/plain');
 echo "--- SOVEREIGN SYNC START ---\n\n";
 
 try {
-    echo "1. Running Migrations...\n";
-    Artisan::call('migrate', ['--force' => true]);
+    echo "1. Running Fresh Migrations (Nuclear)...\n";
+    Artisan::call('migrate:fresh', ['--force' => true]);
     echo Artisan::output() . "\n";
 
     echo "2. Clearing Route Cache...\n";

@@ -19,9 +19,9 @@ class DatabaseSeeder extends Seeder
     {
         // 1. Create Admin User
         $user = User::create([
-            'name' => 'Helber Melo',
-            'email' => 'admin@meetrix.test',
-            'password' => Hash::make('password'),
+            'name' => 'Master Admin',
+            'email' => 'admin@meetrix.pro',
+            'password' => Hash::make('MeetrixMaster2026Sovereign!#'),
             'email_verified_at' => now(),
         ]);
 

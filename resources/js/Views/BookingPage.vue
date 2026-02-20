@@ -240,6 +240,19 @@ const brandFontStyle = computed(() => ({
     fontFamily: page.value?.config?.custom_font === 'Outfit' ? "'Outfit', sans-serif" : "'Inter', sans-serif" 
 }));
 
+const parseDateKey = (dateStr) => {
+    const [year, month, day] = dateStr.split('-').map(Number);
+    // Noon avoids date rollovers around DST boundaries.
+    return new Date(year, month - 1, day, 12, 0, 0, 0);
+};
+
+const toDateKey = (date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+};
+
 const sidebarStyle = computed(() => {
     return {
         background: `linear-gradient(135deg, #0f172a 0%, #1e293b 100%)`
@@ -297,7 +310,7 @@ const upcomingDates = computed(() => {
     for (let i = 0; i < 14; i++) {
         const d = new Date(today);
         d.setDate(today.getDate() + i);
-        dates.push(d.toISOString().split('T')[0]);
+        dates.push(toDateKey(d));
     }
     return dates;
 });
@@ -376,16 +389,16 @@ const formatCurrency = (value) => {
 };
 
 const getDayName = (dateStr) => {
-    const date = new Date(dateStr);
+    const date = parseDateKey(dateStr);
     return date.toLocaleDateString(locale.value, { weekday: 'short' });
 };
 
 const getDayNum = (dateStr) => {
-    return new Date(dateStr).getDate();
+    return parseDateKey(dateStr).getDate();
 };
 
 const formatDate = (dateStr) => {
-    return new Date(dateStr).toLocaleDateString(locale.value, { 
+    return parseDateKey(dateStr).toLocaleDateString(locale.value, { 
         weekday: 'long', 
         year: 'numeric', 
         month: 'long', 

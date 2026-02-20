@@ -244,11 +244,13 @@ class BookingController extends Controller
 
             DB::commit();
 
+            $mailer = $this->resolveTransactionalMailer();
+
             try {
-                Mail::to($booking->customer_email)->send(new BookingConfirmation($booking));
+                Mail::mailer($mailer)->to($booking->customer_email)->send(new BookingConfirmation($booking));
             } catch (\Throwable $mailException) {
                 // Booking is already committed. Mail failures should not invalidate the booking.
-                Log::error('Booking confirmation mail failed: ' . $mailException->getMessage());
+                Log::error("Booking confirmation mail failed [mailer={$mailer}]: " . $mailException->getMessage());
             }
 
             if ($page->config['whatsapp_enabled'] ?? false) {
@@ -280,6 +282,25 @@ class BookingController extends Controller
                 'error_code' => 'booking_creation_failed',
             ], 500);
         }
+    }
+
+    private function resolveTransactionalMailer(): string
+    {
+        $smtpConfig = (array) config('mail.mailers.smtp', []);
+        $smtpHost = (string) ($smtpConfig['host'] ?? '');
+        $smtpUser = (string) ($smtpConfig['username'] ?? '');
+        $smtpPassword = (string) ($smtpConfig['password'] ?? '');
+
+        if (
+            $smtpHost !== ''
+            && !in_array($smtpHost, ['127.0.0.1', 'localhost'], true)
+            && $smtpUser !== ''
+            && $smtpPassword !== ''
+        ) {
+            return 'smtp';
+        }
+
+        return (string) config('mail.default', 'log');
     }
 
     /**

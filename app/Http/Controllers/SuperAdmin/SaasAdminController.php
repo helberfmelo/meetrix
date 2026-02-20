@@ -11,6 +11,8 @@ use App\Models\SchedulingPage;
 use App\Models\Team;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\Rule;
 
 class SaasAdminController extends Controller
@@ -242,6 +244,89 @@ class SaasAdminController extends Controller
     {
         return response()->json([
             'coupons' => Coupon::latest()->get(),
+        ]);
+    }
+
+    /**
+     * Mail configuration diagnostics for production operations.
+     */
+    public function mailDiagnostics()
+    {
+        $defaultMailer = (string) config('mail.default', 'log');
+        $smtpConfig = (array) config('mail.mailers.smtp', []);
+        $fromAddress = (string) config('mail.from.address');
+
+        $riskFlags = [];
+
+        if ($defaultMailer !== 'smtp') {
+            $riskFlags[] = 'default_mailer_not_smtp';
+        }
+
+        if (empty($smtpConfig['username']) || empty($smtpConfig['password'])) {
+            $riskFlags[] = 'smtp_credentials_missing';
+        }
+
+        if (in_array((string) ($smtpConfig['host'] ?? ''), ['127.0.0.1', 'localhost'], true)) {
+            $riskFlags[] = 'smtp_host_default_local';
+        }
+
+        if ($fromAddress === '' || str_ends_with($fromAddress, '@example.com')) {
+            $riskFlags[] = 'from_address_not_configured';
+        }
+
+        return response()->json([
+            'default_mailer' => $defaultMailer,
+            'from' => [
+                'address' => $fromAddress,
+                'name' => (string) config('mail.from.name'),
+            ],
+            'smtp' => [
+                'host' => (string) ($smtpConfig['host'] ?? ''),
+                'port' => (int) ($smtpConfig['port'] ?? 0),
+                'encryption' => (string) ($smtpConfig['encryption'] ?? ''),
+                'username_configured' => !empty($smtpConfig['username']),
+                'password_configured' => !empty($smtpConfig['password']),
+            ],
+            'risk_flags' => $riskFlags,
+        ]);
+    }
+
+    /**
+     * Send a controlled e-mail from super admin for SMTP validation.
+     */
+    public function sendTestEmail(Request $request)
+    {
+        $availableMailers = array_keys((array) config('mail.mailers', []));
+
+        $validated = $request->validate([
+            'email' => ['required', 'email'],
+            'mailer' => ['nullable', Rule::in($availableMailers)],
+        ]);
+
+        $mailer = $validated['mailer']
+            ?? (in_array('smtp', $availableMailers, true) ? 'smtp' : (string) config('mail.default', 'log'));
+
+        try {
+            Mail::mailer($mailer)->raw(
+                'Teste de envio Meetrix. Este e-mail confirma conectividade SMTP do ambiente.',
+                function ($message) use ($validated) {
+                    $message->to($validated['email'])->subject('Meetrix - Teste de E-mail');
+                }
+            );
+        } catch (\Throwable $exception) {
+            Log::error('Super admin mail test failed: ' . $exception->getMessage());
+
+            return response()->json([
+                'message' => 'Falha ao enviar e-mail de teste.',
+                'mailer' => $mailer,
+                'error' => $exception->getMessage(),
+            ], 500);
+        }
+
+        return response()->json([
+            'message' => 'E-mail de teste enviado para a fila de transporte.',
+            'mailer' => $mailer,
+            'recipient' => $validated['email'],
         ]);
     }
 

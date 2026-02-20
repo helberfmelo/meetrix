@@ -60,4 +60,35 @@ class SuperAdminSaasTest extends TestCase
 
         $response->assertStatus(403);
     }
+
+    public function test_super_admin_can_check_mail_diagnostics_and_send_test_mail(): void
+    {
+        $admin = User::factory()->create([
+            'is_super_admin' => true,
+            'is_active' => true,
+        ]);
+
+        Sanctum::actingAs($admin);
+
+        $diagnosticsResponse = $this->getJson('/api/super-admin/mail/diagnostics');
+
+        $diagnosticsResponse->assertStatus(200)
+            ->assertJsonStructure([
+                'default_mailer',
+                'from' => ['address', 'name'],
+                'smtp' => ['host', 'port', 'encryption', 'username_configured', 'password_configured'],
+                'risk_flags',
+            ]);
+
+        $testMailResponse = $this->postJson('/api/super-admin/mail/test', [
+            'email' => 'qa@meetrix.test',
+            'mailer' => 'array',
+        ]);
+
+        $testMailResponse->assertStatus(200)
+            ->assertJson([
+                'mailer' => 'array',
+                'recipient' => 'qa@meetrix.test',
+            ]);
+    }
 }

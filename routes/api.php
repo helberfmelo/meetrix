@@ -74,6 +74,8 @@ Route::middleware(['auth:sanctum', 'superadmin'])->prefix('super-admin')->group(
     Route::get('/activity', [SaasAdminController::class, 'activity']);
     Route::get('/payments', [SaasAdminController::class, 'payments']);
     Route::get('/coupons', [SaasAdminController::class, 'coupons']);
+    Route::get('/mail/diagnostics', [SaasAdminController::class, 'mailDiagnostics']);
+    Route::post('/mail/test', [SaasAdminController::class, 'sendTestEmail']);
 });
 
 // Public Routes

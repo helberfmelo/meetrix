@@ -58,10 +58,12 @@ class StripeWebhookController extends Controller
                     'amount_paid' => $amountTotal,
                 ]);
 
+                $mailer = $this->resolveTransactionalMailer();
+
                 try {
-                    Mail::to($booking->customer_email)->send(new BookingConfirmation($booking));
+                    Mail::mailer($mailer)->to($booking->customer_email)->send(new BookingConfirmation($booking));
                 } catch (\Throwable $mailException) {
-                    Log::error('Booking confirmation mail failed via webhook: ' . $mailException->getMessage());
+                    Log::error("Booking confirmation mail failed via webhook [mailer={$mailer}]: " . $mailException->getMessage());
                 }
                 Log::info("Booking {$bookingId} marked as confirmed via Stripe Webhook.");
             }
@@ -173,5 +175,24 @@ class StripeWebhookController extends Controller
         ]);
 
         Log::info("User {$user->id} subscription cancelled via Webhook.");
+    }
+
+    private function resolveTransactionalMailer(): string
+    {
+        $smtpConfig = (array) config('mail.mailers.smtp', []);
+        $smtpHost = (string) ($smtpConfig['host'] ?? '');
+        $smtpUser = (string) ($smtpConfig['username'] ?? '');
+        $smtpPassword = (string) ($smtpConfig['password'] ?? '');
+
+        if (
+            $smtpHost !== ''
+            && !in_array($smtpHost, ['127.0.0.1', 'localhost'], true)
+            && $smtpUser !== ''
+            && $smtpPassword !== ''
+        ) {
+            return 'smtp';
+        }
+
+        return (string) config('mail.default', 'log');
     }
 }

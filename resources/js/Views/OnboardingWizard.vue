@@ -231,13 +231,25 @@ const form = reactive({
     email: '',
     password: '',
     password_confirmation: '',
-    timezone: 'UTC',
-    pageTitle: 'My Calendar',
+    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC',
+    pageTitle: authStore.user ? `${authStore.user.name}'s Calendar` : 'My Calendar',
     pageSlug: '',
     selectedDays: [1, 2, 3, 4, 5],
     startTime: '09:00',
     endTime: '17:00'
 });
+
+// Sync name when user logs in during onboarding
+import { watch } from 'vue';
+watch(() => authStore.user, (newUser) => {
+    if (newUser && !form.name) {
+        form.name = newUser.name;
+    }
+    if (newUser && form.pageTitle === 'My Calendar') {
+        form.pageTitle = `${newUser.name}'s Calendar`;
+        generateSlug();
+    }
+}, { immediate: true });
 
 const generateSlug = () => {
     form.pageSlug = form.pageTitle
@@ -257,7 +269,10 @@ const toggleDay = (id) => {
 };
 
 const nextStep = async () => {
+    console.log('Next step initiated. Current step:', step.value);
+    
     if (step.value === 1 && !authStore.user) {
+        console.log('Attempting guest registration...');
         loading.value = true;
         try {
             const success = await authStore.register({
@@ -265,23 +280,29 @@ const nextStep = async () => {
                 email: form.email,
                 password: form.password,
                 password_confirmation: form.password_confirmation,
-                country_code: 'BR', // Defaulting for now
-                currency: 'BRL'      // Defaulting for now
+                country_code: 'BR', // Defaulting for robust flow
+                currency: 'BRL'      // Defaulting for robust flow
             });
             if (!success) {
+                console.error('Registration failed:', authStore.error);
                 alert(authStore.error);
                 return;
             }
+            console.log('Registration successful, moving to next step.');
         } catch (error) {
+            console.error('Registration error:', error);
             alert(error.message);
             return;
         } finally {
             loading.value = false;
         }
+    } else if (step.value === 1 && authStore.user) {
+        console.log('User already authenticated, advancing to Step 2.');
     }
 
     if (step.value < 3) {
         step.value++;
+        console.log('Step advanced to:', step.value);
         return;
     }
 

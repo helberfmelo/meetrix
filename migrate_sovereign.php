@@ -13,8 +13,15 @@ define('LARAVEL_START', microtime(true));
 require __DIR__.'/vendor/autoload.php';
 $app = require_once __DIR__.'/bootstrap/app.php';
 
-$kernel = $app->make(Kernel::class);
-$kernel->bootstrap();
+try {
+    $kernel = $app->make(Kernel::class);
+    $kernel->bootstrap();
+} catch (\Exception $e) {
+    header('Content-Type: text/plain');
+    echo "BOOTSTRAP ERROR: " . $e->getMessage() . "\n";
+    echo $e->getTraceAsString();
+    exit;
+}
 
 header('Content-Type: text/plain');
 ini_set('display_errors', 1);

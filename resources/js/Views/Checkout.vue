@@ -1,27 +1,27 @@
 
 <template>
-    <div class="min-h-screen bg-zinc-50 dark:bg-zinc-950 py-24 px-6 md:px-12 transition-colors duration-500 overflow-hidden relative">
+    <div class="min-h-screen bg-zinc-50 dark:bg-zinc-950 py-16 sm:py-24 px-4 sm:px-6 md:px-12 transition-colors duration-500 overflow-hidden relative">
         <!-- Aesthetic Depth -->
         <div class="absolute top-0 right-0 w-[800px] h-[800px] bg-meetrix-orange/5 rounded-full blur-[200px] -z-10"></div>
         <div class="absolute bottom-0 left-0 w-[600px] h-[600px] bg-zinc-900/10 dark:bg-white/5 rounded-full blur-[150px] -z-10"></div>
 
-        <div class="max-w-6xl mx-auto flex flex-col lg:flex-row gap-20 items-start">
+        <div class="max-w-6xl mx-auto flex flex-col lg:flex-row gap-10 sm:gap-20 items-start">
             <!-- Left: Order Summary (High Tension) -->
-            <div class="lg:w-1/2 space-y-12 animate-in fade-in slide-in-from-left-8 duration-700">
+            <div class="lg:w-1/2 space-y-8 sm:space-y-12 animate-in fade-in slide-in-from-left-8 duration-700">
                 <header>
-                    <h1 class="text-6xl font-black text-zinc-950 dark:text-white uppercase tracking-tighter leading-none mb-4 font-outfit">
+                    <h1 class="text-4xl sm:text-6xl font-black text-zinc-950 dark:text-white uppercase tracking-tighter leading-none mb-3 sm:mb-4 font-outfit">
                         Finalize sua <span class="text-meetrix-orange">Assinatura</span>
                     </h1>
                     <p class="text-slate-500 font-bold text-xs uppercase tracking-widest">Meetrix // Inicialização do Plano Profissional</p>
                 </header>
 
-                <div class="bg-white/80 dark:bg-zinc-900/40 backdrop-blur-3xl rounded-4xl p-12 border border-black/5 dark:border-white/5 shadow-premium space-y-8">
-                    <div class="flex justify-between items-center pb-8 border-b border-black/5 dark:border-white/5">
+                <div class="bg-white/80 dark:bg-zinc-900/40 backdrop-blur-3xl rounded-3xl sm:rounded-4xl p-6 sm:p-12 border border-black/5 dark:border-white/5 shadow-premium space-y-6 sm:space-y-8">
+                    <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-4 pb-6 sm:pb-8 border-b border-black/5 dark:border-white/5">
                         <div>
                             <h3 class="text-2xl font-black text-zinc-950 dark:text-white uppercase">Plano Profissional</h3>
                             <p class="text-xs text-slate-400 font-bold uppercase tracking-widest mt-2">Faturamento Mensal</p>
                         </div>
-                        <div class="text-4xl font-black text-zinc-950 dark:text-white font-outfit">R$ 49,90</div>
+                        <div class="text-3xl sm:text-4xl font-black text-zinc-950 dark:text-white font-outfit">R$ 49,90</div>
                     </div>
 
                     <div class="space-y-4">
@@ -31,12 +31,12 @@
                         </div>
                         <div class="flex justify-between items-center bg-zinc-50 dark:bg-zinc-950/40 p-6 rounded-2xl">
                             <span class="text-[10px] font-black uppercase tracking-widest text-slate-400">Total a Pagar Hoje</span>
-                            <span class="text-5xl font-black text-zinc-950 dark:text-white font-outfit">R$ {{ finalPrice.toFixed(2) }}</span>
+                            <span class="text-3xl sm:text-5xl font-black text-zinc-950 dark:text-white font-outfit">R$ {{ finalPrice.toFixed(2) }}</span>
                         </div>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-2 gap-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div class="p-6 bg-white dark:bg-zinc-900/20 rounded-3xl border border-black/5 dark:border-white/5">
                         <i class="fas fa-shield-halved text-meetrix-green mb-4 text-xl"></i>
                         <h4 class="text-[10px] font-black uppercase tracking-widest text-zinc-950 dark:text-white mb-2">Checkout Seguro</h4>
@@ -52,22 +52,22 @@
 
             <!-- Right: Action Section -->
             <div class="lg:w-1/2 w-full space-y-8 animate-in fade-in slide-in-from-right-8 duration-700 delay-150">
-                <div class="bg-zinc-100 dark:bg-zinc-900/60 p-12 rounded-4xl border border-black/5 dark:border-white/5 space-y-12">
+                <div class="bg-zinc-100 dark:bg-zinc-900/60 p-6 sm:p-12 rounded-3xl sm:rounded-4xl border border-black/5 dark:border-white/5 space-y-8 sm:space-y-12">
                     <!-- Coupon Area -->
                     <div class="space-y-6">
-                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4">Possui um cupom de desconto?</label>
-                        <div class="flex gap-4">
+                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Possui um cupom de desconto?</label>
+                        <div class="flex flex-col sm:flex-row gap-3 sm:gap-4">
                             <input 
                                 v-model="couponCode" 
                                 type="text"
                                 placeholder="EX: CUPOM100"
-                                class="flex-1 bg-white dark:bg-zinc-950 border-2 border-black/5 dark:border-white/5 rounded-2xl px-8 py-5 text-zinc-950 dark:text-white font-bold text-lg outline-none focus:border-meetrix-orange transition-all tracking-widest uppercase"
+                                class="flex-1 bg-white dark:bg-zinc-950 border-2 border-black/5 dark:border-white/5 rounded-2xl px-5 sm:px-8 py-4 sm:py-5 text-zinc-950 dark:text-white font-bold text-base sm:text-lg outline-none focus:border-meetrix-orange transition-all tracking-widest uppercase"
                                 :disabled="appliedCoupon"
                             >
                             <button 
                                 @click="applyCoupon"
                                 :disabled="!couponCode || appliedCoupon || loadingCoupon"
-                                class="px-8 py-5 bg-zinc-950 text-white dark:bg-white dark:text-zinc-950 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:scale-105 active:scale-95 transition-all disabled:opacity-50"
+                                class="w-full sm:w-auto px-8 py-4 sm:py-5 bg-zinc-950 text-white dark:bg-white dark:text-zinc-950 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:scale-105 active:scale-95 transition-all disabled:opacity-50"
                             >
                                 <i v-if="loadingCoupon" class="fas fa-circle-notch fa-spin mr-2"></i>
                                 {{ appliedCoupon ? 'Aplicado' : 'Aplicar' }}
@@ -80,7 +80,7 @@
                         <button 
                             @click="handleCheckout"
                             :disabled="loading"
-                            class="w-full py-8 bg-meetrix-orange text-zinc-950 rounded-[2.5rem] font-black text-xs uppercase tracking-[0.4em] hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl shadow-meetrix-orange/30 group"
+                            class="w-full py-6 sm:py-8 bg-meetrix-orange text-zinc-950 rounded-[2rem] sm:rounded-[2.5rem] font-black text-xs uppercase tracking-[0.25em] sm:tracking-[0.4em] hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl shadow-meetrix-orange/30 group"
                         >
                             <span v-if="!loading" class="flex items-center justify-center gap-4">
                                 {{ finalPrice === 0 ? 'Ativar Agora Grátis' : 'Finalizar com Stripe' }}
@@ -96,7 +96,7 @@
                 </div>
 
                 <!-- Back button -->
-                <router-link to="/onboarding" class="flex items-center gap-4 text-[10px] font-black text-slate-400 uppercase tracking-widest hover:text-zinc-950 dark:hover:text-white transition-colors ml-4">
+                <router-link to="/onboarding" class="flex items-center gap-3 sm:gap-4 text-[10px] font-black text-slate-400 uppercase tracking-widest hover:text-zinc-950 dark:hover:text-white transition-colors">
                     <i class="fas fa-chevron-left"></i> Voltar para Onboarding
                 </router-link>
             </div>

@@ -1,31 +1,31 @@
 <template>
-    <div class="min-h-screen bg-zinc-50 dark:bg-zinc-950 flex flex-col items-center justify-center py-12 px-6 sm:px-12 font-sans selection:bg-meetrix-orange selection:text-white relative overflow-hidden transition-colors duration-500">
+    <div class="min-h-screen bg-zinc-50 dark:bg-zinc-950 flex flex-col items-center justify-center py-8 sm:py-12 px-4 sm:px-6 md:px-12 font-sans selection:bg-meetrix-orange selection:text-white relative overflow-hidden transition-colors duration-500">
         <!-- Background Depth -->
         <div class="absolute top-0 right-0 w-[800px] h-[800px] bg-meetrix-orange/5 rounded-full blur-[200px] -z-10 animate-pulse"></div>
         <div class="absolute bottom-0 left-0 w-[600px] h-[600px] bg-zinc-900/10 dark:bg-white/5 rounded-full blur-[150px] -z-10"></div>
 
-        <div class="max-w-3xl w-full space-y-16 animate-in fade-in duration-1000">
+        <div class="max-w-3xl w-full space-y-8 sm:space-y-16 animate-in fade-in duration-1000">
             <!-- Header Progress: Linear Depth -->
-            <div class="px-8 flex items-center justify-between relative">
+            <div class="px-1 sm:px-8 flex items-center justify-between relative">
                 <div class="absolute top-1/2 left-0 w-full h-px bg-zinc-950/5 dark:bg-white/5 -translate-y-1/2 -z-0"></div>
                 <div v-for="n in 3" :key="n" class="flex flex-col items-center relative z-10 transition-all duration-700">
-                    <div :class="['w-14 h-14 rounded-full flex items-center justify-center font-black text-xl border-2 transition-all duration-700', 
+                    <div :class="['w-10 h-10 sm:w-14 sm:h-14 rounded-full flex items-center justify-center font-black text-base sm:text-xl border-2 transition-all duration-700', 
                                   step >= n ? 'bg-zinc-950 text-white dark:bg-white dark:text-zinc-950 border-zinc-950 dark:border-white shadow-premium scale-110' : 'bg-white dark:bg-zinc-900 text-slate-400 dark:text-slate-700 border-black/5 dark:border-white/5']">
                         {{ n }}
                     </div>
-                    <span :class="['mt-4 text-[9px] font-black uppercase tracking-[0.3em] transition-colors duration-700', step >= n ? 'text-zinc-950 dark:text-white' : 'text-slate-400 dark:text-slate-700']">
+                    <span :class="['mt-2 sm:mt-4 text-[8px] sm:text-[9px] text-center font-black uppercase tracking-[0.2em] sm:tracking-[0.3em] transition-colors duration-700', step >= n ? 'text-zinc-950 dark:text-white' : 'text-slate-400 dark:text-slate-700']">
                         {{ $t(`onboarding.step_${n}`) }}
                     </span>
                 </div>
             </div>
 
             <!-- Card: High-Depth Fragment -->
-            <div class="bg-white/80 dark:bg-zinc-900/40 backdrop-blur-3xl rounded-5xl border border-black/5 dark:border-white/5 p-16 min-h-[550px] flex flex-col justify-between shadow-premium relative group/card overflow-hidden transition-colors duration-500">
+            <div class="bg-white/80 dark:bg-zinc-900/40 backdrop-blur-3xl rounded-3xl sm:rounded-5xl border border-black/5 dark:border-white/5 p-5 sm:p-10 lg:p-16 min-h-[unset] sm:min-h-[550px] flex flex-col justify-between shadow-premium relative group/card overflow-hidden transition-colors duration-500">
                 <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-meetrix-orange to-transparent opacity-0 group-hover/card:opacity-100 transition-opacity duration-1000"></div>
                 
                 <div v-if="step === 1" class="animate-in fade-in slide-in-from-bottom-8 duration-700">
-                    <h2 class="text-5xl font-black text-zinc-950 dark:text-white mb-4 uppercase tracking-tighter font-outfit">{{ $t('onboarding.welcome_title') }}</h2>
-                    <p class="text-slate-500 mb-12 font-bold text-xs uppercase tracking-widest">{{ $t('onboarding.welcome_subtitle') }}</p>
+                    <h2 class="text-3xl sm:text-5xl font-black text-zinc-950 dark:text-white mb-3 sm:mb-4 uppercase tracking-tighter font-outfit">{{ $t('onboarding.welcome_title') }}</h2>
+                    <p class="text-slate-500 mb-8 sm:mb-12 font-bold text-[10px] sm:text-xs uppercase tracking-wide sm:tracking-widest">{{ $t('onboarding.welcome_subtitle') }}</p>
                     
                     <div class="space-y-8">
                         <div class="space-y-4">
@@ -41,7 +41,7 @@
                             <input 
                                 v-model="form.name" 
                                 type="text" 
-                                class="w-full bg-zinc-100 dark:bg-zinc-950 border-2 border-black/5 dark:border-white/5 rounded-2xl px-8 py-5 text-zinc-950 dark:text-white font-bold text-lg outline-none focus:border-meetrix-orange transition-all tracking-tight"
+                                class="w-full bg-zinc-100 dark:bg-zinc-950 border-2 border-black/5 dark:border-white/5 rounded-2xl px-5 sm:px-8 py-4 sm:py-5 text-zinc-950 dark:text-white font-bold text-base sm:text-lg outline-none focus:border-meetrix-orange transition-all tracking-tight"
                                 :placeholder="$t('onboarding.name_placeholder')"
                             >
                         </div>
@@ -53,7 +53,7 @@
                                 <input 
                                     v-model="form.email" 
                                     type="email" 
-                                    class="w-full bg-zinc-100 dark:bg-zinc-950 border-2 border-black/5 dark:border-white/5 rounded-2xl px-8 py-5 text-zinc-950 dark:text-white font-bold text-lg outline-none focus:border-meetrix-orange transition-all tracking-tight"
+                                    class="w-full bg-zinc-100 dark:bg-zinc-950 border-2 border-black/5 dark:border-white/5 rounded-2xl px-5 sm:px-8 py-4 sm:py-5 text-zinc-950 dark:text-white font-bold text-base sm:text-lg outline-none focus:border-meetrix-orange transition-all tracking-tight"
                                     placeholder="email@example.com"
                                 >
                             </div>
@@ -63,7 +63,7 @@
                                     <input 
                                         v-model="form.password" 
                                         type="password" 
-                                        class="w-full bg-zinc-100 dark:bg-zinc-950 border-2 border-black/5 dark:border-white/5 rounded-2xl px-8 py-5 text-zinc-950 dark:text-white font-bold text-lg outline-none focus:border-meetrix-orange transition-all tracking-tight"
+                                        class="w-full bg-zinc-100 dark:bg-zinc-950 border-2 border-black/5 dark:border-white/5 rounded-2xl px-5 sm:px-8 py-4 sm:py-5 text-zinc-950 dark:text-white font-bold text-base sm:text-lg outline-none focus:border-meetrix-orange transition-all tracking-tight"
                                         placeholder="••••••••"
                                     >
                                 </div>
@@ -72,7 +72,7 @@
                                     <input 
                                         v-model="form.password_confirmation" 
                                         type="password" 
-                                        class="w-full bg-zinc-100 dark:bg-zinc-950 border-2 border-black/5 dark:border-white/5 rounded-2xl px-8 py-5 text-zinc-950 dark:text-white font-bold text-lg outline-none focus:border-meetrix-orange transition-all tracking-tight"
+                                        class="w-full bg-zinc-100 dark:bg-zinc-950 border-2 border-black/5 dark:border-white/5 rounded-2xl px-5 sm:px-8 py-4 sm:py-5 text-zinc-950 dark:text-white font-bold text-base sm:text-lg outline-none focus:border-meetrix-orange transition-all tracking-tight"
                                         placeholder="••••••••"
                                     >
                                 </div>
@@ -91,7 +91,7 @@
                             </div>
                             <select 
                                 v-model="form.timezone"
-                                class="w-full bg-zinc-100 dark:bg-zinc-950 border-2 border-black/5 dark:border-white/5 rounded-2xl px-8 py-5 text-zinc-950 dark:text-white font-bold text-lg outline-none focus:border-meetrix-orange transition-all appearance-none cursor-pointer"
+                                class="w-full bg-zinc-100 dark:bg-zinc-950 border-2 border-black/5 dark:border-white/5 rounded-2xl px-5 sm:px-8 py-4 sm:py-5 text-zinc-950 dark:text-white font-bold text-base sm:text-lg outline-none focus:border-meetrix-orange transition-all appearance-none cursor-pointer"
                             >
                                 <option value="UTC">UTC (Universal Time)</option>
                                 <option value="America/Sao_Paulo">America/Sao_Paulo</option>
@@ -103,8 +103,8 @@
                 </div>
 
                 <div v-if="step === 2" class="animate-in fade-in slide-in-from-right-12 duration-700">
-                    <h2 class="text-5xl font-black text-zinc-950 dark:text-white mb-4 uppercase tracking-tighter font-outfit">{{ $t('onboarding.page_title') }}</h2>
-                    <p class="text-slate-500 mb-12 font-bold text-xs uppercase tracking-widest">{{ $t('onboarding.page_subtitle') }}</p>
+                    <h2 class="text-3xl sm:text-5xl font-black text-zinc-950 dark:text-white mb-3 sm:mb-4 uppercase tracking-tighter font-outfit">{{ $t('onboarding.page_title') }}</h2>
+                    <p class="text-slate-500 mb-8 sm:mb-12 font-bold text-[10px] sm:text-xs uppercase tracking-wide sm:tracking-widest">{{ $t('onboarding.page_subtitle') }}</p>
                     
                     <div class="space-y-8">
                         <div class="space-y-4">
@@ -121,7 +121,7 @@
                                 v-model="form.pageTitle" 
                                 @input="generateSlug"
                                 type="text" 
-                                class="w-full bg-zinc-100 dark:bg-zinc-950 border-2 border-black/5 dark:border-white/5 rounded-2xl px-8 py-5 text-zinc-950 dark:text-white font-bold text-lg outline-none focus:border-meetrix-orange transition-all tracking-tight"
+                                class="w-full bg-zinc-100 dark:bg-zinc-950 border-2 border-black/5 dark:border-white/5 rounded-2xl px-5 sm:px-8 py-4 sm:py-5 text-zinc-950 dark:text-white font-bold text-base sm:text-lg outline-none focus:border-meetrix-orange transition-all tracking-tight"
                                 :placeholder="$t('onboarding.p_title_placeholder')"
                             >
                         </div>
@@ -135,12 +135,12 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="flex items-center group/input">
-                                <span class="bg-zinc-200 dark:bg-zinc-800 px-6 py-5 rounded-l-2xl border-2 border-r-0 border-black/5 dark:border-white/5 text-slate-500 font-bold text-sm">meetrix.opentshost.com/p/</span>
+                            <div class="flex flex-col sm:flex-row items-stretch group/input">
+                                <span class="bg-zinc-200 dark:bg-zinc-800 px-4 sm:px-6 py-3 sm:py-5 rounded-t-2xl sm:rounded-l-2xl sm:rounded-tr-none border-2 sm:border-r-0 border-black/5 dark:border-white/5 text-slate-500 font-bold text-xs sm:text-sm break-all">meetrix.opentshost.com/p/</span>
                                 <input 
                                     v-model="form.pageSlug"
                                     type="text" 
-                                    class="flex-1 bg-zinc-100 dark:bg-zinc-950 border-2 border-black/5 dark:border-white/5 rounded-r-2xl px-6 py-5 text-meetrix-orange font-black text-lg outline-none focus:border-meetrix-orange transition-all"
+                                    class="flex-1 bg-zinc-100 dark:bg-zinc-950 border-2 border-black/5 dark:border-white/5 rounded-b-2xl sm:rounded-r-2xl sm:rounded-bl-none px-4 sm:px-6 py-4 sm:py-5 text-meetrix-orange font-black text-base sm:text-lg outline-none focus:border-meetrix-orange transition-all"
                                 >
                             </div>
                         </div>
@@ -148,47 +148,47 @@
                 </div>
 
                 <div v-if="step === 3" class="animate-in fade-in zoom-in-95 duration-700">
-                    <h2 class="text-5xl font-black text-zinc-950 dark:text-white mb-4 uppercase tracking-tighter font-outfit">{{ $t('onboarding.avail_title') }}</h2>
-                    <p class="text-slate-500 mb-12 font-bold text-xs uppercase tracking-widest">{{ $t('onboarding.avail_subtitle') }}</p>
+                    <h2 class="text-3xl sm:text-5xl font-black text-zinc-950 dark:text-white mb-3 sm:mb-4 uppercase tracking-tighter font-outfit">{{ $t('onboarding.avail_title') }}</h2>
+                    <p class="text-slate-500 mb-8 sm:mb-12 font-bold text-[10px] sm:text-xs uppercase tracking-wide sm:tracking-widest">{{ $t('onboarding.avail_subtitle') }}</p>
                     
-                    <div class="space-y-12">
+                    <div class="space-y-8 sm:space-y-12">
                         <div class="grid grid-cols-7 gap-3">
                             <button 
                                 v-for="day in days" :key="day.id"
                                 @click="toggleDay(day.id)"
-                                :class="['h-16 flex items-center justify-center rounded-2xl font-black text-sm transition-all border-2', 
+                                :class="['h-12 sm:h-16 flex items-center justify-center rounded-xl sm:rounded-2xl font-black text-xs sm:text-sm transition-all border-2', 
                                         form.selectedDays.includes(day.id) ? 'bg-zinc-950 text-white dark:bg-white dark:text-zinc-950 border-zinc-950 dark:border-white shadow-xl' : 'bg-transparent text-slate-400 dark:text-slate-700 border-black/5 dark:border-white/5 hover:border-black/10 dark:hover:border-white/10']"
                             >
                                 {{ day.label.substring(0, 1) }}
                             </button>
                         </div>
                         
-                        <div class="grid grid-cols-2 gap-8">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8">
                             <div class="space-y-4">
                                 <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest">{{ $t('onboarding.start_time') }}</label>
-                                <input type="time" v-model="form.startTime" class="w-full bg-zinc-100 dark:bg-zinc-950 border-2 border-black/5 dark:border-white/5 rounded-2xl px-6 py-5 text-zinc-950 dark:text-white font-bold text-lg outline-none focus:border-meetrix-orange transition-all">
+                                <input type="time" v-model="form.startTime" class="w-full bg-zinc-100 dark:bg-zinc-950 border-2 border-black/5 dark:border-white/5 rounded-2xl px-5 sm:px-6 py-4 sm:py-5 text-zinc-950 dark:text-white font-bold text-base sm:text-lg outline-none focus:border-meetrix-orange transition-all">
                             </div>
                             <div class="space-y-4">
                                 <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest">{{ $t('onboarding.end_time') }}</label>
-                                <input type="time" v-model="form.endTime" class="w-full bg-zinc-100 dark:bg-zinc-950 border-2 border-black/5 dark:border-white/5 rounded-2xl px-6 py-5 text-zinc-950 dark:text-white font-bold text-lg outline-none focus:border-meetrix-orange transition-all">
+                                <input type="time" v-model="form.endTime" class="w-full bg-zinc-100 dark:bg-zinc-950 border-2 border-black/5 dark:border-white/5 rounded-2xl px-5 sm:px-6 py-4 sm:py-5 text-zinc-950 dark:text-white font-bold text-base sm:text-lg outline-none focus:border-meetrix-orange transition-all">
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Footer Buttons -->
-                <div class="mt-16 flex gap-6">
+                <div class="mt-10 sm:mt-16 flex flex-col-reverse sm:flex-row gap-4 sm:gap-6">
                     <button 
                         v-if="step > 1"
                         @click="step--"
-                        class="px-10 py-5 rounded-2xl font-black text-[10px] uppercase tracking-widest text-slate-500 bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10 transition-all border border-black/5 dark:border-white/5"
+                        class="px-8 sm:px-10 py-4 sm:py-5 rounded-2xl font-black text-[10px] uppercase tracking-widest text-slate-500 bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10 transition-all border border-black/5 dark:border-white/5"
                     >
                         {{ $t('common.back') }}
                     </button>
                     <button 
                         @click="nextStep"
                         :disabled="loading || (step === 1 && !canProceedStep1)"
-                        class="flex-1 py-5 rounded-2xl font-black text-[10px] uppercase tracking-[0.3em] bg-zinc-950 text-white dark:bg-white dark:text-zinc-950 hover:scale-105 active:scale-95 transition-all shadow-premium flex items-center justify-center gap-4 group disabled:bg-zinc-200 dark:disabled:bg-zinc-800 disabled:text-slate-400 dark:disabled:text-slate-600"
+                        class="flex-1 py-4 sm:py-5 rounded-2xl font-black text-[10px] uppercase tracking-[0.2em] sm:tracking-[0.3em] bg-zinc-950 text-white dark:bg-white dark:text-zinc-950 hover:scale-105 active:scale-95 transition-all shadow-premium flex items-center justify-center gap-3 sm:gap-4 group disabled:bg-zinc-200 dark:disabled:bg-zinc-800 disabled:text-slate-400 dark:disabled:text-slate-600"
                     >
                         <i v-if="loading" class="fas fa-circle-notch fa-spin text-lg"></i>
                         {{ step === 3 ? $t('onboarding.finish') : $t('onboarding.continue') }}
@@ -197,7 +197,7 @@
                 </div>
             </div>
             
-            <p class="text-[8px] font-black uppercase tracking-[0.5em] text-slate-800 text-center">
+            <p class="text-[8px] font-black uppercase tracking-[0.3em] sm:tracking-[0.5em] text-slate-800 text-center">
                 MEETRIX_ONBOARDING // SYSTEM_INITIALIZATION_OK
             </p>
         </div>

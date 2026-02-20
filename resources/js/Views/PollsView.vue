@@ -1,8 +1,8 @@
 <template>
-    <div class="space-y-6">
-        <div class="flex justify-between items-center">
-            <h1 class="text-3xl font-black text-gray-900">{{ $t('admin.meeting_polls') }}</h1>
-            <router-link to="/dashboard/polls/create" class="btn-primary">
+    <div class="space-y-6 sm:space-y-8">
+        <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-3 sm:gap-4">
+            <h1 class="text-2xl sm:text-3xl font-black text-gray-900">{{ $t('admin.meeting_polls') }}</h1>
+            <router-link to="/dashboard/polls/create" class="btn-primary w-full sm:w-auto text-center">
                 + {{ $t('admin.new_poll') }}
             </router-link>
         </div>
@@ -11,7 +11,7 @@
             <i class="fas fa-circle-notch fa-spin text-4xl text-meetrix-orange"></i>
         </div>
 
-        <div v-else-if="polls.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div v-else-if="polls.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             <div v-for="poll in polls" :key="poll.id" class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
                 <div class="flex justify-between items-start mb-4">
                     <div class="h-10 w-10 bg-orange-100 dark:bg-zinc-800 text-orange-600 dark:text-meetrix-orange rounded-lg flex items-center justify-center text-lg">
@@ -35,13 +35,13 @@
             </div>
         </div>
 
-        <div v-else class="bg-white dark:bg-zinc-900/50 p-12 text-center rounded-[40px] border border-black/5 dark:border-white/5 shadow-premium">
+        <div v-else class="bg-white dark:bg-zinc-900/50 p-8 sm:p-12 text-center rounded-[28px] sm:rounded-[40px] border border-black/5 dark:border-white/5 shadow-premium">
             <div class="text-5xl mb-4 text-meetrix-orange"><i class="fas fa-vote-yea"></i></div>
             <h2 class="text-xl font-bold text-gray-900 mb-2">{{ $t('admin.create_multiple_options') }}</h2>
             <p class="text-gray-500 max-w-sm mx-auto mb-8">
                 {{ $t('admin.poll_description') }}
             </p>
-            <router-link to="/dashboard/polls/create" class="btn-primary">
+            <router-link to="/dashboard/polls/create" class="btn-primary inline-block w-full sm:w-auto">
                 {{ $t('admin.create_a_poll') }}
             </router-link>
         </div>

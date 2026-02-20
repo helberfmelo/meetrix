@@ -1,8 +1,8 @@
 <template>
-    <div class="space-y-6">
-        <div class="flex justify-between items-center">
-            <h1 class="text-3xl font-black text-gray-900">{{ $t('common.teams') }}</h1>
-            <button @click="showCreateModal = true" class="btn-primary">
+    <div class="space-y-6 sm:space-y-8">
+        <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-3 sm:gap-4">
+            <h1 class="text-2xl sm:text-3xl font-black text-gray-900">{{ $t('common.teams') }}</h1>
+            <button @click="showCreateModal = true" class="btn-primary w-full sm:w-auto">
                 + {{ $t('admin.create_team') }}
             </button>
         </div>
@@ -12,7 +12,7 @@
             <i class="fas fa-circle-notch fa-spin text-4xl text-meetrix-orange"></i>
         </div>
 
-        <div v-else-if="teams.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div v-else-if="teams.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             <div v-for="team in teams" :key="team.id" class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
                 <div class="flex justify-between items-start mb-4">
                     <div class="h-12 w-12 bg-indigo-100 text-indigo-600 rounded-xl flex items-center justify-center text-xl font-bold">
@@ -43,28 +43,28 @@
             </div>
         </div>
 
-        <div v-else class="bg-white dark:bg-zinc-900/50 p-12 text-center rounded-[40px] border border-black/5 dark:border-white/5 shadow-premium">
+        <div v-else class="bg-white dark:bg-zinc-900/50 p-8 sm:p-12 text-center rounded-[28px] sm:rounded-[40px] border border-black/5 dark:border-white/5 shadow-premium">
             <div class="text-5xl mb-4 text-meetrix-orange"><i class="fas fa-users-viewfinder"></i></div>
             <h2 class="text-xl font-bold text-gray-900 mb-2">{{ $t('admin.no_teams_yet') }}</h2>
             <p class="text-gray-500 max-w-sm mx-auto mb-8">
                 {{ $t('admin.teams_description') }}
             </p>
-            <button @click="showCreateModal = true" class="btn-primary">
+            <button @click="showCreateModal = true" class="btn-primary w-full sm:w-auto">
                 {{ $t('admin.create_first_team') }}
             </button>
         </div>
 
         <!-- Create Modal -->
         <div v-if="showCreateModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-            <div class="bg-white w-full max-w-md rounded-3xl shadow-2xl p-8 animate-in zoom-in-95 duration-200">
-                <h2 class="text-2xl font-black text-gray-900 mb-6">{{ $t('admin.create_new_team') }}</h2>
+            <div class="bg-white w-full max-w-md rounded-3xl shadow-2xl p-5 sm:p-8 animate-in zoom-in-95 duration-200">
+                <h2 class="text-xl sm:text-2xl font-black text-gray-900 mb-6">{{ $t('admin.create_new_team') }}</h2>
                 <div class="space-y-4">
                     <div class="space-y-1">
                         <label class="text-xs font-bold text-gray-400 uppercase tracking-wider px-1">{{ $t('admin.team_name') }}</label>
                         <input v-model="newTeam.name" type="text" :placeholder="$t('admin.team_name_placeholder')" class="w-full px-5 py-4 rounded-xl border-2 border-gray-100 focus:border-indigo-600 outline-none transition-all">
                     </div>
                 </div>
-                <div class="flex space-x-3 mt-8">
+                <div class="flex flex-col-reverse sm:flex-row gap-3 mt-8">
                     <button @click="showCreateModal = false" class="flex-1 py-4 font-bold text-gray-400 hover:text-gray-600">{{ $t('admin.cancel') }}</button>
                     <button @click="createTeam" :disabled="creating" class="flex-1 btn-primary py-4">
                         {{ creating ? $t('admin.creating') : $t('admin.create_team') }}

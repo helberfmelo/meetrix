@@ -1,12 +1,12 @@
 <template>
-    <div class="min-h-screen bg-gray-50/50 py-12 px-4">
+    <div class="min-h-screen bg-gray-50/50 py-8 sm:py-12 px-4">
         <div v-if="loading" class="flex justify-center py-12">
             <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
         </div>
 
         <div v-else-if="poll" class="max-w-xl mx-auto bg-white rounded-3xl shadow-2xl border border-gray-100 overflow-hidden">
-            <div class="p-8 border-b border-gray-50 bg-indigo-600 text-white">
-                <h1 class="text-2xl font-black mb-2">{{ poll.title }}</h1>
+            <div class="p-5 sm:p-8 border-b border-gray-50 bg-indigo-600 text-white">
+                <h1 class="text-xl sm:text-2xl font-black mb-2">{{ poll.title }}</h1>
                 <p class="text-indigo-100 text-sm opacity-80">{{ poll.description }}</p>
                 <div class="mt-4 flex items-center text-xs font-bold text-indigo-200 uppercase tracking-widest">
                     <span class="mr-2">{{ $t('poll.by') }}</span>
@@ -14,9 +14,9 @@
                 </div>
             </div>
 
-            <div class="p-8 space-y-6">
+            <div class="p-5 sm:p-8 space-y-6">
                 <!-- Customer Info -->
-                <div class="grid grid-cols-2 gap-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div class="space-y-1">
                         <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest px-1">{{ $t('poll.your_name') }}</label>
                         <input v-model="voter.customer_name" type="text" :placeholder="$t('poll.name_placeholder')" class="w-full px-4 py-3 rounded-xl border-2 border-gray-50 focus:border-indigo-600 outline-none">

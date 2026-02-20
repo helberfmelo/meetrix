@@ -1,13 +1,13 @@
 <template>
-    <div class="space-y-6">
-        <h1 class="text-3xl font-black text-gray-900">{{ $t('common.integrations') }}</h1>
-        <p class="text-gray-500 max-w-2xl">
+    <div class="space-y-6 sm:space-y-8">
+        <h1 class="text-2xl sm:text-3xl font-black text-gray-900">{{ $t('common.integrations') }}</h1>
+        <p class="text-gray-500 max-w-2xl text-sm sm:text-base">
             {{ $t('admin.integrations_description') }}
         </p>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
             <!-- Google Calendar -->
-            <div class="bg-white p-8 rounded-3xl border border-gray-100 shadow-sm flex flex-col justify-between">
+            <div class="bg-white p-5 sm:p-8 rounded-3xl border border-gray-100 shadow-sm flex flex-col justify-between">
                 <div>
                     <div class="flex items-center justify-between mb-6">
                         <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Google_Calendar_icon_%282020%29.svg" class="h-10 w-10" alt="Google Calendar">
@@ -35,7 +35,7 @@
             </div>
 
             <!-- Microsoft Outlook -->
-            <div class="bg-white p-8 rounded-3xl border border-gray-100 shadow-sm flex flex-col justify-between opacity-50 grayscale">
+            <div class="bg-white p-5 sm:p-8 rounded-3xl border border-gray-100 shadow-sm flex flex-col justify-between opacity-50 grayscale">
                 <div>
                     <div class="flex items-center justify-between mb-6">
                         <img src="https://upload.wikimedia.org/wikipedia/commons/d/df/Microsoft_Office_Outlook_%282018%E2%80%93present%29.svg" class="h-10 w-10" alt="Outlook">

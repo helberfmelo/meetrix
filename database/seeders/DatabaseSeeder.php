@@ -18,12 +18,14 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // 1. Create Admin User
-        $user = User::create([
-            'name' => 'Master Admin',
-            'email' => 'admin@meetrix.pro',
-            'password' => Hash::make('MeetrixMaster2026Sovereign!#'),
-            'email_verified_at' => now(),
-        ]);
+        $user = User::updateOrCreate(
+            ['email' => 'admin@meetrix.pro'],
+            [
+                'name' => 'Master Admin',
+                'password' => Hash::make('MeetrixMaster2026Sovereign!#'),
+                'email_verified_at' => now(),
+            ]
+        );
 
         // 2. Create a Scheduling Page
         $page = SchedulingPage::create([

@@ -2,6 +2,9 @@
 
 Este guia define os procedimentos operacionais padrão para a IA (Antigravity) no projeto Meetrix.
 
+> [!IMPORTANT]
+> **Idioma de Comunicação**: A IA deve se comunicar com o usuário obrigatoriamente em **Português do Brasil (PT-BR)**.
+
 ## 🚀 Fluxo de Deployment & Verificação
 
 1. **Commit & Push**: Realize o commit e push das alterações para a branch `main`.
@@ -29,7 +32,8 @@ Este guia define os procedimentos operacionais padrão para a IA (Antigravity) n
 
 ## 🧪 Protocolo de Testes e E-mail
 
-- **E-mail para Testes**: Use preferencialmente `tester@meetrix.pro` ou e-mails temporários para fluxos de registro.
+- **Limpeza de Formulários**: Antes de digitar qualquer valor em um `input` (Login ou formulários em geral), a IA deve **sempre** verificar se já existe conteúdo e apagá-lo completamente para evitar interferência de auto-completar do navegador.
+- **Protocolo de Testes**: Use preferencialmente `tester@meetrix.pro` ou e-mails temporários para fluxos de registro.
 - **Falha em Produção**: Se um teste falhar ou terminar, **limpe os dados residuais** antes de um novo ciclo.
 - **Limpeza**: Use o script `migrate_sovereign.php` para um reset total ("Nuclear") ou crie scripts PHP temporários para deletar registros específicos.
 

@@ -2,20 +2,20 @@
     <div class="space-y-8">
         <!-- Logo Upload (Mock) -->
         <div>
-            <label class="block text-sm font-bold text-gray-700 mb-2 uppercase tracking-widest">{{ $t('admin.logo_url_label') }}</label>
+            <label class="block text-sm font-bold text-gray-700 dark:text-slate-200 mb-2 uppercase tracking-widest">{{ $t('admin.logo_url_label') }}</label>
             <input 
                 type="text" 
                 v-model="config.logo_url" 
                 @input="update"
-                placeholder="https://example.com/logo.png"
-                class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all outline-none"
+                :placeholder="$t('admin.logo_url_placeholder')"
+                class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-zinc-950 text-zinc-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all outline-none"
             />
-            <p class="mt-2 text-[10px] text-gray-500 font-bold uppercase tracking-widest">{{ $t('admin.logo_pro_tip') }}</p>
+            <p class="mt-2 text-[10px] text-gray-500 dark:text-slate-300 font-bold uppercase tracking-widest">{{ $t('admin.logo_pro_tip') }}</p>
         </div>
 
         <!-- Primary Color -->
         <div>
-            <label class="block text-sm font-bold text-gray-700 mb-2 uppercase tracking-widest">{{ $t('admin.primary_color_label') }}</label>
+            <label class="block text-sm font-bold text-gray-700 dark:text-slate-200 mb-2 uppercase tracking-widest">{{ $t('admin.primary_color_label') }}</label>
             <div class="flex items-center gap-4">
                 <input 
                     type="color" 
@@ -28,18 +28,18 @@
                     v-model="config.primary_color" 
                     @input="update"
                     placeholder="#4f46e5"
-                    class="flex-1 px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all outline-none font-mono"
+                    class="flex-1 px-4 py-3 rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-zinc-950 text-zinc-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all outline-none font-mono"
                 />
             </div>
         </div>
 
         <!-- Typography -->
         <div>
-            <label class="block text-sm font-bold text-gray-700 mb-2 uppercase tracking-widest">{{ $t('admin.typography_label') }}</label>
+            <label class="block text-sm font-bold text-gray-700 dark:text-slate-200 mb-2 uppercase tracking-widest">{{ $t('admin.typography_label') }}</label>
             <select 
                 v-model="config.custom_font" 
                 @change="update"
-                class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500 transition-all outline-none appearance-none"
+                class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-zinc-950 text-zinc-900 dark:text-white focus:ring-2 focus:ring-indigo-500 transition-all outline-none appearance-none"
             >
                 <option value="Inter">{{ $t('admin.inter_standard') }}</option>
                 <option value="Outfit">{{ $t('admin.outfit_premium') }}</option>
@@ -53,7 +53,7 @@
             <div class="flex items-start gap-4">
                 <div class="flex-1">
                     <h4 class="text-sm font-black uppercase tracking-widest mb-1 text-meetrix-orange">{{ $t('admin.coming_soon') }}</h4>
-                    <p class="text-xs text-slate-500 font-medium">{{ $t('admin.whatsapp_pro_desc') }}</p>
+                    <p class="text-xs text-slate-300/90 font-medium">{{ $t('admin.whatsapp_pro_desc') }}</p>
                 </div>
                 <label class="relative inline-flex items-center cursor-pointer">
                     <input type="checkbox" v-model="config.whatsapp_enabled" @change="update" class="sr-only peer">

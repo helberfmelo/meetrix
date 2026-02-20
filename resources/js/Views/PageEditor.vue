@@ -1,14 +1,14 @@
 <template>
-    <div class="min-h-screen lg:h-screen bg-gray-50 flex flex-col lg:flex-row overflow-y-auto lg:overflow-hidden">
+    <div class="min-h-screen lg:h-screen bg-gray-50 dark:bg-zinc-950 flex flex-col lg:flex-row overflow-y-auto lg:overflow-hidden">
         <!-- Sidebar (Editor Controls) -->
-        <div :class="[isPreviewMode ? 'hidden lg:flex' : 'flex']" class="w-full lg:w-80 bg-white border-r border-gray-200 flex-col z-20 shadow-xl">
-            <div class="p-3 sm:p-4 border-b border-gray-100 flex items-center justify-between gap-2">
-                <h2 class="font-bold text-gray-800">{{ $t('admin.editor') }}</h2>
+        <div :class="[isPreviewMode ? 'hidden lg:flex' : 'flex']" class="w-full lg:w-80 bg-white dark:bg-zinc-900 border-r border-gray-200 dark:border-white/10 flex-col z-20 shadow-xl">
+            <div class="p-3 sm:p-4 border-b border-gray-100 dark:border-white/10 flex items-center justify-between gap-2">
+                <h2 class="font-bold text-gray-800 dark:text-zinc-100">{{ $t('admin.editor') }}</h2>
                 <div class="flex items-center space-x-2">
                     <button @click="isPreviewMode = !isPreviewMode" class="lg:hidden text-xs font-bold text-indigo-600 whitespace-nowrap">
                         {{ isPreviewMode ? $t('admin.back_to_edit') : $t('admin.preview') }}
                     </button>
-                    <router-link to="/dashboard" class="text-xs sm:text-sm text-gray-500 hover:text-indigo-600 whitespace-nowrap">{{ $t('admin.exit') }}</router-link>
+                    <router-link to="/dashboard" class="text-xs sm:text-sm text-gray-500 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-300 whitespace-nowrap">{{ $t('admin.exit') }}</router-link>
                 </div>
             </div>
             
@@ -42,10 +42,10 @@
         <div
             v-if="activeSection"
             :class="[isPreviewMode ? 'hidden lg:flex' : 'flex']"
-            class="w-full lg:w-96 bg-white border-r border-gray-200 flex-col overflow-y-auto z-10 transition-all duration-300"
+            class="w-full lg:w-96 bg-white dark:bg-zinc-900 border-r border-gray-200 dark:border-white/10 flex-col overflow-y-auto z-10 transition-all duration-300"
         >
             <div class="p-4 sm:p-6">
-                <h3 class="text-lg sm:text-xl font-bold text-gray-900 mb-4 sm:mb-6">{{ currentSection.label }}</h3>
+                <h3 class="text-lg sm:text-xl font-bold text-gray-900 dark:text-zinc-100 mb-4 sm:mb-6">{{ currentSection.label }}</h3>
                 
                 <!-- Dynamic Component for Section -->
                 <component 
@@ -59,9 +59,9 @@
         <!-- Live Preview Area -->
         <div
             :class="[isPreviewMode ? 'flex' : 'hidden lg:flex']"
-            class="flex-1 bg-gray-100 items-center justify-center p-3 sm:p-4 lg:p-8 relative overflow-hidden min-h-[50vh] lg:min-h-0"
+            class="flex-1 bg-gray-100 dark:bg-zinc-950 items-center justify-center p-3 sm:p-4 lg:p-8 relative overflow-hidden min-h-[50vh] lg:min-h-0"
         >
-            <div class="absolute top-3 sm:top-4 right-3 sm:right-4 bg-white/80 backdrop-blur px-2.5 sm:px-3 py-1 rounded-full text-[10px] sm:text-xs font-mono text-gray-500 z-10">
+            <div class="absolute top-3 sm:top-4 right-3 sm:right-4 bg-white/80 dark:bg-zinc-900/80 backdrop-blur px-2.5 sm:px-3 py-1 rounded-full text-[10px] sm:text-xs font-mono text-gray-500 dark:text-slate-300 z-10">
                 {{ $t('admin.live_preview') }}
             </div>
             

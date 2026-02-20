@@ -48,7 +48,7 @@
                 <div v-if="summary?.user" class="space-y-2 text-sm">
                     <p class="text-slate-600 dark:text-slate-300"><span class="font-bold">E-mail:</span> {{ summary.user.email }}</p>
                     <p class="text-slate-600 dark:text-slate-300"><span class="font-bold">Idioma:</span> {{ summary.user.preferred_locale || 'auto' }}</p>
-                    <p class="text-slate-600 dark:text-slate-300"><span class="font-bold">Timezone:</span> {{ summary.user.timezone || 'UTC' }}</p>
+                    <p class="text-slate-600 dark:text-slate-300"><span class="font-bold">Fuso horário:</span> {{ summary.user.timezone || 'UTC' }}</p>
                     <p class="text-slate-600 dark:text-slate-300"><span class="font-bold">Paginas:</span> {{ summary.user.scheduling_pages_count }}</p>
                     <p class="text-slate-600 dark:text-slate-300"><span class="font-bold">Times:</span> {{ summary.user.teams_count }}</p>
                 </div>
@@ -69,7 +69,7 @@
                     <input
                         v-model="preferences.timezone"
                         type="text"
-                        placeholder="Timezone (America/Sao_Paulo)"
+                        placeholder="Fuso horário (America/Sao_Paulo)"
                         class="w-full rounded-xl px-4 py-3 bg-zinc-50 dark:bg-zinc-950 border border-black/10 dark:border-white/10 text-zinc-900 dark:text-white"
                     >
                     <button

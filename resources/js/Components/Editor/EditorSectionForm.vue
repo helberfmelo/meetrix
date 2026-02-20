@@ -1,6 +1,6 @@
 <template>
     <div class="space-y-6">
-        <p class="text-sm text-gray-500 leading-relaxed">
+        <p class="text-sm text-gray-500 dark:text-slate-300 leading-relaxed">
             {{ $t('admin.form_description') }}
         </p>
 
@@ -8,18 +8,18 @@
             <div 
                 v-for="(field, index) in fields" 
                 :key="index"
-                class="p-4 bg-gray-50 rounded-xl border border-gray-100 flex items-start space-x-3 group relative"
+                class="p-4 bg-gray-50 dark:bg-zinc-900/60 rounded-xl border border-gray-100 dark:border-white/10 flex items-start space-x-3 group relative"
             >
                 <div class="flex-1 space-y-3">
                     <div class="flex space-x-2">
                         <input 
                             v-model="field.label" 
-                            class="flex-1 px-3 py-2 text-sm font-medium border-2 border-transparent focus:border-indigo-600 rounded-lg outline-none transition-all"
+                            class="flex-1 px-3 py-2 text-sm font-medium border-2 border-transparent focus:border-indigo-600 rounded-lg outline-none transition-all bg-white dark:bg-zinc-950 text-zinc-900 dark:text-white"
                             :placeholder="$t('admin.field_label_placeholder')"
                         >
                         <select 
                             v-model="field.type" 
-                            class="px-3 py-2 text-sm border-2 border-transparent focus:border-indigo-600 rounded-lg outline-none bg-white"
+                            class="px-3 py-2 text-sm border-2 border-transparent focus:border-indigo-600 rounded-lg outline-none bg-white dark:bg-zinc-950 text-zinc-900 dark:text-white"
                         >
                             <option value="text">{{ $t('admin.text_field') }}</option>
                             <option value="email">{{ $t('admin.email_field') }}</option>
@@ -28,18 +28,18 @@
                         </select>
                     </div>
                     <div class="flex items-center space-x-4 px-1">
-                        <label class="flex items-center text-xs font-bold text-gray-500 cursor-pointer">
+                        <label class="flex items-center text-xs font-bold text-gray-500 dark:text-slate-300 cursor-pointer">
                             <input type="checkbox" v-model="field.required" class="mr-2 rounded text-indigo-600">
                             {{ $t('admin.required_label') }}
                         </label>
-                        <span class="text-[10px] text-gray-300 font-mono">ID: {{ field.name }}</span>
+                        <span class="text-[10px] text-gray-400 dark:text-slate-400 font-mono">ID: {{ field.name }}</span>
                     </div>
                 </div>
                 
                 <button 
                     @click="removeField(index)"
                     v-if="!isDefaultField(field.name)"
-                    class="p-2 text-gray-300 hover:text-red-500 transition-colors"
+                    class="p-2 text-gray-400 dark:text-slate-300 hover:text-red-500 transition-colors rounded-lg border border-transparent hover:border-red-200 dark:hover:border-red-500/30"
                 >
                     ✕
                 </button>
@@ -48,7 +48,7 @@
 
         <button 
             @click="addField"
-            class="w-full py-3 border-2 border-dashed border-gray-200 rounded-xl text-gray-400 font-bold hover:border-indigo-300 hover:text-indigo-600 transition-all text-sm"
+            class="w-full py-3 border-2 border-dashed border-gray-200 dark:border-white/10 rounded-xl text-gray-500 dark:text-slate-300 font-bold hover:border-indigo-300 dark:hover:border-indigo-400 hover:text-indigo-600 dark:hover:text-indigo-300 transition-all text-sm"
         >
             {{ $t('admin.add_question') }}
         </button>

@@ -28,7 +28,13 @@
                         <input v-model="option.start_at" type="datetime-local" class="px-4 py-3 rounded-xl border-2 border-gray-100 dark:border-white/10 bg-white dark:bg-zinc-950 text-zinc-900 dark:text-white focus:border-indigo-600 outline-none">
                         <input v-model="option.end_at" type="datetime-local" class="px-4 py-3 rounded-xl border-2 border-gray-100 dark:border-white/10 bg-white dark:bg-zinc-950 text-zinc-900 dark:text-white focus:border-indigo-600 outline-none">
                     </div>
-                    <button @click="removeOption(index)" v-if="poll.options.length > 1" class="mt-2 sm:mt-0 text-gray-300 dark:text-slate-400 hover:text-red-500 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-all">✕</button>
+                    <button
+                        v-if="poll.options.length > 1"
+                        @click="removeOption(index)"
+                        class="mt-2 sm:mt-0 w-9 h-9 rounded-xl border border-black/10 dark:border-white/10 text-slate-500 dark:text-slate-300 hover:text-red-500 hover:border-red-200 dark:hover:border-red-500/30 transition-colors"
+                    >
+                        ✕
+                    </button>
                 </div>
             </div>
 

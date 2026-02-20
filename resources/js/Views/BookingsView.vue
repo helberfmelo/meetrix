@@ -26,7 +26,7 @@
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-black/5 dark:divide-white/5">
-                        <tr v-if="bookings.length === 0">
+                        <tr v-if="normalizedBookings.length === 0">
                             <td colspan="4" class="px-6 lg:px-12 py-20 lg:py-24 text-center">
                                 <div class="flex flex-col items-center gap-6">
                                     <div class="w-16 h-16 rounded-full bg-zinc-100 dark:bg-zinc-900 flex items-center justify-center text-zinc-300 dark:text-zinc-800 text-2xl">
@@ -36,25 +36,25 @@
                                 </div>
                             </td>
                         </tr>
-                        <tr v-for="booking in bookings" :key="booking.id" class="group hover:bg-zinc-50 dark:hover:bg-zinc-900/50 transition-colors">
+                        <tr v-for="booking in normalizedBookings" :key="booking.id" class="group hover:bg-zinc-50 dark:hover:bg-zinc-900/50 transition-colors">
                             <td class="px-6 lg:px-12 py-6 lg:py-8">
-                                <p class="text-sm font-black text-zinc-950 dark:text-white uppercase tracking-tight">{{ booking.customer_name }}</p>
-                                <p class="text-[10px] text-slate-500 font-medium">{{ booking.customer_email }}</p>
+                                <p class="text-sm font-black text-zinc-950 dark:text-white uppercase tracking-tight">{{ booking.customerName }}</p>
+                                <p class="text-[10px] text-slate-500 dark:text-slate-300 font-medium">{{ booking.customerEmail }}</p>
                             </td>
                             <td class="px-6 lg:px-12 py-6 lg:py-8">
-                                <span class="px-4 py-1.5 bg-zinc-100 dark:bg-zinc-800 rounded-lg text-[9px] font-black text-slate-600 dark:text-slate-400 uppercase tracking-widest">
-                                    {{ booking.service_name }}
+                                <span class="px-4 py-1.5 bg-zinc-100 dark:bg-zinc-800 rounded-lg text-[9px] font-black text-slate-700 dark:text-slate-100 uppercase tracking-widest">
+                                    {{ booking.serviceName }}
                                 </span>
                             </td>
                             <td class="px-6 lg:px-12 py-6 lg:py-8">
-                                <p class="text-xs font-bold text-zinc-950 dark:text-white">{{ booking.start_time }}</p>
-                                <p class="text-[9px] text-slate-500 font-black uppercase tracking-tighter">{{ booking.duration }} MIN</p>
+                                <p class="text-xs font-bold text-zinc-950 dark:text-white">{{ booking.startLabel }}</p>
+                                <p class="text-[9px] text-slate-500 dark:text-slate-300 font-black uppercase tracking-tighter">{{ booking.durationLabel }}</p>
                             </td>
                             <td class="px-6 lg:px-12 py-6 lg:py-8">
                                 <span class="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest"
-                                    :class="booking.status === 'confirmed' ? 'text-meetrix-green' : 'text-meetrix-orange'">
-                                    <span class="w-1.5 h-1.5 rounded-full" :class="booking.status === 'confirmed' ? 'bg-meetrix-green' : 'bg-meetrix-orange'"></span>
-                                    {{ booking.status }}
+                                    :class="statusTextClass(booking.status)">
+                                    <span class="w-1.5 h-1.5 rounded-full" :class="statusDotClass(booking.status)"></span>
+                                    {{ booking.statusLabel }}
                                 </span>
                             </td>
                         </tr>
@@ -63,31 +63,31 @@
             </div>
 
             <div class="md:hidden p-4 space-y-3">
-                <div v-if="bookings.length === 0" class="py-16 text-center rounded-2xl border border-dashed border-black/10 dark:border-white/10">
+                <div v-if="normalizedBookings.length === 0" class="py-16 text-center rounded-2xl border border-dashed border-black/10 dark:border-white/10">
                     <div class="w-12 h-12 mx-auto rounded-full bg-zinc-100 dark:bg-zinc-900 flex items-center justify-center text-zinc-300 dark:text-zinc-700 text-xl mb-4">
                         <i class="fas fa-calendar-alt"></i>
                     </div>
                     <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">{{ $t('dashboard.no_bookings') }}</p>
                 </div>
 
-                <article v-for="booking in bookings" :key="`mobile-${booking.id}`" class="rounded-2xl border border-black/5 dark:border-white/5 bg-zinc-50/70 dark:bg-zinc-900/40 p-4 space-y-3">
+                <article v-for="booking in normalizedBookings" :key="`mobile-${booking.id}`" class="rounded-2xl border border-black/5 dark:border-white/5 bg-zinc-50/70 dark:bg-zinc-900/40 p-4 space-y-3">
                     <div>
-                        <p class="text-sm font-black text-zinc-950 dark:text-white uppercase tracking-tight">{{ booking.customer_name }}</p>
-                        <p class="text-[10px] text-slate-500 font-medium break-all">{{ booking.customer_email }}</p>
+                        <p class="text-sm font-black text-zinc-950 dark:text-white uppercase tracking-tight">{{ booking.customerName }}</p>
+                        <p class="text-[10px] text-slate-500 dark:text-slate-300 font-medium break-all">{{ booking.customerEmail }}</p>
                     </div>
                     <div class="flex items-center justify-between gap-3">
-                        <span class="px-3 py-1.5 bg-zinc-100 dark:bg-zinc-800 rounded-lg text-[9px] font-black text-slate-600 dark:text-slate-400 uppercase tracking-widest">
-                            {{ booking.service_name }}
+                        <span class="px-3 py-1.5 bg-zinc-100 dark:bg-zinc-800 rounded-lg text-[9px] font-black text-slate-700 dark:text-slate-100 uppercase tracking-widest">
+                            {{ booking.serviceName }}
                         </span>
                         <span class="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest"
-                            :class="booking.status === 'confirmed' ? 'text-meetrix-green' : 'text-meetrix-orange'">
-                            <span class="w-1.5 h-1.5 rounded-full" :class="booking.status === 'confirmed' ? 'bg-meetrix-green' : 'bg-meetrix-orange'"></span>
-                            {{ booking.status }}
+                            :class="statusTextClass(booking.status)">
+                            <span class="w-1.5 h-1.5 rounded-full" :class="statusDotClass(booking.status)"></span>
+                            {{ booking.statusLabel }}
                         </span>
                     </div>
-                    <div class="text-[10px] font-bold text-slate-500">
-                        <p class="text-zinc-950 dark:text-white">{{ booking.start_time }}</p>
-                        <p class="uppercase">{{ booking.duration }} MIN</p>
+                    <div class="text-[10px] font-bold text-slate-500 dark:text-slate-300">
+                        <p class="text-zinc-950 dark:text-white">{{ booking.startLabel }}</p>
+                        <p class="uppercase">{{ booking.durationLabel }}</p>
                     </div>
                 </article>
             </div>
@@ -96,10 +96,90 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { computed, ref, onMounted } from 'vue';
+import { useI18n } from 'vue-i18n';
 import axios from '../axios';
 
+const { t, locale } = useI18n();
 const bookings = ref([]);
+
+const normalizedBookings = computed(() => bookings.value.map((booking) => normalizeBooking(booking)));
+
+const statusTextClass = (status) => {
+    const key = (status || '').toLowerCase();
+
+    if (key === 'confirmed' || key === 'completed') return 'text-meetrix-green';
+    if (key === 'pending') return 'text-meetrix-orange';
+    if (key === 'cancelled' || key === 'canceled' || key === 'rejected' || key === 'no_show') return 'text-red-500';
+
+    return 'text-slate-500 dark:text-slate-300';
+};
+
+const statusDotClass = (status) => {
+    const key = (status || '').toLowerCase();
+
+    if (key === 'confirmed' || key === 'completed') return 'bg-meetrix-green';
+    if (key === 'pending') return 'bg-meetrix-orange';
+    if (key === 'cancelled' || key === 'canceled' || key === 'rejected' || key === 'no_show') return 'bg-red-500';
+
+    return 'bg-slate-400 dark:bg-slate-500';
+};
+
+const normalizeBooking = (booking) => {
+    const appointmentType = booking.appointment_type || booking.appointmentType || null;
+    const startAt = booking.start_at || booking.startAt || null;
+    const endAt = booking.end_at || booking.endAt || null;
+
+    let durationMinutes = Number(appointmentType?.duration_minutes ?? booking.duration ?? 0);
+    if ((!durationMinutes || Number.isNaN(durationMinutes)) && startAt && endAt) {
+        const startDate = new Date(startAt);
+        const endDate = new Date(endAt);
+        const deltaMs = endDate.getTime() - startDate.getTime();
+        if (!Number.isNaN(deltaMs) && deltaMs > 0) {
+            durationMinutes = Math.round(deltaMs / 60000);
+        }
+    }
+
+    return {
+        id: booking.id,
+        status: booking.status || 'pending',
+        statusLabel: resolveStatusLabel(booking.status),
+        customerName: booking.customer_name || booking.customerName || t('booking.customer_fallback'),
+        customerEmail: booking.customer_email || booking.customerEmail || t('booking.email_fallback'),
+        serviceName: appointmentType?.name || booking.service_name || t('booking.service_fallback'),
+        startLabel: formatDateTime(startAt),
+        durationLabel: durationMinutes > 0
+            ? `${durationMinutes} ${t('booking.minutes_short')}`
+            : t('booking.duration_unknown'),
+    };
+};
+
+const resolveStatusLabel = (status) => {
+    const key = (status || '').toLowerCase();
+    const map = {
+        pending: 'booking.status_pending',
+        confirmed: 'booking.status_confirmed',
+        completed: 'booking.status_completed',
+        cancelled: 'booking.status_cancelled',
+        canceled: 'booking.status_cancelled',
+        rejected: 'booking.status_rejected',
+        no_show: 'booking.status_no_show',
+    };
+
+    return map[key] ? t(map[key]) : t('booking.status_unknown');
+};
+
+const formatDateTime = (value) => {
+    if (!value) return t('booking.date_unknown');
+
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) return t('booking.date_unknown');
+
+    return new Intl.DateTimeFormat(locale.value || 'pt-BR', {
+        dateStyle: 'short',
+        timeStyle: 'short',
+    }).format(date);
+};
 
 onMounted(async () => {
     try {

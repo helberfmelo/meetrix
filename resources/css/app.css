@@ -1,3 +1,9 @@
 @import "tailwindcss/base";
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
+
+@layer components {
+    .btn-primary {
+        @apply inline-flex items-center justify-center gap-2 rounded-2xl bg-meetrix-orange px-6 py-3.5 text-[10px] font-black uppercase tracking-[0.15em] text-zinc-950 shadow-xl shadow-meetrix-orange/20 transition-all hover:scale-[1.02] active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60 sm:px-8 sm:py-4 sm:text-xs sm:tracking-[0.2em];
+    }
+}

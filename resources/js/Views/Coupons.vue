@@ -58,12 +58,18 @@
                                         </span>
                                     </td>
                                     <td class="px-6 lg:px-8 py-5 lg:py-6 text-right">
-                                        <div class="flex items-center justify-end gap-3 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
-                                            <button @click="toggleStatus(coupon)" class="p-2 hover:text-meetrix-orange transition-colors">
-                                                <span class="text-xs font-black uppercase tracking-tighter">{{ coupon.is_active ? $t('admin.deactivate') : $t('admin.activate') }}</span>
+                                        <div class="flex items-center justify-end gap-2">
+                                            <button
+                                                @click="toggleStatus(coupon)"
+                                                class="px-3 py-2 rounded-lg border border-black/10 dark:border-white/10 text-xs font-black uppercase tracking-tight text-zinc-700 dark:text-slate-100 hover:border-meetrix-orange hover:text-meetrix-orange dark:hover:text-meetrix-orange transition-colors"
+                                            >
+                                                {{ coupon.is_active ? $t('admin.deactivate') : $t('admin.activate') }}
                                             </button>
-                                            <button @click="deleteCoupon(coupon)" class="p-2 hover:text-red-500 transition-colors">
-                                                <span class="text-xs font-black uppercase tracking-tighter">{{ $t('admin.delete') }}</span>
+                                            <button
+                                                @click="deleteCoupon(coupon)"
+                                                class="px-3 py-2 rounded-lg border border-red-200 dark:border-red-500/30 text-xs font-black uppercase tracking-tight text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors"
+                                            >
+                                                {{ $t('admin.delete') }}
                                             </button>
                                         </div>
                                     </td>

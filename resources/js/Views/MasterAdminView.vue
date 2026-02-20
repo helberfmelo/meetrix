@@ -2,7 +2,7 @@
     <div class="space-y-8 py-6 animate-in fade-in duration-700">
         <header class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
             <div>
-                <h1 class="text-3xl sm:text-4xl font-black text-zinc-950 dark:text-white tracking-tight uppercase">Master Admin</h1>
+                <h1 class="text-3xl sm:text-4xl font-black text-zinc-950 dark:text-white tracking-tight uppercase">{{ $t('admin.master_admin_title') }}</h1>
                 <p class="text-[10px] font-black text-slate-500 uppercase tracking-[0.25em] mt-2">Operacao SaaS: clientes, pagamentos, cupons e atividade</p>
             </div>
             <button
@@ -36,9 +36,9 @@
                     </select>
                     <select v-model="filters.subscription" class="rounded-xl px-4 py-3 bg-zinc-50 dark:bg-zinc-950 border border-black/10 dark:border-white/10 text-zinc-900 dark:text-white">
                         <option value="all">Todos planos</option>
-                        <option value="free">Free</option>
-                        <option value="pro">Pro</option>
-                        <option value="enterprise">Enterprise</option>
+                        <option value="free">{{ $t('admin.plan_free') }}</option>
+                        <option value="pro">{{ $t('admin.plan_pro') }}</option>
+                        <option value="enterprise">{{ $t('admin.plan_enterprise') }}</option>
                     </select>
                     <button
                         @click="fetchCustomers"
@@ -138,7 +138,7 @@
 
             <div class="grid grid-cols-1 xl:grid-cols-3 gap-4">
                 <article class="rounded-2xl border border-black/5 dark:border-white/10 p-4">
-                    <p class="text-[10px] font-black uppercase tracking-wider text-slate-500">Teams</p>
+                    <p class="text-[10px] font-black uppercase tracking-wider text-slate-500">{{ $t('common.teams') }}</p>
                     <p class="text-2xl font-black text-zinc-900 dark:text-zinc-100 mt-2">{{ selectedCustomer.customer.owned_teams?.length || 0 }}</p>
                 </article>
                 <article class="rounded-2xl border border-black/5 dark:border-white/10 p-4">
@@ -164,7 +164,7 @@
                 </article>
 
                 <article class="rounded-2xl border border-black/5 dark:border-white/10 p-4">
-                    <h3 class="text-sm font-black uppercase tracking-wider text-zinc-900 dark:text-zinc-100 mb-3">Bookings</h3>
+                    <h3 class="text-sm font-black uppercase tracking-wider text-zinc-900 dark:text-zinc-100 mb-3">{{ $t('common.bookings') }}</h3>
                     <div v-if="selectedCustomer.bookings?.length" class="space-y-2 max-h-64 overflow-auto pr-1">
                         <div v-for="booking in selectedCustomer.bookings" :key="booking.id" class="text-xs border-b border-black/5 dark:border-white/10 pb-2">
                             <p class="font-bold">{{ booking.customer_name }} - {{ booking.status }}</p>
@@ -183,8 +183,10 @@
 
 <script setup>
 import { computed, onMounted, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 import axios from '../axios';
 
+const { t } = useI18n();
 const overview = ref(null);
 const customers = ref([]);
 const selectedCustomer = ref(null);
@@ -204,9 +206,9 @@ const kpiCards = computed(() => {
         { label: 'Clientes', value: overview.value.kpis.clients_total },
         { label: 'Ativos', value: overview.value.kpis.clients_active },
         { label: 'Inativos', value: overview.value.kpis.clients_inactive },
-        { label: 'Teams', value: overview.value.kpis.teams_total },
+        { label: t('common.teams'), value: overview.value.kpis.teams_total },
         { label: 'Paginas', value: overview.value.kpis.pages_total },
-        { label: 'Bookings', value: overview.value.kpis.bookings_total },
+        { label: t('common.bookings'), value: overview.value.kpis.bookings_total },
         { label: 'Pagamentos', value: overview.value.kpis.payments_paid_total },
         { label: 'Receita Mes', value: formatCurrency(overview.value.kpis.revenue_current_month, 'BRL') },
     ];

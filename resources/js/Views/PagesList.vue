@@ -2,7 +2,7 @@
     <div class="space-y-6 sm:space-y-8">
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6 sm:mb-8">
             <div>
-                <h1 class="text-3xl sm:text-5xl font-black text-zinc-950 dark:text-white tracking-tighter uppercase font-outfit">YOUR_PAGES<span class="text-meetrix-orange">.NODES</span></h1>
+                <h1 class="text-3xl sm:text-5xl font-black text-zinc-950 dark:text-white tracking-tighter uppercase font-outfit">{{ $t('admin.pages_header_prefix') }}<span class="text-meetrix-orange">{{ $t('admin.pages_header_suffix') }}</span></h1>
                 <p class="text-slate-500 font-bold text-[10px] sm:text-xs uppercase tracking-[0.2em] sm:tracking-[0.4em] mt-2">{{ $t('admin.active_deployments') }}</p>
             </div>
             <button @click="showCreateModal = true" class="w-full md:w-auto px-6 sm:px-8 py-3.5 sm:py-4 bg-meetrix-orange text-zinc-950 rounded-2xl font-black text-[10px] sm:text-xs uppercase tracking-[0.15em] sm:tracking-[0.2em] hover:scale-105 active:scale-95 transition-all shadow-xl shadow-meetrix-orange/20">
@@ -107,7 +107,7 @@
                 <div class="space-y-6">
                     <div class="space-y-2">
                         <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">{{ $t('admin.internal_name') }}</label>
-                        <input v-model="newPage.title" type="text" placeholder="e.g. Sales Consultation" class="w-full px-6 py-4 rounded-2xl bg-zinc-50 dark:bg-zinc-950 border-2 border-black/5 dark:border-white/5 focus:border-meetrix-orange outline-none text-zinc-950 dark:text-white font-bold transition-all">
+                        <input v-model="newPage.title" type="text" :placeholder="$t('admin.page_name_placeholder')" class="w-full px-6 py-4 rounded-2xl bg-zinc-50 dark:bg-zinc-950 border-2 border-black/5 dark:border-white/5 focus:border-meetrix-orange outline-none text-zinc-950 dark:text-white font-bold transition-all">
                     </div>
                 </div>
                 <div class="mt-8 sm:mt-12 flex gap-3 sm:gap-4">
@@ -164,7 +164,7 @@ const createPage = async () => {
 };
 
 const deletePage = async (id) => {
-    if (!confirm(t('admin.destroy_vector_confirm'))) return;
+    if (!confirm(t('admin.delete_page_confirm'))) return;
     try {
         await axios.delete(`/api/pages/${id}`);
         fetchPages();

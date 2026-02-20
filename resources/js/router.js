@@ -55,7 +55,9 @@ const routes = [
             { path: 'integrations/:service/callback', component: () => import('./Views/IntegrationCallbackView.vue') },
             { path: 'polls', component: () => import('./Views/PollsView.vue') },
             { path: 'polls/create', component: () => import('./Views/PollCreator.vue') },
-            { path: 'coupons', component: () => import('./Views/Coupons.vue') }
+            { path: 'coupons', component: () => import('./Views/Coupons.vue') },
+            { path: 'account', component: () => import('./Views/AccountView.vue') },
+            { path: 'master-admin', component: () => import('./Views/MasterAdminView.vue') }
         ]
     },
     {

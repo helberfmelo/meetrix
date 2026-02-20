@@ -1,67 +1,84 @@
 # AI Operations Guide - Meetrix SaaS
 
-Este guia define os procedimentos operacionais padrão para a IA (Antigravity) no projeto Meetrix.
+Este guia define os procedimentos operacionais padrão para a IA no projeto Meetrix.
 
 > [!IMPORTANT]
-> **Idioma de Comunicação**: A IA deve se comunicar com o usuário obrigatoriamente em **Português do Brasil (PT-BR)**.
+> **Idioma de Comunicação**: a IA deve se comunicar com o usuário em **Português do Brasil (PT-BR)**.
 
-## 🚀 Fluxo de Deployment & Verificação
+## Fluxo de Deployment e Verificação
 
-1. **Commit & Push**: Realize o commit e push das alterações para a branch `main`.
-   - **IMPORTANTE**: Verifique se o comando `git push origin main` no terminal terminou com sucesso (Exit Code 0). Se houver erro de credencial ou bloqueio de segredos, resolva localmente antes de prosseguir.
-2. **Monitoramento (GitHub Actions)**: Após confirmar o push no terminal, monitore o deploy.
-   - **URL**: [https://github.com/helberfmelo/meetrix/actions/workflows/deploy.yml](https://github.com/helberfmelo/meetrix/actions/workflows/deploy.yml)
-   - **Protocolo de Polling**: Você **DEVE** atualizar (refresh) a página do GitHub Actions manualmente a cada 15 segundos. Não limite-se a esperar; a atualização é necessária para ver o status real.
-   - **Confirmação**: Prossiga apenas quando o job "🎉 Deploy" estiver com o checkmark verde (sucesso).
-3. **Validação em Produção**: Após o sucesso no GitHub, siga esta ordem:
-   - **Logs**: Acesse `read_logs.php` para garantir que nenhum erro de bootstrap (ex: `headers already sent`) surgiu.
-   - **Migrações**: Se houver mudanças de banco, acesse `migrate_sovereign.php`.
-   - **Funcionalidade**: Teste as URLs finais (Home, Login, Dashboard).
+1. **Commit e Push**: realize commit/push na branch `main`.
+   - Confirmar `git push origin main` com `Exit Code 0`.
+2. **Monitoramento no GitHub Actions**:
+   - URL: [https://github.com/helberfmelo/meetrix/actions/workflows/deploy.yml](https://github.com/helberfmelo/meetrix/actions/workflows/deploy.yml)
+   - Polling obrigatório a cada 15 segundos (refresh manual).
+   - Só seguir após o job "🎉 Deploy" ficar verde.
+3. **Validação em produção**:
+   - Logs: `https://opentshost.com/meetrix/read_logs.php`
+   - Migração/seed (quando necessário): `https://opentshost.com/meetrix/migrate_sovereign.php`
+   - Fluxos: Home, Login, Onboarding, Checkout, Dashboard e recursos alterados no release.
 
-## 🔐 Credenciais de Acesso
+## Estado Atual em Produção (2026-02-20)
 
-### Ambiente Local
-- **URL**: `http://localhost:8000` (ou similar)
-- **Login**: `admin@meetrix.test`
-- **Senha**: `password`
+- `deploy.yml` operacional e último deploy validado com sucesso.
+- PHP 8.2 funcional na HostGator.
+- Erro de bootstrap `headers already sent` não reapareceu nos logs após os ajustes.
+- Fluxo de login/onboarding/checkout com cupom total (`cupom100`) validado.
+- Página pública `/p/{slug}` restaurada (ex.: `/p/helber`).
+- Layout mobile do sistema ajustado no topo direito: tema, idioma e sair.
+- Editor de página atualizado para prefixo público `meetrix.opentshost.com/p/`.
 
-### Ambiente Produção (Master Admin)
-- **URL**: [https://meetrix.opentshost.com/login](https://meetrix.opentshost.com/login)
-- **Login**: `admin@meetrix.pro`
-- **Senha**: `MeetrixMaster2026Sovereign!#`
+## Estado da Implementação Atual (2026-02-20)
 
-## 🧪 Protocolo de Testes e E-mail
+- Módulo **Master Admin** implementado no backend/frontend:
+  - visão geral SaaS, listagem de clientes, detalhe por cliente, pagamentos, cupons e atividade.
+  - ações administrativas seguras (`activate`, `deactivate`, `reset_onboarding`) com auditoria.
+- Área de **Conta** implementada para todos os usuários:
+  - perfil, segurança, preferências e histórico de cobrança.
+- Correção aplicada para erro de agendamento (`Falha no agendamento...`):
+  - ajuste de schema da tabela `bookings`;
+  - validações de consistência entre página e tipo de serviço;
+  - testes automatizados cobrindo fluxo com cupom 100% sem gateway.
 
-- **Limpeza de Formulários**: Antes de digitar qualquer valor em um `input` (Login ou formulários em geral), a IA deve **sempre** verificar se já existe conteúdo e apagá-lo completamente para evitar interferência de auto-completar do navegador.
-- **Protocolo de Testes**: Use preferencialmente `tester@meetrix.pro` ou e-mails temporários para fluxos de registro.
-- **Falha em Produção**: Se um teste falhar ou terminar, **limpe os dados residuais** antes de um novo ciclo.
-- **Limpeza**: Use o script `migrate_sovereign.php` para um reset total ("Nuclear") ou crie scripts PHP temporários para deletar registros específicos.
+## Pendências Abertas
 
-## 🗄️ Manutenção do Banco de Dados
+1. Validar visual e funcionalmente os novos módulos em produção após deploy.
+2. Avançar roadmap de lacunas mapeadas no benchmark YCBM (`docs/YCBM_BENCHMARK_GAPS_2026-02-20.md`).
 
-1. **Migrações**: Use migrações padrão do Laravel sempre que possível.
-2. **Ajustes Ad-hoc**: Em produção, se necessário, crie scripts PHP na pasta `public/` (ex: `fix_db.php`), execute-os via navegador e **APAGUE-OS** imediatamente após o uso.
-3. **Paridade**: Garanta que o banco de produção esteja sempre alinhado com o `DatabaseSeeder.php` e as migrations locais.
+## Credenciais de Referência
 
-## 🤖 Orientações Adicionais para a IA
+### Local
 
-- **Proatividade**: Deploys, testes e ajustes finos devem ser feitos autonomamente pela IA, reportando o progresso.
-- **Segurança**: Nunca exponha segredos (`.env`) em logs ou documentação pública.
-- **Stripe/Google**: Verifique sempre as chaves no `.env` local antes de assumir que o fluxo de integração funcionará em produção.
-- **Soft Deletes**: A tabela `bookings` utiliza SoftDeletes. Lembre-se disso ao consultar/limpar dados.
+- URL: `http://localhost:8000`
+- Login: `admin@meetrix.pro`
+- Senha: `MeetrixMaster2026Sovereign!#`
 
-## 🌐 Infraestrutura & Roteamento (Produção)
+### Produção (Master Admin)
 
-> [!IMPORTANT]
-> O ambiente de produção possui uma configuração de path mapping específica que deve ser seguida para migrações e acessos diretos.
+- URL: [https://meetrix.opentshost.com/login](https://meetrix.opentshost.com/login)
+- Login: `admin@meetrix.pro`
+- Senha: `MeetrixMaster2026Sovereign!#`
 
-- **Domínio Principal (SPA/API)**: `https://meetrix.opentshost.com`
-  - Aponta internamente para a pasta `/public/` do projeto.
-  - No servidor HostGator, o caminho físico é `/public_html/meetrix/public`.
-- **Acesso Direto (Scripts/Manutenção)**: `https://opentshost.com/meetrix/`
-  - Permite acessar arquivos e subpastas que estão na **raiz** do projeto (fora da `public`).
-  - **Migration Sync**: [https://opentshost.com/meetrix/migrate_sovereign.php](https://opentshost.com/meetrix/migrate_sovereign.php)
-  - Utilize este caminho para rodar scripts de manutenção `fix_db.php` ou resets de cache.
+## Protocolo de Testes
+
+- **Limpeza de inputs**: antes de digitar em qualquer formulário, apagar conteúdo existente no campo.
+- Preferir `tester@meetrix.pro` ou e-mails temporários para novos cadastros.
+- Ao final de ciclos de teste, limpar dados residuais para não contaminar validações futuras.
+- Se necessário, usar `migrate_sovereign.php` para reset total controlado.
+
+## Manutenção de Banco
+
+1. Priorizar migrações padrão Laravel.
+2. Ajuste ad-hoc em produção: script PHP temporário, execução via navegador e remoção imediata.
+3. Manter paridade entre produção e `DatabaseSeeder.php`/migrations do repositório.
+
+## Infraestrutura e Roteamento em Produção
+
+- Domínio principal (SPA/API): `https://meetrix.opentshost.com`
+  - Mapeado para `/home1/opents62/public_html/meetrix/public`
+- Acesso direto à raiz do projeto: `https://opentshost.com/meetrix/`
+  - Scripts operacionais: `read_logs.php`, `migrate_sovereign.php`
+- Base de páginas públicas: `https://meetrix.opentshost.com/p/{slug}`
 
 ---
-*Última atualização: 2026-02-20*
+*Última atualização: 2026-02-20 (módulos Master Admin + Conta + correção de booking)*

@@ -45,4 +45,9 @@ class Booking extends Model
     {
         return $this->belongsTo(AppointmentType::class);
     }
+
+    public function billingTransactions()
+    {
+        return $this->hasMany(BillingTransaction::class);
+    }
 }

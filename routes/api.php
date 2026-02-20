@@ -3,6 +3,8 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\AccountController;
+use App\Http\Controllers\SuperAdmin\SaasAdminController;
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
@@ -55,6 +57,23 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Admin / Coupons
     Route::apiResource('coupons', \App\Http\Controllers\CouponController::class);
+
+    // Account Area
+    Route::get('/account/summary', [AccountController::class, 'summary']);
+    Route::put('/account/profile', [AccountController::class, 'updateProfile']);
+    Route::put('/account/preferences', [AccountController::class, 'updatePreferences']);
+    Route::put('/account/password', [AccountController::class, 'updatePassword']);
+    Route::get('/account/billing-history', [AccountController::class, 'billingHistory']);
+});
+
+Route::middleware(['auth:sanctum', 'superadmin'])->prefix('super-admin')->group(function () {
+    Route::get('/overview', [SaasAdminController::class, 'overview']);
+    Route::get('/customers', [SaasAdminController::class, 'customers']);
+    Route::get('/customers/{user}', [SaasAdminController::class, 'showCustomer']);
+    Route::post('/customers/{user}/actions', [SaasAdminController::class, 'performAction']);
+    Route::get('/activity', [SaasAdminController::class, 'activity']);
+    Route::get('/payments', [SaasAdminController::class, 'payments']);
+    Route::get('/coupons', [SaasAdminController::class, 'coupons']);
 });
 
 // Public Routes

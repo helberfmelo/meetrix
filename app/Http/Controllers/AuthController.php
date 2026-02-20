@@ -18,6 +18,8 @@ class AuthController extends Controller
             'password' => 'required|string|min:8|confirmed',
             'country_code' => 'nullable|string|size:2',
             'currency' => 'nullable|string|size:3',
+            'timezone' => 'nullable|timezone',
+            'preferred_locale' => 'nullable|string|max:10',
         ]);
 
         $countryCode = $request->country_code ?? 'BR';
@@ -38,6 +40,9 @@ class AuthController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'country_code' => $countryCode,
+            'timezone' => $request->timezone ?? 'UTC',
+            'preferred_locale' => $request->preferred_locale,
+            'is_active' => true,
         ]);
 
         // Create Default Tenant with regional settings
@@ -58,6 +63,11 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required|string',
+        ]);
+
         if (!Auth::attempt($request->only('email', 'password'))) {
             throw ValidationException::withMessages([
                 'email' => ['Invalid credentials'],
@@ -65,6 +75,17 @@ class AuthController extends Controller
         }
 
         $user = User::where('email', $request['email'])->firstOrFail();
+
+        if (!$user->is_active) {
+            throw ValidationException::withMessages([
+                'email' => ['Conta desativada. Contate o suporte.'],
+            ]);
+        }
+
+        $user->update([
+            'last_login_at' => now(),
+        ]);
+
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([

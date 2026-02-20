@@ -1,18 +1,41 @@
 # PROMPT DE CONTINUAÇÃO (HANDOFF)
 
-**OBJETIVO**: Finalizar a Fase 9 do projeto Meetrix, resolvendo os erros 405 (Cupom) e 500 (Dashboard) em Produção.
+**OBJETIVO ATUAL**: dar continuidade à evolução do Meetrix pós-recuperação de produção, com foco em melhorias funcionais, gestão SaaS e correção de falhas abertas.
 
-**INSTRUÇÕES OBRIGATÓRIAS**:
-1. Leia **TODOS** os arquivos da pasta `docs/` para entender a arquitetura e o estado atual.
-2. Verifique o arquivo `docs/implementation_plan.md` para o guia técnico.
-3. Examine `docs/TASK.md` para ver o progresso.
+## Instruções Obrigatórias
 
-**RESUMO TÉCNICO**:
-- **Ambiente Local**: ESTÁVEL. Todos os testes passam. O código reflete a versão final da Fase 9 com banco padronizado.
-- **Ambiente Produção**: CRÍTICO. O servidor parou de executar PHP (exibe código-fonte) e o banco de dados está travado por conflitos de migração.
-- **Meta Imediata**: 1) Restaurar o `.htaccess` para que o PHP volte a funcionar. 2) Rodar o script `migrate_fresh` em produção para alinhar o banco.
+1. Leia primeiro:
+   - `docs/AI_OPERATIONS_GUIDE.md`
+   - `docs/INFRASTRUCTURE.md`
+   - `docs/Documentação YouCanBookMe (YCBM).md`
+2. Comunicação obrigatória em PT-BR.
+3. Em testes E2E, limpar sempre os campos de input antes de digitar.
+4. Em caso de deploy, seguir polling de 15s no GitHub Actions e validar em produção.
 
-**ARQUIVO DE CONFIGURAÇÃO CRÍTICO**:
-- `public/.htaccess`: Provável causa da falha de PHP em produção.
+## Contexto Consolidado
 
-**AVISO**: Não tente correções incrementais no banco de produção; use `migrate:fresh` via script manual para garantir paridade total com o ambiente local já validado.
+- A fase crítica de recuperação já foi concluída.
+- Produção está operacional para login/onboarding/checkout e dashboard.
+- Ajustes recentes concluídos:
+  - rota pública `/p/{slug}` funcionando (ex.: `/p/helber`);
+  - header mobile do sistema com controles alinhados à direita (tema, idioma, sair);
+  - prefixo de URL pública no editor para `meetrix.opentshost.com/p/`;
+  - textos e UX de onboarding refinados;
+  - melhoria de contraste em dark mode e cobertura de traduções em páginas-chave;
+  - módulo Master Admin entregue (clientes, pagamentos, cupons, atividade e ações administrativas seguras);
+  - área de conta entregue para usuários (perfil, senha, preferências e histórico de cobrança);
+  - correção da falha de agendamento com atualização de schema e testes.
+
+## Pendências Prioritárias
+
+1. Validar em produção os novos fluxos de Master Admin e Conta após deploy.
+2. Evoluir backlog do benchmark YCBM:
+   - referência: `docs/YCBM_BENCHMARK_GAPS_2026-02-20.md`.
+
+## Notas de Documentação
+
+- Documentos obsoletos da última implementação foram removidos:
+  - `docs/PLAN.md`
+  - `docs/TASK.md`
+  - `docs/implementation_plan.md`
+- Este handoff substitui referências antigas da fase de recuperação.

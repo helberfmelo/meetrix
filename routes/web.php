@@ -2,10 +2,6 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::middleware(['auth:sanctum', 'superadmin'])->prefix('super-admin')->group(function () {
-    Route::get('/', [\App\Http\Controllers\SuperAdmin\DashboardController::class, 'index'])->name('superadmin.dashboard');
-});
-
 Route::match(['get', 'post'], '/sys/migrate', function() {
     try {
         \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);

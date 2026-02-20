@@ -11,15 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        \App\Models\User::updateOrCreate(
-            ['email' => 'admin@meetrix.pro'],
-            [
-                'name' => 'Master Admin',
-                'password' => \Illuminate\Support\Facades\Hash::make('MeetrixMaster2026Sovereign!#'),
-                'is_master_admin' => true,
-                'email_verified_at' => now(),
-            ]
-        );
+        $attributes = [
+            'name' => 'Master Admin',
+            'password' => \Illuminate\Support\Facades\Hash::make('MeetrixMaster2026Sovereign!#'),
+            'is_super_admin' => true,
+            'email_verified_at' => now(),
+        ];
+
+        if (\Illuminate\Support\Facades\Schema::hasColumn('users', 'is_active')) {
+            $attributes['is_active'] = true;
+        }
+
+        \App\Models\User::updateOrCreate(['email' => 'admin@meetrix.pro'], $attributes);
     }
 
     /**

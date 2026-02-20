@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\User;
+use App\Models\BillingTransaction;
 use App\Models\Coupon;
-use Stripe\Stripe;
+use Illuminate\Http\Request;
 use Stripe\Checkout\Session;
+use Stripe\Stripe;
 
 class SubscriptionController extends Controller
 {
@@ -20,14 +20,14 @@ class SubscriptionController extends Controller
      */
     public function checkout(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'plan' => 'required|in:pro,enterprise',
             'interval' => 'required|in:monthly,annual',
             'coupon_code' => 'nullable|string',
         ]);
 
         $user = $request->user();
-        $isAnnual = $request->interval === 'annual';
+        $isAnnual = $validated['interval'] === 'annual';
         
         // Define Price IDs (Should be in .env)
         $priceId = $isAnnual 
@@ -42,41 +42,80 @@ class SubscriptionController extends Controller
             ]],
             'mode' => 'subscription',
             'success_url' => url('/dashboard?subscription=success'),
-            'cancel_url' => url('/dashboard/billing?cancel=1'),
+            'cancel_url' => url('/dashboard/account?cancel=1'),
             'customer_email' => $user->email,
             'client_reference_id' => $user->id,
             'metadata' => [
                 'user_id' => $user->id,
-                'plan' => $request->plan,
-                'interval' => $request->interval,
+                'plan' => $validated['plan'],
+                'interval' => $validated['interval'],
             ],
         ];
 
         // Handle Coupons
-        if ($request->filled('coupon_code')) {
-            $coupon = Coupon::where('code', $request->coupon_code)->first();
-            if ($coupon && $coupon->isValid()) {
-                // If 100% discount, we can bypass Stripe if explicitly free
-                if ($coupon->discount_type === 'percent' && (float)$coupon->discount_value >= 100) {
-                    $coupon->increment('times_used');
-                    $user->update([
-                        'subscription_tier' => $request->plan,
-                        'trial_ends_at' => now()->addMonth(), // Give a month even if 100% off
-                    ]);
-                    return response()->json([
-                        'status' => 'success',
-                        'message' => 'Sovereign Node Activated',
-                        'redirect_url' => url('/dashboard?subscription=free_success')
-                    ]);
-                }
+        $coupon = null;
+        if (!empty($validated['coupon_code'])) {
+            $coupon = Coupon::whereRaw('LOWER(code) = ?', [strtolower($validated['coupon_code'])])->first();
+            if (!$coupon || !$coupon->isValid()) {
+                return response()->json(['message' => 'Invalid or expired coupon.'], 422);
+            }
 
-                $sessionOptions['discounts'] = [[
-                    'coupon' => $coupon->code,
-                ]];
+            // If 100% discount, we can bypass Stripe if explicitly free
+            if ($coupon->discount_type === 'percent' && (float)$coupon->discount_value >= 100) {
+                $coupon->increment('times_used');
+                $user->update([
+                    'subscription_tier' => $validated['plan'],
+                    'billing_cycle' => $validated['interval'],
+                    'trial_ends_at' => now()->addMonth(), // Give a month even if 100% off
+                ]);
+
+                BillingTransaction::create([
+                    'user_id' => $user->id,
+                    'source' => 'subscription',
+                    'status' => 'paid',
+                    'amount' => 0,
+                    'currency' => 'BRL',
+                    'coupon_code' => $coupon->code,
+                    'description' => "Assinatura {$validated['plan']} ({$validated['interval']}) via cupom 100%",
+                    'metadata' => [
+                        'plan' => $validated['plan'],
+                        'interval' => $validated['interval'],
+                        'coupon_code' => $coupon->code,
+                    ],
+                    'paid_at' => now(),
+                ]);
+
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Sovereign Node Activated',
+                    'redirect_url' => url('/dashboard?subscription=free_success')
+                ]);
             }
         }
 
+        $transaction = BillingTransaction::create([
+            'user_id' => $user->id,
+            'source' => 'subscription',
+            'status' => 'pending',
+            'amount' => null,
+            'currency' => 'BRL',
+            'coupon_code' => $coupon?->code,
+            'description' => "Checkout assinatura {$validated['plan']} ({$validated['interval']})",
+            'metadata' => [
+                'plan' => $validated['plan'],
+                'interval' => $validated['interval'],
+                'coupon_code' => $coupon?->code,
+            ],
+        ]);
+
+        $sessionOptions['metadata']['transaction_id'] = $transaction->id;
+        $sessionOptions['metadata']['coupon_code'] = $coupon?->code;
+
         $session = Session::create($sessionOptions);
+
+        $transaction->update([
+            'external_reference' => $session->id,
+        ]);
 
         return response()->json([
             'checkout_url' => $session->url

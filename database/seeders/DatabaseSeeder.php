@@ -23,6 +23,8 @@ class DatabaseSeeder extends Seeder
             [
                 'name' => 'Master Admin',
                 'password' => Hash::make('MeetrixMaster2026Sovereign!#'),
+                'is_super_admin' => true,
+                'is_active' => true,
                 'email_verified_at' => now(),
             ]
         );

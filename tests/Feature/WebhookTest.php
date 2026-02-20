@@ -3,7 +3,6 @@
 namespace Tests\Feature;
 
 use App\Models\User;
-use App\Models\Booking;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -16,7 +15,7 @@ class WebhookTest extends TestCase
      */
     public function test_subscription_created_webhook()
     {
-        $user = User::factory()->create(['subscription_tier' => 'Free']);
+        $user = User::factory()->create(['subscription_tier' => 'free']);
 
         $payload = [
             'type' => 'customer.subscription.created',
@@ -35,7 +34,7 @@ class WebhookTest extends TestCase
 
         $response->assertStatus(200);
         $user->refresh();
-        $this->assertEquals('Pro', $user->subscription_tier);
+        $this->assertEquals('pro', $user->subscription_tier);
         $this->assertEquals('cus_test123', $user->stripe_id);
     }
 
@@ -45,7 +44,7 @@ class WebhookTest extends TestCase
     public function test_subscription_deleted_webhook()
     {
         $user = User::factory()->create([
-            'subscription_tier' => 'Pro',
+            'subscription_tier' => 'pro',
             'stripe_id' => 'cus_test123'
         ]);
 
@@ -64,6 +63,6 @@ class WebhookTest extends TestCase
 
         $response->assertStatus(200);
         $user->refresh();
-        $this->assertEquals('Free', $user->subscription_tier);
+        $this->assertEquals('free', $user->subscription_tier);
     }
 }

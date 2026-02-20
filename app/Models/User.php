@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
+use App\Models\AdminActivityLog;
+use App\Models\BillingTransaction;
 
 class User extends Authenticatable
 {
@@ -28,7 +30,11 @@ class User extends Authenticatable
         'trial_ends_at',
         'subscription_ends_at',
         'country_code',
+        'preferred_locale',
+        'timezone',
+        'last_login_at',
         'is_super_admin',
+        'is_active',
     ];
 
     /**
@@ -45,6 +51,9 @@ class User extends Authenticatable
         'onboarding_completed_at' => 'datetime',
         'trial_ends_at' => 'datetime',
         'subscription_ends_at' => 'datetime',
+        'last_login_at' => 'datetime',
+        'is_super_admin' => 'boolean',
+        'is_active' => 'boolean',
     ];
 
     public function tenant()
@@ -71,6 +80,14 @@ class User extends Authenticatable
     }
 
     /**
+     * Teams owned by the user.
+     */
+    public function ownedTeams()
+    {
+        return $this->hasMany(Team::class, 'user_id');
+    }
+
+    /**
      * Get the user's integrations (Google, Outlook, etc).
      */
     public function integrations()
@@ -84,5 +101,29 @@ class User extends Authenticatable
     public function polls()
     {
         return $this->hasMany(Poll::class);
+    }
+
+    /**
+     * Billing transactions for subscriptions and paid/free bookings.
+     */
+    public function billingTransactions()
+    {
+        return $this->hasMany(BillingTransaction::class);
+    }
+
+    /**
+     * Admin actions performed by this user.
+     */
+    public function adminActivities()
+    {
+        return $this->hasMany(AdminActivityLog::class, 'actor_user_id');
+    }
+
+    /**
+     * Admin actions that target this user.
+     */
+    public function adminTargetActivities()
+    {
+        return $this->hasMany(AdminActivityLog::class, 'target_user_id');
     }
 }

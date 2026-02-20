@@ -31,8 +31,8 @@ error_reporting(E_ALL);
 echo "--- SOVEREIGN SYNC START ---\n\n";
 
 try {
-    echo "1. Running Fresh Migrations (Nuclear)...\n";
-    Artisan::call('migrate:fresh', ['--force' => true]);
+    echo "1. Running Fresh Migrations & Seeding (Nuclear)...\n";
+    Artisan::call('migrate:fresh', ['--force' => true, '--seed' => true]);
     echo Artisan::output() . "\n";
 
     echo "2. Clearing Route Cache...\n";

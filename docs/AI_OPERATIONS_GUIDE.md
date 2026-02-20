@@ -42,5 +42,18 @@ Este guia define os procedimentos operacionais padrão para a IA (Antigravity) n
 - **Stripe/Google**: Verifique sempre as chaves no `.env` local antes de assumir que o fluxo de integração funcionará em produção.
 - **Soft Deletes**: A tabela `bookings` utiliza SoftDeletes. Lembre-se disso ao consultar/limpar dados.
 
+## 🌐 Infraestrutura & Roteamento (Produção)
+
+> [!IMPORTANT]
+> O ambiente de produção possui uma configuração de path mapping específica que deve ser seguida para migrações e acessos diretos.
+
+- **Domínio Principal (SPA/API)**: `https://meetrix.opentshost.com`
+  - Aponta internamente para a pasta `/public/` do projeto.
+  - No servidor HostGator, o caminho físico é `/public_html/meetrix/public`.
+- **Acesso Direto (Scripts/Manutenção)**: `https://opentshost.com/meetrix/`
+  - Permite acessar arquivos e subpastas que estão na **raiz** do projeto (fora da `public`).
+  - **Migration Sync**: [https://opentshost.com/meetrix/migrate_sovereign.php](https://opentshost.com/meetrix/migrate_sovereign.php)
+  - Utilize este caminho para rodar scripts de manutenção `fix_db.php` ou resets de cache.
+
 ---
 *Última atualização: 2026-02-20*

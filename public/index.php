@@ -1,5 +1,4 @@
 <?php
-echo "DEBUG: HIT PUBLIC INDEX\n";
 
 use Illuminate\Http\Request;
 

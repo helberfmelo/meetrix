@@ -62,7 +62,7 @@
                         <div v-for="(stage, index) in funnelData" :key="index" class="group relative flex items-end gap-8">
                             <div class="flex-1">
                                 <div class="flex justify-between items-end mb-4">
-                                    <span class="text-xs font-black uppercase tracking-[0.2em] text-slate-500">{{ stage.label }}</span>
+                                    <span class="text-xs font-black uppercase tracking-[0.2em] text-slate-500">{{ $t(stage.label) }}</span>
                                     <span class="text-2xl font-black text-zinc-950 dark:text-white tracking-tighter">{{ stage.value }}</span>
                                 </div>
                                 <div class="h-16 bg-zinc-50 dark:bg-zinc-950 rounded-2xl p-1 overflow-hidden shadow-inner relative">
@@ -70,14 +70,14 @@
                                         :class="stage.color"
                                         :style="{ width: stage.percent + '%' }">
                                         <span class="text-[10px] font-black text-white/50 tracking-widest uppercase" v-if="stage.percent > 10">
-                                            {{ stage.sublabel }} // {{ stage.percent }}%
+                                            {{ $t(stage.sublabel) }} // {{ stage.percent }}%
                                         </span>
                                     </div>
                                 </div>
                             </div>
                             <!-- 3D Depth Indicator -->
                             <div class="hidden lg:block w-32 h-16 bg-white dark:bg-zinc-950 rounded-2xl border border-black/5 dark:border-white/5 flex flex-col justify-center items-center shadow-3d group-hover:shadow-3d-hover transition-all translate-y-[-4px] group-hover:translate-y-0 duration-300">
-                                <span class="text-[8px] font-black text-slate-600 uppercase">Retention</span>
+                                <span class="text-[8px] font-black text-slate-600 uppercase">{{ $t('dashboard.retention') }}</span>
                                 <span class="text-lg font-black text-zinc-950 dark:text-white leading-none">{{ stage.retention }}%</span>
                             </div>
                         </div>
@@ -94,7 +94,7 @@
                          <div class="w-20 h-20 rounded-4xl bg-zinc-100 dark:bg-zinc-900 border border-black/5 dark:border-white/5 flex items-center justify-center mb-8">
                              <div class="w-2 h-2 rounded-full bg-meetrix-orange animate-ping"></div>
                          </div>
-                         <p class="text-xs font-black text-slate-600 uppercase tracking-widest">Waiting for first page deployment...</p>
+                         <p class="text-xs font-black text-slate-600 uppercase tracking-widest">{{ $t('dashboard.waiting_first_page') }}</p>
                     </div>
 
                     <div v-else class="space-y-4">
@@ -156,26 +156,26 @@ const funnel = ref({ views: 0, clicks: 0, bookings: 0, conversion_rate: 0 });
 
 const funnelData = computed(() => [
     { 
-        label: 'Total Impressions', 
+        label: 'dashboard.impressions', 
         value: funnel.value.views, 
         percent: 100, 
-        sublabel: 'PAGE_REACH', 
+        sublabel: 'dashboard.page_reach', 
         color: 'from-zinc-800 to-zinc-900',
         retention: 100
     },
     { 
-        label: 'Intent Signals', 
+        label: 'dashboard.intent_signals', 
         value: funnel.value.clicks, 
         percent: funnel.value.views > 0 ? Math.round(funnel.value.clicks / funnel.value.views * 100) : 0, 
-        sublabel: 'SLOT_INTERACTION', 
+        sublabel: 'dashboard.slot_interaction', 
         color: 'from-meetrix-orange/80 to-meetrix-orange',
         retention: funnel.value.views > 0 ? Math.round(funnel.value.clicks / funnel.value.views * 100) : 0
     },
     { 
-        label: 'Confirmed Conversions', 
+        label: 'dashboard.confirmed_conversions', 
         value: funnel.value.bookings, 
         percent: funnel.value.clicks > 0 ? Math.round(funnel.value.bookings / funnel.value.clicks * 100) : 0, 
-        sublabel: 'SUCCESS_BOOKING', 
+        sublabel: 'dashboard.success_booking', 
         color: 'from-meetrix-green/80 to-meetrix-green',
         retention: funnel.value.clicks > 0 ? Math.round(funnel.value.bookings / funnel.value.clicks * 100) : 0
     }

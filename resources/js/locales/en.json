@@ -8,7 +8,11 @@
         "settings": "Settings",
         "profile": "Profile",
         "back": "Back",
-        "loading": "Loading..."
+        "loading": "Loading...",
+        "teams": "Teams",
+        "integrations": "Integrations",
+        "polls": "Polls",
+        "coupons": "Coupons"
     },
     "login": {
         "title": "Sign in to your account",
@@ -82,7 +86,35 @@
         "views_index": "Views Index",
         "upcoming": "Upcoming",
         "recent_bookings": "Recent Bookings",
-        "no_bookings": "No bookings yet."
+        "no_bookings": "No bookings yet.",
+        "retention": "Retention",
+        "waiting_first_page": "Waiting for first page deployment...",
+        "impressions": "Total Impressions",
+        "page_reach": "PAGE_REACH",
+        "intent_signals": "Intent Signals",
+        "slot_interaction": "SLOT_INTERACTION",
+        "confirmed_conversions": "Confirmed Conversions",
+        "success_booking": "SUCCESS_BOOKING"
+    },
+    "admin": {
+        "sovereign_node": "Sovereign_Node",
+        "breadcrumb_prefix": "SYSTEM //",
+        "overview": "OVERVIEW",
+        "export_csv": "Export_CSV",
+        "historical_data": "Historical_Data_Protocol // System_Memory",
+        "client": "Client",
+        "service": "Service",
+        "date_time": "Date / Time",
+        "status": "Status",
+        "instance_name": "Instance_Name",
+        "analytics": "Analytics",
+        "control_panel": "Control_Panel",
+        "editor": "EDITOR",
+        "active_deployments": "Active Deployment Channels",
+        "internal_name": "Internal Name",
+        "new_instance": "NEW",
+        "initializing": "INITIALIZING...",
+        "activate": "ACTIVATE"
     },
     "booking": {
         "select_service": "Select Service",

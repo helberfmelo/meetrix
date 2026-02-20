@@ -4,11 +4,11 @@
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <div>
                 <h1 class="text-5xl font-black text-zinc-950 dark:text-white tracking-tighter uppercase font-outfit">{{ $t('common.bookings') }}<span class="text-meetrix-orange">.LOG</span></h1>
-                <p class="text-slate-500 font-bold text-xs uppercase tracking-[0.4em] mt-2">Historical_Data_Protocol // System_Memory</p>
+                <p class="text-slate-500 font-bold text-xs uppercase tracking-[0.4em] mt-2">{{ $t('admin.historical_data') }}</p>
             </div>
             <div class="flex gap-4">
                 <button class="px-6 py-3 bg-white dark:bg-zinc-900 border border-black/5 dark:border-white/5 rounded-full text-[10px] font-black text-slate-500 uppercase tracking-widest hover:text-zinc-950 dark:hover:text-white hover:border-meetrix-orange/30 transition-all shadow-sm flex items-center gap-2">
-                    <i class="fas fa-file-csv"></i> Export_CSV
+                    <i class="fas fa-file-csv"></i> {{ $t('admin.export_csv') }}
                 </button>
             </div>
         </div>
@@ -19,10 +19,10 @@
                 <table class="w-full text-left">
                     <thead class="bg-zinc-50 dark:bg-zinc-900/50 border-b border-black/5 dark:border-white/5">
                         <tr>
-                            <th class="px-12 py-6 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Client</th>
-                            <th class="px-12 py-6 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Service</th>
-                            <th class="px-12 py-6 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Date / Time</th>
-                            <th class="px-12 py-6 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Status</th>
+                            <th class="px-12 py-6 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">{{ $t('admin.client') }}</th>
+                            <th class="px-12 py-6 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">{{ $t('admin.service') }}</th>
+                            <th class="px-12 py-6 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">{{ $t('admin.date_time') }}</th>
+                            <th class="px-12 py-6 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">{{ $t('admin.status') }}</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-black/5 dark:divide-white/5">

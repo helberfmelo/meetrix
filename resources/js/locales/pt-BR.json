@@ -8,7 +8,11 @@
         "settings": "Configurações",
         "profile": "Perfil",
         "back": "Voltar",
-        "loading": "Carregando..."
+        "loading": "Carregando...",
+        "teams": "Equipes",
+        "integrations": "Integrações",
+        "polls": "Enquetes",
+        "coupons": "Cupons"
     },
     "login": {
         "title": "Acesse sua conta",
@@ -82,7 +86,35 @@
         "views_index": "Índice de Visualizações",
         "upcoming": "Próximos",
         "recent_bookings": "Agendamentos Recentes",
-        "no_bookings": "Nenhum agendamento ainda."
+        "no_bookings": "Nenhum agendamento ainda.",
+        "retention": "Retenção",
+        "waiting_first_page": "Aguardando primeira implementação de página...",
+        "impressions": "Impressões Totais",
+        "page_reach": "ALCANCE_PAGINA",
+        "intent_signals": "Sinais de Intenção",
+        "slot_interaction": "INTERACAO_SLOT",
+        "confirmed_conversions": "Conversões Confirmadas",
+        "success_booking": "SUCESSO_AGENDAMENTO"
+    },
+    "admin": {
+        "sovereign_node": "Nó_Soberano",
+        "breadcrumb_prefix": "SISTEMA //",
+        "overview": "VISÃO GERAL",
+        "export_csv": "Exportar_CSV",
+        "historical_data": "Protocolo_Dados_Historicos // Memoria_Sistema",
+        "client": "Cliente",
+        "service": "Serviço",
+        "date_time": "Data / Hora",
+        "status": "Status",
+        "instance_name": "Nome_Instancia",
+        "analytics": "Analiticos",
+        "control_panel": "Painel_Controle",
+        "editor": "EDITOR",
+        "active_deployments": "Canais de Implementação Ativos",
+        "internal_name": "Nome Interno",
+        "new_instance": "NOVO",
+        "initializing": "INICIALIZANDO...",
+        "activate": "ATIVAR"
     },
     "booking": {
         "select_service": "Selecione o Serviço",

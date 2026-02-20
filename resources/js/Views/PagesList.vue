@@ -3,7 +3,7 @@
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
             <div>
                 <h1 class="text-5xl font-black text-zinc-950 dark:text-white tracking-tighter uppercase font-outfit">YOUR_PAGES<span class="text-meetrix-orange">.NODES</span></h1>
-                <p class="text-slate-500 font-bold text-xs uppercase tracking-[0.4em] mt-2">Active Deployment Channels</p>
+                <p class="text-slate-500 font-bold text-xs uppercase tracking-[0.4em] mt-2">{{ $t('admin.active_deployments') }}</p>
             </div>
             <button @click="showCreateModal = true" class="px-8 py-4 bg-meetrix-orange text-zinc-950 rounded-2xl font-black text-xs uppercase tracking-[0.2em] hover:scale-105 active:scale-95 transition-all shadow-xl shadow-meetrix-orange/20">
                 <i class="fas fa-plus mr-2"></i> {{ $t('onboarding.page_title') }}
@@ -18,9 +18,9 @@
             <table class="min-w-full divide-y divide-black/5 dark:divide-white/5">
                 <thead class="bg-zinc-50 dark:bg-zinc-950/50">
                     <tr>
-                        <th class="px-10 py-6 text-left text-[10px] font-black text-slate-400 uppercase tracking-widest">Instance_Name</th>
-                        <th class="px-10 py-6 text-left text-[10px] font-black text-slate-400 uppercase tracking-widest">Analytics</th>
-                        <th class="px-10 py-6 text-right text-[10px] font-black text-slate-400 uppercase tracking-widest">Control_Panel</th>
+                        <th class="px-10 py-6 text-left text-[10px] font-black text-slate-400 uppercase tracking-widest">{{ $t('admin.instance_name') }}</th>
+                        <th class="px-10 py-6 text-left text-[10px] font-black text-slate-400 uppercase tracking-widest">{{ $t('admin.analytics') }}</th>
+                        <th class="px-10 py-6 text-right text-[10px] font-black text-slate-400 uppercase tracking-widest">{{ $t('admin.control_panel') }}</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-black/5 dark:divide-white/5">
@@ -39,7 +39,7 @@
                         <td class="px-10 py-8">
                             <div class="flex gap-8">
                                 <div>
-                                    <div class="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1">Views</div>
+                                    <div class="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1">{{ $t('admin.analytics') }}</div>
                                     <div class="text-xl font-black text-zinc-950 dark:text-white tabular-nums tracking-tighter">{{ page.views || 0 }}</div>
                                 </div>
                             </div>
@@ -47,7 +47,7 @@
                         <td class="px-10 py-8 text-right">
                             <div class="flex justify-end items-center gap-4">
                                 <router-link :to="'/dashboard/editor/' + page.slug" class="px-5 py-2.5 text-[10px] font-black bg-zinc-100 dark:bg-zinc-800 text-zinc-950 dark:text-white rounded-xl border border-black/5 dark:border-white/5 hover:bg-zinc-950 hover:text-white dark:hover:bg-white dark:hover:text-zinc-950 transition-all uppercase tracking-widest">
-                                    EDITOR
+                                    {{ $t('admin.editor') }}
                                 </router-link>
                                 <button @click="deletePage(page.id)" class="w-10 h-10 flex items-center justify-center text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-xl transition-all">
                                     <i class="fas fa-trash-alt"></i>
@@ -73,17 +73,17 @@
         <!-- Create Modal -->
         <div v-if="showCreateModal" class="fixed inset-0 z-50 flex items-center justify-center bg-zinc-950/40 backdrop-blur-sm p-4">
             <div class="bg-white dark:bg-zinc-900 rounded-[40px] p-12 max-w-md w-full shadow-premium animate-in zoom-in-95 duration-200 border border-black/5 dark:border-white/5">
-                <h3 class="text-3xl font-black text-zinc-950 dark:text-white mb-6 uppercase tracking-tighter">{{ $t('onboarding.page_title') }} // NEW</h3>
+                <h3 class="text-3xl font-black text-zinc-950 dark:text-white mb-6 uppercase tracking-tighter">{{ $t('onboarding.page_title') }} // {{ $t('admin.new_instance') }}</h3>
                 <div class="space-y-6">
                     <div class="space-y-2">
-                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">Internal Name</label>
+                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">{{ $t('admin.internal_name') }}</label>
                         <input v-model="newPage.title" type="text" placeholder="e.g. Sales Consultation" class="w-full px-6 py-4 rounded-2xl bg-zinc-50 dark:bg-zinc-950 border-2 border-black/5 dark:border-white/5 focus:border-meetrix-orange outline-none text-zinc-950 dark:text-white font-bold transition-all">
                     </div>
                 </div>
                 <div class="mt-12 flex gap-4">
                     <button @click="showCreateModal = false" class="flex-1 py-4 font-black text-[10px] uppercase tracking-widest text-slate-400 hover:text-zinc-950 dark:hover:text-white transition-colors">Cancel</button>
                     <button @click="createPage" :disabled="creating" class="flex-1 py-4 bg-meetrix-orange text-zinc-950 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-lg shadow-meetrix-orange/20">
-                        {{ creating ? 'INITIALIZING...' : 'ACTIVATE' }}
+                        {{ creating ? $t('admin.initializing') : $t('admin.activate') }}
                     </button>
                 </div>
             </div>

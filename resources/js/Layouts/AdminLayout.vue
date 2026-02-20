@@ -37,7 +37,7 @@
                     <div class="flex items-center gap-3 group cursor-pointer relative pr-6 border-r border-black/10 dark:border-white/10">
                         <div class="text-right hidden sm:block">
                             <p class="text-[10px] font-black text-zinc-950 dark:text-white uppercase tracking-widest leading-none">{{ user?.name }}</p>
-                            <p class="text-[8px] font-black text-meetrix-orange uppercase tracking-widest mt-1">Sovereign_Node</p>
+                            <p class="text-[8px] font-black text-meetrix-orange uppercase tracking-widest mt-1">{{ $t('admin.sovereign_node') }}</p>
                         </div>
                         <div class="w-10 h-10 rounded-2xl bg-zinc-950 dark:bg-white border border-black/10 dark:border-white/10 flex items-center justify-center text-white dark:text-zinc-950 group-hover:border-meetrix-orange group-hover:bg-meetrix-orange group-hover:text-white group-hover:scale-105 transition-all font-black shadow-lg group-active:scale-95">
                             {{ user?.name?.charAt(0) }}
@@ -56,7 +56,7 @@
             </div>
 
             <footer class="py-8 px-6 md:px-12 flex flex-col md:flex-row justify-between items-center gap-4 text-[10px] font-medium uppercase tracking-wider text-slate-500 border-t border-black/5 dark:border-white/5 bg-zinc-50/50 dark:bg-zinc-950/50 backdrop-blur-sm">
-                <div>MEETRIX <span class="mx-2 text-slate-300 dark:text-slate-700">|</span> SOVEREIGN NODE</div>
+                <div>MEETRIX <span class="mx-2 text-slate-300 dark:text-slate-700">|</span> {{ $t('admin.sovereign_node') }}</div>
                 <div>
                     © {{ new Date().getFullYear() }} <span class="mx-2 text-slate-300 dark:text-slate-700">|</span> <a href="https://opents.com.br" target="_blank" class="hover:text-meetrix-orange transition-colors">OTS - Open Tecnologia e Serviços Ltda.</a>
                 </div>
@@ -84,15 +84,15 @@ const navItems = computed(() => [
     { path: '/dashboard', label: t('common.dashboard'), icon: 'fas fa-chart-pie' },
     { path: '/dashboard/pages', label: t('common.pages'), icon: 'fas fa-file-lines' },
     { path: '/dashboard/bookings', label: t('common.bookings'), icon: 'fas fa-calendar-check' },
-    { path: '/dashboard/teams', label: 'Teams', icon: 'fas fa-users-viewfinder' },
-    { path: '/dashboard/integrations', label: 'Integrations', icon: 'fas fa-plug-circle-bolt' },
-    { path: '/dashboard/polls', label: 'Polls', icon: 'fas fa-square-poll-vertical' },
-    { path: '/dashboard/coupons', label: 'Coupons', icon: 'fas fa-ticket' }
+    { path: '/dashboard/teams', label: t('common.teams'), icon: 'fas fa-users-viewfinder' },
+    { path: '/dashboard/integrations', label: t('common.integrations'), icon: 'fas fa-plug-circle-bolt' },
+    { path: '/dashboard/polls', label: t('common.polls'), icon: 'fas fa-square-poll-vertical' },
+    { path: '/dashboard/coupons', label: t('common.coupons'), icon: 'fas fa-ticket' }
 ]);
 
 const breadcrumb = computed(() => {
     const active = navItems.value.find(i => i.path === route.path);
-    return active ? `SYSTEM // ${active.label}` : 'SYSTEM // OVERVIEW';
+    return active ? `${t('admin.breadcrumb_prefix')} ${active.label}` : `${t('admin.breadcrumb_prefix')} ${t('admin.overview')}`;
 });
 
 const handleLogout = () => {

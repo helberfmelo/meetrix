@@ -8,4 +8,4 @@ Route::middleware(['auth:sanctum', 'superadmin'])->prefix('super-admin')->group(
 
 Route::get('/{any}', function () {
     return view('welcome');
-})->where('any', '.*');
+})->where('any', '^(?!api|p/|storage|up).*$');

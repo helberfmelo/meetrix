@@ -1,14 +1,21 @@
 <script setup>
+import { computed } from 'vue';
+import { useAuthStore } from '../stores/auth';
 import LanguageSwitcher from '../Components/LanguageSwitcher.vue';
 import ThemeToggle from '../Components/ThemeToggle.vue';
+
+const authStore = useAuthStore();
+const logoTarget = computed(() => (authStore.isAuthenticated ? '/dashboard' : '/'));
 </script>
 
 <template>
     <div class="min-h-screen bg-zinc-50 dark:bg-zinc-950 text-slate-600 dark:text-slate-400 font-sans selection:bg-meetrix-orange selection:text-white overflow-x-hidden transition-colors duration-500">
         <!-- Unified Sovereign Navigation -->
         <nav class="fixed top-0 inset-x-0 z-[5000] px-3 sm:px-6 py-3 sm:py-6 flex justify-between items-center pointer-events-none">
-            <div class="text-base sm:text-2xl font-black tracking-tighter text-zinc-950 dark:text-white font-outfit pointer-events-auto bg-white/10 dark:bg-black/10 backdrop-blur-sm px-3 sm:px-4 py-2 rounded-2xl">MEETRIX<span class="text-meetrix-orange">.PRO</span></div>
-            <div class="flex items-center gap-2 sm:gap-6 pointer-events-auto">
+            <router-link :to="logoTarget" class="text-base sm:text-2xl font-black tracking-tighter text-zinc-950 dark:text-white font-outfit pointer-events-auto bg-white/10 dark:bg-black/10 backdrop-blur-sm px-3 sm:px-4 py-2 rounded-2xl">
+                MEETRIX<span class="text-meetrix-orange">.PRO</span>
+            </router-link>
+            <div class="flex items-center gap-1.5 sm:gap-6 pointer-events-auto">
                 <!-- Dynamic Login Heading: Only on /login -->
                 <div v-if="$route.path === '/login'" class="hidden xl:flex flex-col items-end">
                     <h2 class="text-xl font-black text-zinc-950 dark:text-white uppercase tracking-tighter leading-none">
@@ -19,7 +26,9 @@ import ThemeToggle from '../Components/ThemeToggle.vue';
                     </p>
                 </div>
 
-                <router-link v-if="$route.path !== '/login'" to="/login" class="hidden sm:inline-flex text-[10px] uppercase font-black tracking-widest text-zinc-500 hover:text-zinc-950 dark:text-white/50 dark:hover:text-white transition-colors bg-white/10 dark:bg-black/10 backdrop-blur-sm px-4 py-2 rounded-2xl">{{ $t('home.login') }}</router-link>
+                <router-link v-if="$route.path !== '/login'" to="/login" class="inline-flex text-[9px] sm:text-[10px] uppercase font-black tracking-wider sm:tracking-widest text-zinc-600 hover:text-zinc-950 dark:text-white/70 dark:hover:text-white transition-colors bg-white/20 dark:bg-black/20 backdrop-blur-sm px-2.5 sm:px-4 py-2 rounded-2xl border border-black/5 dark:border-white/10">
+                    {{ $t('home.login') }}
+                </router-link>
                 <router-link to="/onboarding" class="px-3 sm:px-6 py-2.5 sm:py-3 bg-meetrix-orange text-zinc-950 dark:bg-white dark:text-zinc-950 rounded-2xl font-black text-[9px] sm:text-[10px] uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-xl shadow-meetrix-orange/20">
                     {{ $t('home.get_started') }}
                 </router-link>

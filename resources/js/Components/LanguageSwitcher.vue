@@ -2,10 +2,10 @@
     <div class="relative inline-block text-left font-outfit z-[9999]">
         <div>
             <button type="button" @click="isOpen = !isOpen"
-                class="inline-flex justify-center items-center py-1 px-3 bg-zinc-100 dark:bg-zinc-900/50 border border-zinc-200 dark:border-white/10 rounded-full text-[9px] font-black text-zinc-600 dark:text-white/70 hover:text-zinc-950 dark:hover:text-white hover:border-meetrix-orange transition-all active:scale-95 shadow-sm"
+                class="inline-flex justify-center items-center py-1.5 sm:py-1 px-2.5 sm:px-3 bg-zinc-100 dark:bg-zinc-900/50 border border-zinc-200 dark:border-white/10 rounded-full text-[9px] font-black text-zinc-600 dark:text-white/80 hover:text-zinc-950 dark:hover:text-white hover:border-meetrix-orange transition-all active:scale-95 shadow-sm"
                 id="menu-button" aria-expanded="true" aria-haspopup="true">
-                <span class="mr-1 opacity-80">{{ currentFlag }}</span>
-                <span>{{ currentLocale }}</span>
+                <span class="mr-0.5 sm:mr-1 opacity-80">{{ currentFlag }}</span>
+                <span class="hidden sm:inline">{{ currentLocale }}</span>
                 <i class="fas fa-chevron-down ml-1 text-[7px] transition-transform duration-300" :class="{ 'rotate-180': isOpen }"></i>
             </button>
         </div>
@@ -24,7 +24,7 @@
                        v-for="(flag, locale) in locales" :key="locale"
                        @click.prevent="changeLocale(locale)">
                         <span class="mr-4 grayscale group-hover:grayscale-0 transition-all">{{ flag }}</span>
-                        <span class="text-zinc-500 dark:text-slate-500 group-hover:text-meetrix-orange transition-colors">{{ getLabel(locale) }}</span>
+                        <span class="text-zinc-500 dark:text-slate-300 group-hover:text-meetrix-orange transition-colors">{{ getLabel(locale) }}</span>
                     </button>
                 </div>
             </div>

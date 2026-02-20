@@ -3,8 +3,10 @@
         <!-- Sidebar: Raw Depth -->
         <aside class="hidden lg:flex w-72 bg-white dark:bg-zinc-900 border-r border-black/5 dark:border-white/5 flex-col transition-all duration-500">
             <div class="p-8">
-                <div class="text-xl font-black tracking-tighter text-zinc-950 dark:text-white font-outfit hidden lg:block uppercase">MEETRIX<span class="text-meetrix-orange">.PRO</span></div>
-                <div class="text-xl font-black text-meetrix-orange lg:hidden text-center">M</div>
+                <router-link :to="logoTarget" class="text-xl font-black tracking-tighter text-zinc-950 dark:text-white font-outfit hidden lg:block uppercase">
+                    MEETRIX<span class="text-meetrix-orange">.PRO</span>
+                </router-link>
+                <router-link :to="logoTarget" class="text-xl font-black text-meetrix-orange lg:hidden text-center">M</router-link>
             </div>
             
             <nav class="mt-12 flex-1 px-4 space-y-2">
@@ -31,6 +33,9 @@
         <main class="flex-1 flex flex-col min-w-0">
             <header class="py-4 sm:py-6 px-4 sm:px-6 md:px-12 flex flex-col sm:flex-row sm:justify-between sm:items-center items-start gap-3 sm:gap-0 relative z-[1000] bg-white/80 dark:bg-zinc-950/80 backdrop-blur-xl border-b border-black/5 dark:border-white/5">
                 <div class="w-full sm:w-auto flex items-center gap-4">
+                    <router-link :to="logoTarget" class="sm:hidden text-sm font-black tracking-tighter text-zinc-950 dark:text-white font-outfit uppercase">
+                        MEETRIX<span class="text-meetrix-orange">.PRO</span>
+                    </router-link>
                     <span class="text-[9px] sm:text-[10px] font-black text-zinc-500 dark:text-zinc-400 uppercase tracking-[0.2em] sm:tracking-[0.4em] truncate max-w-[90vw] sm:max-w-none">{{ breadcrumb }}</span>
                 </div>
                 <div class="w-full sm:w-auto flex items-center justify-between sm:justify-end gap-3 sm:gap-6">
@@ -49,7 +54,7 @@
                             <i class="fas fa-sign-out-alt text-sm"></i>
                         </button>
                         <ThemeToggle />
-                        <LanguageSwitcher class="hidden sm:block" />
+                        <LanguageSwitcher />
                     </div>
                 </div>
             </header>
@@ -97,6 +102,7 @@ const route = useRoute();
 const { t } = useI18n();
 
 const user = computed(() => authStore.user);
+const logoTarget = computed(() => (authStore.isAuthenticated ? '/dashboard' : '/'));
 
 const navItems = computed(() => [
     { path: '/dashboard', label: t('common.dashboard'), icon: 'fas fa-chart-pie' },

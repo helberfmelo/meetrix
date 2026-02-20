@@ -14,17 +14,22 @@
                     <p class="text-lg sm:text-xl md:text-2xl text-slate-500 dark:text-slate-400 max-w-md leading-tight font-medium">
                         {{ $t('home.hero_subtitle') }}
                     </p>
-                    <div class="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6 w-full sm:w-auto">
-                        <!-- Swapped Login to left of Get Started -->
-                        <router-link to="/login" class="text-xs sm:text-sm font-black uppercase tracking-widest text-zinc-600 dark:text-slate-400 hover:text-zinc-950 dark:hover:text-white transition-colors">
+                    <div class="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 w-full sm:w-auto">
+                        <router-link
+                            to="/login"
+                            class="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3 rounded-2xl border border-black/10 dark:border-white/20 bg-white/80 dark:bg-zinc-900/80 text-[10px] sm:text-xs font-black uppercase tracking-[0.2em] text-zinc-700 dark:text-slate-200 hover:border-meetrix-orange hover:text-zinc-950 dark:hover:text-white transition-all shadow-lg"
+                        >
                             {{ $t('login.title') }}
                         </router-link>
                         
-                        <router-link to="/onboarding" class="group flex items-center gap-3 sm:gap-4 text-zinc-950 dark:text-white hover:text-meetrix-orange transition-colors">
-                            <span class="w-10 h-10 sm:w-12 sm:h-12 rounded-full border border-black/10 dark:border-white/20 flex items-center justify-center group-hover:border-meetrix-orange group-hover:bg-meetrix-orange transition-all duration-500">
-                                <i class="fas fa-chevron-right group-hover:text-zinc-950 text-zinc-950 dark:text-white transition-colors"></i>
+                        <router-link
+                            to="/onboarding"
+                            class="w-full sm:w-auto group inline-flex items-center justify-center gap-3 sm:gap-4 px-6 py-3 rounded-2xl bg-zinc-950 dark:bg-white text-white dark:text-zinc-950 hover:bg-meetrix-orange hover:text-zinc-950 transition-all shadow-xl"
+                        >
+                            <span class="w-8 h-8 sm:w-9 sm:h-9 rounded-full border border-white/30 dark:border-zinc-950/20 flex items-center justify-center group-hover:border-zinc-950/30 group-hover:bg-zinc-950/10 transition-all duration-500">
+                                <i class="fas fa-chevron-right text-white dark:text-zinc-950 group-hover:text-zinc-950 transition-colors"></i>
                             </span>
-                            <span class="text-xs sm:text-sm font-black uppercase tracking-widest">{{ $t('home.get_started') }}</span>
+                            <span class="text-[10px] sm:text-xs font-black uppercase tracking-[0.2em]">{{ $t('home.get_started') }}</span>
                         </router-link>
                     </div>
                 </div>

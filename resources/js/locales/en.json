@@ -260,7 +260,17 @@
         "system_default": "System Default",
         "pro_feature_tag": "PRO FEATURE",
         "whatsapp_pro": "WhatsApp Pro",
-        "whatsapp_pro_desc": "Automatic reminders via WhatsApp."
+        "whatsapp_pro_desc": "Automatic reminders via WhatsApp.",
+        "poll_create_title": "Create Meeting Poll",
+        "poll_title_label": "Poll Title",
+        "poll_title_placeholder": "e.g. Project Review Session",
+        "poll_description_optional": "Description (Optional)",
+        "poll_time_options": "Time Options",
+        "poll_add_option": "Add Alternative",
+        "poll_creating": "Creating...",
+        "poll_launch": "Launch Poll",
+        "poll_enter_title_alert": "Please enter a poll title.",
+        "poll_create_failed_alert": "Failed to create poll. Check the selected dates."
     },
     "booking": {
         "select_service": "Select Service",
@@ -306,5 +316,17 @@
         "tooltip_timezone": "Critical for accurate slot calculations and global availability.",
         "tooltip_page_title": "This will be the main header on your public booking page.",
         "tooltip_page_url": "Your unique sovereign identifier. Keep it short and memorable."
+    },
+    "poll": {
+        "by": "By",
+        "anonymous_user": "Meetrix User",
+        "your_name": "Your Name",
+        "name_placeholder": "John Doe",
+        "your_email": "Your Email",
+        "email_placeholder": "john@example.com",
+        "choose_availability": "Choose your availability",
+        "votes_label": "votes",
+        "submitting": "Submitting...",
+        "submit_availability": "Submit Availability"
     }
 }

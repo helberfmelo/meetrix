@@ -6,7 +6,7 @@
                 <h1 class="text-[clamp(2rem,8vw,5rem)] font-black text-zinc-950 dark:text-white uppercase tracking-tighter leading-[0.9] mb-3 sm:mb-4">
                     DISCOUNT // <span class="text-meetrix-orange">{{ $t('common.coupons') }}</span>
                 </h1>
-                <p class="text-slate-500 font-medium tracking-tight text-xs sm:text-sm">{{ $t('admin.coupons_description') }}</p>
+                <p class="text-slate-500 dark:text-slate-300 font-medium tracking-tight text-xs sm:text-sm">{{ $t('admin.coupons_description') }}</p>
             </div>
             <button @click="showCreateModal = true" 
                 class="w-full sm:w-auto px-6 sm:px-8 py-3.5 sm:py-4 bg-meetrix-orange text-zinc-950 font-black text-[10px] sm:text-xs uppercase tracking-wide sm:tracking-widest hover:scale-105 active:scale-95 transition-all shadow-xl shadow-meetrix-orange/20 rounded-full flex items-center justify-center gap-3">
@@ -23,11 +23,11 @@
                         <table class="w-full text-left">
                             <thead>
                                 <tr class="border-b border-black/5 dark:border-white/5 bg-zinc-50 dark:bg-zinc-950">
-                                    <th class="px-6 lg:px-8 py-5 lg:py-6 text-[10px] font-black uppercase tracking-[0.2em] lg:tracking-[0.3em] text-slate-400">{{ $t('admin.code') }}</th>
-                                    <th class="px-6 lg:px-8 py-5 lg:py-6 text-[10px] font-black uppercase tracking-[0.2em] lg:tracking-[0.3em] text-slate-400">{{ $t('admin.discount') }}</th>
-                                    <th class="px-6 lg:px-8 py-5 lg:py-6 text-[10px] font-black uppercase tracking-[0.2em] lg:tracking-[0.3em] text-slate-400">{{ $t('admin.usage') }}</th>
-                                    <th class="px-6 lg:px-8 py-5 lg:py-6 text-[10px] font-black uppercase tracking-[0.2em] lg:tracking-[0.3em] text-slate-400">{{ $t('admin.expires') }}</th>
-                                    <th class="px-6 lg:px-8 py-5 lg:py-6 text-[10px] font-black uppercase tracking-[0.2em] lg:tracking-[0.3em] text-slate-400 text-right">{{ $t('admin.actions') }}</th>
+                                    <th class="px-6 lg:px-8 py-5 lg:py-6 text-[10px] font-black uppercase tracking-[0.2em] lg:tracking-[0.3em] text-slate-400 dark:text-slate-300">{{ $t('admin.code') }}</th>
+                                    <th class="px-6 lg:px-8 py-5 lg:py-6 text-[10px] font-black uppercase tracking-[0.2em] lg:tracking-[0.3em] text-slate-400 dark:text-slate-300">{{ $t('admin.discount') }}</th>
+                                    <th class="px-6 lg:px-8 py-5 lg:py-6 text-[10px] font-black uppercase tracking-[0.2em] lg:tracking-[0.3em] text-slate-400 dark:text-slate-300">{{ $t('admin.usage') }}</th>
+                                    <th class="px-6 lg:px-8 py-5 lg:py-6 text-[10px] font-black uppercase tracking-[0.2em] lg:tracking-[0.3em] text-slate-400 dark:text-slate-300">{{ $t('admin.expires') }}</th>
+                                    <th class="px-6 lg:px-8 py-5 lg:py-6 text-[10px] font-black uppercase tracking-[0.2em] lg:tracking-[0.3em] text-slate-400 dark:text-slate-300 text-right">{{ $t('admin.actions') }}</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-black/5 dark:divide-white/5">
@@ -39,13 +39,13 @@
                                         </div>
                                     </td>
                                     <td class="px-6 lg:px-8 py-5 lg:py-6">
-                                        <span class="text-xs font-black px-3 py-1 bg-zinc-100 dark:bg-zinc-800 rounded-full text-zinc-600 dark:text-slate-400">
+                                        <span class="text-xs font-black px-3 py-1 bg-zinc-100 dark:bg-zinc-800 rounded-full text-zinc-600 dark:text-slate-200">
                                             {{ coupon.discount_type === 'percent' ? `${coupon.discount_value}%` : `$${coupon.discount_value}` }} {{ $t('admin.off') }}
                                         </span>
                                     </td>
                                     <td class="px-6 lg:px-8 py-5 lg:py-6">
                                         <div class="flex flex-col">
-                                            <span class="text-xs font-black text-zinc-950 dark:text-white">{{ coupon.times_used }} <span class="text-slate-400">/ {{ coupon.max_usages || '∞' }}</span></span>
+                                            <span class="text-xs font-black text-zinc-950 dark:text-white">{{ coupon.times_used }} <span class="text-slate-400 dark:text-slate-300">/ {{ coupon.max_usages || '∞' }}</span></span>
                                             <div class="w-24 h-1 bg-zinc-100 dark:bg-zinc-800 rounded-full mt-2 overflow-hidden">
                                                 <div class="h-full bg-meetrix-orange transition-all duration-1000" 
                                                     :style="{ width: coupon.max_usages ? (coupon.times_used / coupon.max_usages * 100) + '%' : '0%' }"></div>
@@ -53,7 +53,7 @@
                                         </div>
                                     </td>
                                     <td class="px-6 lg:px-8 py-5 lg:py-6">
-                                        <span class="text-xs font-black" :class="isExpired(coupon.expires_at) ? 'text-red-500' : 'text-slate-400'">
+                                        <span class="text-xs font-black" :class="isExpired(coupon.expires_at) ? 'text-red-500' : 'text-slate-500 dark:text-slate-200'">
                                             {{ coupon.expires_at ? new Date(coupon.expires_at).toLocaleDateString() : $t('admin.never') }}
                                         </span>
                                     </td>
@@ -95,11 +95,11 @@
 
                             <div class="grid grid-cols-2 gap-3 text-[10px]">
                                 <div>
-                                    <p class="font-black uppercase tracking-wider text-slate-400">{{ $t('admin.usage') }}</p>
+                                    <p class="font-black uppercase tracking-wider text-slate-400 dark:text-slate-300">{{ $t('admin.usage') }}</p>
                                     <p class="font-black text-zinc-950 dark:text-white">{{ coupon.times_used }} / {{ coupon.max_usages || '∞' }}</p>
                                 </div>
                                 <div>
-                                    <p class="font-black uppercase tracking-wider text-slate-400">{{ $t('admin.expires') }}</p>
+                                    <p class="font-black uppercase tracking-wider text-slate-400 dark:text-slate-300">{{ $t('admin.expires') }}</p>
                                     <p class="font-black" :class="isExpired(coupon.expires_at) ? 'text-red-500' : 'text-zinc-950 dark:text-white'">
                                         {{ coupon.expires_at ? new Date(coupon.expires_at).toLocaleDateString() : $t('admin.never') }}
                                     </p>
@@ -130,14 +130,14 @@
 
                 <form @submit.prevent="createCoupon" class="space-y-6 sm:space-y-8">
                     <div class="space-y-2">
-                        <label class="text-[10px] font-black uppercase tracking-widest text-slate-500">{{ $t('admin.vector_code') }}</label>
+                        <label class="text-[10px] font-black uppercase tracking-widest text-slate-500 dark:text-slate-300">{{ $t('admin.vector_code') }}</label>
                         <input v-model="form.code" type="text" placeholder="MEETRIXPRO20"
                             class="w-full bg-zinc-50 dark:bg-zinc-950 border border-black/5 dark:border-white/10 rounded-2xl px-6 py-4 text-sm font-black uppercase tracking-widest focus:border-meetrix-orange outline-none transition-all dark:text-white">
                     </div>
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-8">
                         <div class="space-y-2">
-                            <label class="text-[10px] font-black uppercase tracking-widest text-slate-500">{{ $t('admin.type') }}</label>
+                            <label class="text-[10px] font-black uppercase tracking-widest text-slate-500 dark:text-slate-300">{{ $t('admin.type') }}</label>
                             <select v-model="form.discount_type" 
                                 class="w-full bg-zinc-50 dark:bg-zinc-950 border border-black/5 dark:border-white/10 rounded-2xl px-6 py-4 text-sm font-black uppercase tracking-widest focus:border-meetrix-orange outline-none transition-all dark:text-white">
                                 <option value="percent">{{ $t('admin.percentage') }}</option>
@@ -145,7 +145,7 @@
                             </select>
                         </div>
                         <div class="space-y-2">
-                            <label class="text-[10px] font-black uppercase tracking-widest text-slate-500">{{ $t('admin.value') }}</label>
+                            <label class="text-[10px] font-black uppercase tracking-widest text-slate-500 dark:text-slate-300">{{ $t('admin.value') }}</label>
                             <input v-model="form.discount_value" type="number" 
                                 class="w-full bg-zinc-50 dark:bg-zinc-950 border border-black/5 dark:border-white/10 rounded-2xl px-6 py-4 text-sm font-black focus:border-meetrix-orange outline-none transition-all dark:text-white">
                         </div>
@@ -153,12 +153,12 @@
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-8">
                         <div class="space-y-2">
-                            <label class="text-[10px] font-black uppercase tracking-widest text-slate-500">{{ $t('admin.max_usages') }}</label>
+                            <label class="text-[10px] font-black uppercase tracking-widest text-slate-500 dark:text-slate-300">{{ $t('admin.max_usages') }}</label>
                             <input v-model="form.max_usages" type="number" :placeholder="$t('admin.unlimited_placeholder')"
                                 class="w-full bg-zinc-50 dark:bg-zinc-950 border border-black/5 dark:border-white/10 rounded-2xl px-6 py-4 text-sm font-black focus:border-meetrix-orange outline-none transition-all dark:text-white">
                         </div>
                         <div class="space-y-2">
-                            <label class="text-[10px] font-black uppercase tracking-widest text-slate-500">{{ $t('admin.expiry_date') }}</label>
+                            <label class="text-[10px] font-black uppercase tracking-widest text-slate-500 dark:text-slate-300">{{ $t('admin.expiry_date') }}</label>
                             <input v-model="form.expires_at" type="date"
                                 class="w-full bg-zinc-50 dark:bg-zinc-950 border border-black/5 dark:border-white/10 rounded-2xl px-6 py-4 text-sm font-black focus:border-meetrix-orange outline-none transition-all dark:text-white">
                         </div>

@@ -14,7 +14,7 @@ class IntegrationController extends Controller
      */
     public function googleRedirect(Request $request)
     {
-        $client = $this->getGoogleClient();
+        $client = $this->getGoogleClient($request);
         $authUrl = $client->createAuthUrl();
 
         return response()->json(['url' => $authUrl]);
@@ -27,7 +27,7 @@ class IntegrationController extends Controller
     {
         $request->validate(['code' => 'required|string']);
 
-        $client = $this->getGoogleClient();
+        $client = $this->getGoogleClient($request);
         
         try {
             $token = $client->fetchAccessTokenWithAuthCode($request->code);
@@ -82,12 +82,12 @@ class IntegrationController extends Controller
         return response()->json(['message' => 'Integration removed.']);
     }
 
-    private function getGoogleClient()
+    private function getGoogleClient(?Request $request = null)
     {
         $client = new GoogleClient();
         $client->setClientId(env('GOOGLE_CLIENT_ID'));
         $client->setClientSecret(env('GOOGLE_CLIENT_SECRET'));
-        $client->setRedirectUri(env('GOOGLE_REDIRECT_URL'));
+        $client->setRedirectUri($this->resolveGoogleRedirectUri($request));
         $client->addScope(\Google\Service\Calendar::CALENDAR);
         $client->addScope('email');
         $client->addScope('profile');
@@ -95,5 +95,16 @@ class IntegrationController extends Controller
         $client->setPrompt('consent');
 
         return $client;
+    }
+
+    private function resolveGoogleRedirectUri(?Request $request = null): string
+    {
+        if ($request) {
+            return rtrim($request->root(), '/') . '/dashboard/integrations/google/callback';
+        }
+
+        $baseUrl = env('APP_URL', 'http://localhost');
+
+        return rtrim($baseUrl, '/') . '/dashboard/integrations/google/callback';
     }
 }

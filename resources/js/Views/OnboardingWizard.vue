@@ -187,7 +187,7 @@
                     </button>
                     <button 
                         @click="nextStep"
-                        :disabled="loading || (step === 1 && !form.name)"
+                        :disabled="loading || (step === 1 && !canProceedStep1)"
                         class="flex-1 py-5 rounded-2xl font-black text-[10px] uppercase tracking-[0.3em] bg-zinc-950 text-white dark:bg-white dark:text-zinc-950 hover:scale-105 active:scale-95 transition-all shadow-premium flex items-center justify-center gap-4 group disabled:bg-zinc-200 dark:disabled:bg-zinc-800 disabled:text-slate-400 dark:disabled:text-slate-600"
                     >
                         <i v-if="loading" class="fas fa-circle-notch fa-spin text-lg"></i>
@@ -205,7 +205,7 @@
 </template>
 
 <script setup>
-import { ref, reactive } from 'vue';
+import { ref, reactive, computed, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import { useAuthStore } from '../stores/auth';
@@ -239,8 +239,19 @@ const form = reactive({
     endTime: '17:00'
 });
 
+const canProceedStep1 = computed(() => {
+    if (!form.name?.trim()) return false;
+    if (authStore.user) return true;
+
+    return Boolean(
+        form.email?.trim()
+        && form.password
+        && form.password_confirmation
+        && form.password === form.password_confirmation
+    );
+});
+
 // Sync name when user logs in during onboarding
-import { watch } from 'vue';
 watch(() => authStore.user, (newUser) => {
     if (newUser && !form.name) {
         form.name = newUser.name;

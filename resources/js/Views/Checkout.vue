@@ -129,7 +129,7 @@ const finalPrice = computed(() => Math.max(0, basePrice - discountValue.value));
 const applyCoupon = async () => {
     loadingCoupon.value = true;
     try {
-        const response = await axios.post('/api/coupons/validate-code', { code: couponCode.value });
+        const response = await axios.post('/api/coupons/validate-code', { code: couponCode.value.trim() });
         appliedCoupon.value = response.data.coupon;
         console.log('Coupon applied successfully:', appliedCoupon.value);
     } catch (error) {
@@ -144,26 +144,26 @@ const applyCoupon = async () => {
 const handleCheckout = async () => {
     loading.value = true;
     try {
-        if (finalPrice.value === 0) {
-            // Free checkout logic
-            await axios.post('/api/subscription/checkout', {
-                plan: 'pro',
-                coupon: appliedCoupon.value?.code,
-                free: true
-            });
-            router.push('/dashboard');
-        } else {
-            // Real Stripe checkout
-            const response = await axios.post('/api/subscription/checkout', {
-                plan: 'pro',
-                coupon: appliedCoupon.value?.code
-            });
-            if (response.data.url) {
-                window.location.href = response.data.url;
-            }
+        const response = await axios.post('/api/subscription/checkout', {
+            plan: 'pro',
+            interval: 'monthly',
+            coupon_code: appliedCoupon.value?.code || null
+        });
+
+        if (response.data.redirect_url) {
+            window.location.href = response.data.redirect_url;
+            return;
         }
+
+        if (response.data.checkout_url) {
+            window.location.href = response.data.checkout_url;
+            return;
+        }
+
+        router.push('/dashboard');
     } catch (error) {
-        alert('Erro ao processar checkout. Tente novamente.');
+        const message = error.response?.data?.message || 'Erro ao processar checkout. Tente novamente.';
+        alert(message);
     } finally {
         loading.value = false;
     }

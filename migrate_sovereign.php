@@ -8,6 +8,13 @@ use Illuminate\Contracts\Console\Kernel;
 use Illuminate\Support\Facades\Artisan;
 
 define('LARAVEL_START', microtime(true));
+ob_start();
+
+$sendPlainTextHeader = static function (): void {
+    if (!headers_sent()) {
+        header('Content-Type: text/plain; charset=UTF-8');
+    }
+};
 
 // 1. Boot Laravel
 require __DIR__.'/vendor/autoload.php';
@@ -16,17 +23,28 @@ $app = require_once __DIR__.'/bootstrap/app.php';
 try {
     $kernel = $app->make(Kernel::class);
     $kernel->bootstrap();
-} catch (\Exception $e) {
-    header('Content-Type: text/plain');
+} catch (\Throwable $e) {
+    $sendPlainTextHeader();
+    $bootstrapOutput = trim((string) ob_get_clean());
+    if ($bootstrapOutput !== '') {
+        echo "BOOTSTRAP OUTPUT DETECTED:\n";
+        echo $bootstrapOutput . "\n\n";
+    }
     echo "BOOTSTRAP ERROR: " . $e->getMessage() . "\n";
     echo $e->getTraceAsString();
     exit;
 }
 
-header('Content-Type: text/plain');
+$bootstrapOutput = trim((string) ob_get_clean());
+$sendPlainTextHeader();
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
+
+if ($bootstrapOutput !== '') {
+    echo "NOTICE: Unexpected bootstrap output detected (possible BOM/whitespace).\n";
+    echo $bootstrapOutput . "\n\n";
+}
 
 echo "--- SOVEREIGN SYNC START ---\n\n";
 

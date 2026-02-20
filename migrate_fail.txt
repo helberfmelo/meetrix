@@ -1,0 +1,37 @@
+
+  Dropping all tables  100.63ms DONE
+
+   INFO  Preparing database.  
+
+  Creating migration table  13.68ms DONE
+
+   INFO  Running migrations.  
+
+  0001_01_01_000000_create_users_table  62.79ms DONE
+  0001_01_01_000001_create_cache_table  21.58ms DONE
+  0001_01_01_000002_create_jobs_table  56.07ms DONE
+  2024_03_01_000001_create_tenants_table  60.38ms DONE
+  2024_03_01_000002_create_pages_table  64.89ms DONE
+  2024_03_01_000003_create_bookings_table  12.95ms FAIL
+
+   Illuminate\Database\QueryException 
+
+  SQLSTATE[HY000]: General error: 1824 Failed to open the referenced table 'scheduling_pages' (Connection: mysql, SQL: alter table `bookings` add constraint `bookings_scheduling_page_id_foreign` foreign key (`scheduling_page_id`) references `scheduling_pages` (`id`) on delete cascade)
+
+  at vendor\laravel\framework\src\Illuminate\Database\Connection.php:825
+    821Ôûò                     $this->getName(), $query, $this->prepareBindings($bindings), $e
+    822Ôûò                 );
+    823Ôûò             }
+    824Ôûò 
+  Ô×£ 825Ôûò             throw new QueryException(
+    826Ôûò                 $this->getName(), $query, $this->prepareBindings($bindings), $e
+    827Ôûò             );
+    828Ôûò         }
+    829Ôûò     }
+
+  1   vendor\laravel\framework\src\Illuminate\Database\Connection.php:571
+      PDOException::("SQLSTATE[HY000]: General error: 1824 Failed to open the referenced table 'scheduling_pages'")
+
+  2   vendor\laravel\framework\src\Illuminate\Database\Connection.php:571
+      PDOStatement::execute()
+

@@ -129,15 +129,13 @@ const finalPrice = computed(() => Math.max(0, basePrice - discountValue.value));
 const applyCoupon = async () => {
     loadingCoupon.value = true;
     try {
-        const response = await axios.post('/api/coupons/validate', { code: couponCode.value });
+        const response = await axios.post('/api/coupons/validate-code', { code: couponCode.value });
         appliedCoupon.value = response.data.coupon;
-        // In a real app, response would have coupon details
-        // Mocking for cupom100 if backend mock not ready
-        if (couponCode.value.toLowerCase() === 'cupom100') {
-            appliedCoupon.value = { code: 'CUPOM100', type: 'percent', value: 100 };
-        }
+        console.log('Coupon applied successfully:', appliedCoupon.value);
     } catch (error) {
-        alert('Cupom inválido ou expirado.');
+        console.error('Coupon validation failed:', error.response?.data || error.message);
+        alert(error.response?.data?.message || 'Cupom inválido ou expirado.');
+        appliedCoupon.value = null;
     } finally {
         loadingCoupon.value = false;
     }

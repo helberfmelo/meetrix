@@ -10,14 +10,15 @@ return new class extends Migration
     {
         Schema::create('bookings', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('page_id')->constrained()->onDelete('cascade');
+            $table->foreignId('scheduling_page_id')->constrained('scheduling_pages')->onDelete('cascade');
             $table->string('customer_name');
             $table->string('customer_email');
-            $table->dateTime('start_time');
-            $table->dateTime('end_time');
+            $table->dateTime('start_at');
+            $table->dateTime('end_at');
             $table->string('status')->default('pending'); // confirmed, cancelled, reshcheduled
             $table->json('meta')->nullable(); // Answers to form questions
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

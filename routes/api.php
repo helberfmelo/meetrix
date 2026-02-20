@@ -89,7 +89,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Subscriptions & Billing
     Route::post('/subscription/checkout', [\App\Http\Controllers\SubscriptionController::class, 'checkout']);
-    Route::post('/coupons/validate', [\App\Http\Controllers\CouponController::class, 'validateCoupon']);
+    Route::post('/coupons/validate-code', [\App\Http\Controllers\CouponController::class, 'validateCoupon']);
 
     // Admin / Coupons
     Route::apiResource('coupons', \App\Http\Controllers\CouponController::class);

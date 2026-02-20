@@ -14,11 +14,10 @@ return new class extends Migration
         \App\Models\Coupon::updateOrCreate(
             ['code' => 'cupom100'],
             [
-                'discount_percent' => 100.00,
-                'max_uses' => 10,
-                'uses' => 0,
-                'expires_at' => '2026-02-20',
+                'discount_type' => 'percent',
+                'discount_value' => 100,
                 'is_active' => true,
+                'expires_at' => now()->addYear(),
             ]
         );
     }

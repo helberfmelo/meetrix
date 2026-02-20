@@ -11,12 +11,16 @@ class DashboardController extends Controller
     public function index(Request $request)
     {
         $user = $request->user();
-        $teamIds = $user->teams->pluck('id');
+        $teamIds = $user->teams ? $user->teams->pluck('id') : collect([]);
 
         // Aggregated Stats
-        $pageIds = SchedulingPage::where('user_id', $user->id)
-            ->orWhereIn('team_id', $teamIds)
-            ->pluck('id');
+        $pageIds = SchedulingPage::where('user_id', $user->id);
+        
+        if ($teamIds->isNotEmpty()) {
+            $pageIds = $pageIds->orWhereIn('team_id', $teamIds);
+        }
+        
+        $pageIds = $pageIds->pluck('id');
 
         $views = SchedulingPage::whereIn('id', $pageIds)->sum('views');
         $clicks = SchedulingPage::whereIn('id', $pageIds)->sum('slot_clicks');

@@ -31,46 +31,32 @@ class CouponTest extends TestCase
     }
 
     /**
-     * Test 100% discount bypasses Stripe.
+     * Test 100% discount bypasses Stripe for subscriptions.
      */
-    public function test_100_percent_discount_bypasses_stripe()
+    public function test_subscription_100_percent_discount_bypasses_stripe()
     {
         $user = User::factory()->create();
-        $page = SchedulingPage::create([
-            'user_id' => $user->id,
-            'title' => 'Test Page',
-            'slug' => 'test-page',
-        ]);
         
-        $type = AppointmentType::create([
-            'scheduling_page_id' => $page->id,
-            'name' => 'Paid Service',
-            'price' => 50,
-            'duration_minutes' => 30,
-        ]);
-
         $coupon = Coupon::create([
-            'code' => 'FREEPASS',
+            'code' => 'FREEPRO',
             'discount_type' => 'percent',
             'discount_value' => 100,
+            'is_active' => true,
         ]);
 
-        $response = $this->postJson('/api/bookings', [
-            'scheduling_page_id' => $page->id,
-            'appointment_type_id' => $type->id,
-            'customer_name' => 'Tester',
-            'customer_email' => 'test@example.com',
-            'start_at' => now()->addDay()->format('Y-m-d H:i:s'),
-            'coupon_code' => 'FREEPASS',
-            'timezone' => 'UTC',
+        $response = $this->actingAs($user)->postJson('/api/subscription/checkout', [
+            'plan' => 'pro',
+            'interval' => 'monthly',
+            'coupon_code' => 'FREEPRO',
         ]);
 
-        // Should be confirmed immediately, not require payment
-        $response->assertStatus(201);
-        $this->assertDatabaseHas('bookings', [
-            'customer_name' => 'Tester',
-            'status' => 'confirmed'
+        // Should be confirmed immediately, return success and redirect
+        $response->assertStatus(200);
+        $response->assertJson([
+            'status' => 'success',
+            'redirect_url' => url('/dashboard?subscription=free_success')
         ]);
-        $this->assertArrayNotHasKey('checkout_url', $response->json());
+        
+        $this->assertEquals('pro', $user->fresh()->subscription_tier);
     }
 }

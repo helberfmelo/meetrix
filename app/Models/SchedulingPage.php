@@ -20,6 +20,8 @@ class SchedulingPage extends Model
         'is_active',
         'confirmation_message',
         'redirect_url',
+        'views',
+        'slot_clicks',
     ];
 
     protected $casts = [

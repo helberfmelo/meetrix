@@ -16,31 +16,36 @@ class AuthController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
-            'country_code' => 'required|string|size:2',
-            'currency' => 'required|string|size:3',
+            'country_code' => 'nullable|string|size:2',
+            'currency' => 'nullable|string|size:3',
         ]);
 
-        // Geo-Fence Logic (Sovereign Shield)
-        $geoService = new \App\Services\GeoIPService();
-        if (!$geoService->validateRegion($request->ip(), $request->country_code)) {
-             throw ValidationException::withMessages([
-                'country_code' => ['Regional mismatch detected. Sovereign Geo-Fence protection activated.'],
-            ]);
+        $countryCode = $request->country_code ?? 'BR';
+        $currency = $request->currency ?? 'BRL';
+
+        // Geo-Fence Logic (Sovereign Shield) - Only if enabled in config
+        if (config('pricing.geoip_enabled')) {
+            $geoService = new \App\Services\GeoIPService();
+            if (!$geoService->validateRegion($request->ip(), $countryCode)) {
+                throw ValidationException::withMessages([
+                    'country_code' => ['Regional mismatch detected. Sovereign Geo-Fence protection activated.'],
+                ]);
+            }
         }
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'country_code' => $request->country_code,
+            'country_code' => $countryCode,
         ]);
 
         // Create Default Tenant with regional settings
         $user->tenant()->create([
             'name' => "{$user->name}'s Node",
-            'slug' => \Illuminate\Support\Str::slug($user->name),
-            'region' => $request->country_code === 'BR' ? 'BR' : ($request->country_code === 'EU' ? 'EU' : 'Global'),
-            'currency' => $request->currency,
+            'slug' => \Illuminate\Support\Str::slug($user->name) . '-' . rand(100, 999), // Ensure unique slug for tenant
+            'region' => $countryCode === 'BR' ? 'BR' : ($countryCode === 'EU' ? 'EU' : 'Global'),
+            'currency' => $currency,
         ]);
 
         $token = $user->createToken('auth_token')->plainTextToken;

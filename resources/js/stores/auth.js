@@ -14,6 +14,28 @@ export const useAuthStore = defineStore('auth', {
     },
 
     actions: {
+        async register(userData) {
+            this.loading = true;
+            this.error = null;
+            try {
+                await axios.get('/sanctum/csrf-cookie');
+                const response = await axios.post('/api/register', userData);
+
+                this.token = response.data.access_token;
+                // Fetch user to populate state
+                await this.fetchUser();
+
+                localStorage.setItem('token', this.token);
+                axios.defaults.headers.common['Authorization'] = `Bearer ${this.token}`;
+                return true;
+            } catch (err) {
+                this.error = err.response?.data?.message || 'Registration failed';
+                return false;
+            } finally {
+                this.loading = false;
+            }
+        },
+
         async login(email, password) {
             this.loading = true;
             this.error = null;

@@ -45,6 +45,40 @@
                                 :placeholder="$t('onboarding.name_placeholder')"
                             >
                         </div>
+                        
+                        <!-- Guest Registration Fields -->
+                        <div v-if="!authStore.user" class="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                            <div class="space-y-4">
+                                <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">{{ $t('onboarding.email_label') }}</label>
+                                <input 
+                                    v-model="form.email" 
+                                    type="email" 
+                                    class="w-full bg-zinc-100 dark:bg-zinc-950 border-2 border-black/5 dark:border-white/5 rounded-2xl px-8 py-5 text-zinc-950 dark:text-white font-bold text-lg outline-none focus:border-meetrix-orange transition-all tracking-tight"
+                                    placeholder="email@example.com"
+                                >
+                            </div>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                <div class="space-y-4">
+                                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">{{ $t('onboarding.password_label') }}</label>
+                                    <input 
+                                        v-model="form.password" 
+                                        type="password" 
+                                        class="w-full bg-zinc-100 dark:bg-zinc-950 border-2 border-black/5 dark:border-white/5 rounded-2xl px-8 py-5 text-zinc-950 dark:text-white font-bold text-lg outline-none focus:border-meetrix-orange transition-all tracking-tight"
+                                        placeholder="••••••••"
+                                    >
+                                </div>
+                                <div class="space-y-4">
+                                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">{{ $t('onboarding.confirm_password_label') }}</label>
+                                    <input 
+                                        v-model="form.password_confirmation" 
+                                        type="password" 
+                                        class="w-full bg-zinc-100 dark:bg-zinc-950 border-2 border-black/5 dark:border-white/5 rounded-2xl px-8 py-5 text-zinc-950 dark:text-white font-bold text-lg outline-none focus:border-meetrix-orange transition-all tracking-tight"
+                                        placeholder="••••••••"
+                                    >
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="space-y-4">
                             <div class="flex items-center justify-between">
                                 <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">{{ $t('onboarding.timezone_label') }}</label>
@@ -194,6 +228,9 @@ const days = [
 
 const form = reactive({
     name: authStore.user?.name || '',
+    email: '',
+    password: '',
+    password_confirmation: '',
     timezone: 'UTC',
     pageTitle: 'My Calendar',
     pageSlug: '',
@@ -220,6 +257,29 @@ const toggleDay = (id) => {
 };
 
 const nextStep = async () => {
+    if (step.value === 1 && !authStore.user) {
+        loading.value = true;
+        try {
+            const success = await authStore.register({
+                name: form.name,
+                email: form.email,
+                password: form.password,
+                password_confirmation: form.password_confirmation,
+                country_code: 'BR', // Defaulting for now
+                currency: 'BRL'      // Defaulting for now
+            });
+            if (!success) {
+                alert(authStore.error);
+                return;
+            }
+        } catch (error) {
+            alert(error.message);
+            return;
+        } finally {
+            loading.value = false;
+        }
+    }
+
     if (step.value < 3) {
         step.value++;
         return;

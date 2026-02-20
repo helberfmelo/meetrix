@@ -9,7 +9,7 @@ Build "Meetrix", a SaaS scheduling platform inspired by YouCanBookMe (YCBM), usi
 > - **Database**: The local database `meetrix_db` will be used for development. Ensure it exists.
 > - **Deploy**: GitHub Secrets (`FTP_HOST`, `FTP_USER`, `FTP_PASSWORD`, SSH Keys) must be configured in the repo settings for the Actions workflow to succeed.
 > - **Domain**: Production URL is set to `/home1/opents62/public_html/meetrix/`.
-> - **URL test access**: Production URL is set to `https://opentshost.com/meetrix/`.
+> - **URL test access**: Production URL is set to `https://meetrix.opentshost.com/`.
 
 ## Proposed Changes
 
@@ -41,12 +41,19 @@ Build "Meetrix", a SaaS scheduling platform inspired by YouCanBookMe (YCBM), usi
 - [x] Onboarding Protocol (6-Step).
 - [x] Dashboard & PagesList Editor.
 
-### [DONE] Phase 5: Aesthetic Sovereign Refinement
+### [DONE] Phase 5: Aesthetic Sovereign Refinement & I18n
 - [x] Font Awesome 6 Integration.
 - [x] Premium Multi-language Engine (11 languages).
 - [x] Sovereign Color Palette (Zinc/Orange).
 - [x] "Naked" Icon Switchers (Theme/Locale).
 - [x] Login Layout Optimization.
+- [x] Full I18n Localization (11 languages, all modules).
+
+### [IN PROGRESS] Phase 9: Quality, Testing & URL Refinement
+- [x] Fix missing Home page feature cards.
+- [x] Add tooltips to onboarding flow.
+- [x] Update production subdomain to `meetrix.opentshost.com`.
+- [/] E2E Testing with `cupom100` and `helberfrancis@gmail.com`.
 
 ## Verification Plan
 

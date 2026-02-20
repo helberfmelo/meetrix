@@ -127,6 +127,55 @@ class BackendIntegrationTest extends TestCase
         ]);
     }
 
+    public function test_booking_timestamps_are_serialized_as_utc_even_when_app_timezone_is_not_utc(): void
+    {
+        config(['app.timezone' => 'America/Sao_Paulo']);
+        Mail::fake();
+
+        $user = User::factory()->create();
+
+        $page = SchedulingPage::create([
+            'user_id' => $user->id,
+            'title' => 'TZ Booking Page',
+            'slug' => 'tz-booking-page',
+            'is_active' => true,
+            'config' => [
+                'form_fields' => [
+                    ['name' => 'customer_name', 'label' => 'Name', 'type' => 'text', 'required' => true],
+                    ['name' => 'customer_email', 'label' => 'Email', 'type' => 'email', 'required' => true],
+                ],
+            ],
+        ]);
+
+        $type = AppointmentType::create([
+            'scheduling_page_id' => $page->id,
+            'name' => 'TZ Call',
+            'duration_minutes' => 15,
+            'price' => 0,
+            'currency' => 'BRL',
+            'is_active' => true,
+        ]);
+
+        $response = $this->postJson('/api/bookings', [
+            'scheduling_page_id' => $page->id,
+            'appointment_type_id' => $type->id,
+            'start_at' => '2026-03-02 12:00',
+            'timezone' => 'America/Sao_Paulo',
+            'customer_name' => 'TZ User',
+            'customer_email' => 'tz-user@example.com',
+        ]);
+
+        $response->assertStatus(201)
+            ->assertJsonPath('booking.start_at', '2026-03-02T15:00:00.000000Z')
+            ->assertJsonPath('booking.end_at', '2026-03-02T15:15:00.000000Z');
+
+        $this->assertDatabaseHas('bookings', [
+            'customer_email' => 'tz-user@example.com',
+            'start_at' => '2026-03-02 15:00:00',
+            'end_at' => '2026-03-02 15:15:00',
+        ]);
+    }
+
     public function test_slots_endpoint_hides_booked_slot_using_request_timezone(): void
     {
         config(['app.timezone' => 'America/Sao_Paulo']);

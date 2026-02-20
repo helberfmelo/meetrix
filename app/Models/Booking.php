@@ -2,7 +2,9 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -29,12 +31,26 @@ class Booking extends Model
     ];
 
     protected $casts = [
-        'start_at' => 'datetime',
-        'end_at' => 'datetime',
         'customer_data' => 'array',
         'is_paid' => 'boolean',
         'amount_paid' => 'decimal:2',
     ];
+
+    protected function startAt(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => $value ? Carbon::parse($value, 'UTC') : null,
+            set: fn ($value) => $value ? Carbon::parse($value)->utc()->format('Y-m-d H:i:s') : null,
+        );
+    }
+
+    protected function endAt(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => $value ? Carbon::parse($value, 'UTC') : null,
+            set: fn ($value) => $value ? Carbon::parse($value)->utc()->format('Y-m-d H:i:s') : null,
+        );
+    }
 
     public function schedulingPage()
     {

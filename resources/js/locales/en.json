@@ -297,6 +297,10 @@
         "start_time": "Window Open",
         "end_time": "Window Close",
         "finish": "Synchronize",
-        "continue": "Proceed"
+        "continue": "Continue",
+        "tooltip_name": "Enter your full professional name for client recognition.",
+        "tooltip_timezone": "Critical for accurate slot calculations and global availability.",
+        "tooltip_page_title": "This will be the main header on your public booking page.",
+        "tooltip_page_url": "Your unique sovereign identifier. Keep it short and memorable."
     }
 }

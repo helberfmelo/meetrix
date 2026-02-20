@@ -257,7 +257,11 @@
         "start_time": "Abertura da Janela",
         "end_time": "Fechamento da Janela",
         "finish": "Sincronizar",
-        "continue": "Prosseguir"
+        "continue": "Prosseguir",
+        "tooltip_name": "Insira seu nome profissional completo para identificação dos clientes.",
+        "tooltip_timezone": "Crucial para cálculos precisos de horários e disponibilidade global.",
+        "tooltip_page_title": "Este será o cabeçalho principal na sua página pública de reservas.",
+        "tooltip_page_url": "Seu identificador soberano único. Mantenha curto e memorável."
     },
     "poll": {
         "by": "Por",

@@ -32,7 +32,7 @@
                                 </div>
                                 <div class="ml-6 flex flex-col">
                                     <div class="text-sm font-black text-zinc-950 dark:text-white uppercase tracking-tight">{{ page.title }}</div>
-                                    <a :href="'/p/' + page.slug" target="_blank" class="text-[10px] font-bold text-slate-400 hover:text-meetrix-orange transition-colors uppercase tracking-widest mt-1">meetrix.pro/p/{{ page.slug }}</a>
+                                    <a :href="'/p/' + page.slug" target="_blank" class="text-[10px] font-bold text-slate-400 hover:text-meetrix-orange transition-colors uppercase tracking-widest mt-1">meetrix.opentshost.com/p/{{ page.slug }}</a>
                                 </div>
                             </div>
                         </td>

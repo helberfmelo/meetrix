@@ -29,7 +29,15 @@
                     
                     <div class="space-y-8">
                         <div class="space-y-4">
-                            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">{{ $t('onboarding.name_label') }}</label>
+                            <div class="flex items-center justify-between">
+                                <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">{{ $t('onboarding.name_label') }}</label>
+                                <div class="group relative">
+                                    <i class="fas fa-circle-info text-slate-400 cursor-help"></i>
+                                    <div class="absolute bottom-full right-0 mb-3 w-48 p-3 bg-zinc-950 text-white text-[9px] font-bold rounded-xl opacity-0 group-hover:opacity-100 transition-all pointer-events-none z-50 shadow-2xl border border-white/10 uppercase tracking-wider">
+                                        {{ $t('onboarding.tooltip_name') }}
+                                    </div>
+                                </div>
+                            </div>
                             <input 
                                 v-model="form.name" 
                                 type="text" 
@@ -38,7 +46,15 @@
                             >
                         </div>
                         <div class="space-y-4">
-                            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">{{ $t('onboarding.timezone_label') }}</label>
+                            <div class="flex items-center justify-between">
+                                <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">{{ $t('onboarding.timezone_label') }}</label>
+                                <div class="group relative">
+                                    <i class="fas fa-circle-info text-slate-400 cursor-help"></i>
+                                    <div class="absolute bottom-full right-0 mb-3 w-48 p-3 bg-zinc-950 text-white text-[9px] font-bold rounded-xl opacity-0 group-hover:opacity-100 transition-all pointer-events-none z-50 shadow-2xl border border-white/10 uppercase tracking-wider">
+                                        {{ $t('onboarding.tooltip_timezone') }}
+                                    </div>
+                                </div>
+                            </div>
                             <select 
                                 v-model="form.timezone"
                                 class="w-full bg-zinc-100 dark:bg-zinc-950 border-2 border-black/5 dark:border-white/5 rounded-2xl px-8 py-5 text-zinc-950 dark:text-white font-bold text-lg outline-none focus:border-meetrix-orange transition-all appearance-none cursor-pointer"
@@ -58,7 +74,15 @@
                     
                     <div class="space-y-8">
                         <div class="space-y-4">
-                            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">{{ $t('onboarding.p_title_label') }}</label>
+                            <div class="flex items-center justify-between">
+                                <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">{{ $t('onboarding.p_title_label') }}</label>
+                                <div class="group relative">
+                                    <i class="fas fa-circle-info text-slate-400 cursor-help"></i>
+                                    <div class="absolute bottom-full right-0 mb-3 w-48 p-3 bg-zinc-950 text-white text-[9px] font-bold rounded-xl opacity-0 group-hover:opacity-100 transition-all pointer-events-none z-50 shadow-2xl border border-white/10 uppercase tracking-wider">
+                                        {{ $t('onboarding.tooltip_page_title') }}
+                                    </div>
+                                </div>
+                            </div>
                             <input 
                                 v-model="form.pageTitle" 
                                 @input="generateSlug"
@@ -68,9 +92,17 @@
                             >
                         </div>
                         <div class="space-y-4">
-                            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">{{ $t('onboarding.p_url_label') }}</label>
+                            <div class="flex items-center justify-between">
+                                <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">{{ $t('onboarding.p_url_label') }}</label>
+                                <div class="group relative">
+                                    <i class="fas fa-circle-info text-slate-400 cursor-help"></i>
+                                    <div class="absolute bottom-full right-0 mb-3 w-48 p-3 bg-zinc-950 text-white text-[9px] font-bold rounded-xl opacity-0 group-hover:opacity-100 transition-all pointer-events-none z-50 shadow-2xl border border-white/10 uppercase tracking-wider">
+                                        {{ $t('onboarding.tooltip_page_url') }}
+                                    </div>
+                                </div>
+                            </div>
                             <div class="flex items-center group/input">
-                                <span class="bg-zinc-200 dark:bg-zinc-800 px-6 py-5 rounded-l-2xl border-2 border-r-0 border-black/5 dark:border-white/5 text-slate-500 font-bold text-sm">meetrix.pro/p/</span>
+                                <span class="bg-zinc-200 dark:bg-zinc-800 px-6 py-5 rounded-l-2xl border-2 border-r-0 border-black/5 dark:border-white/5 text-slate-500 font-bold text-sm">meetrix.opentshost.com/p/</span>
                                 <input 
                                     v-model="form.pageSlug"
                                     type="text" 

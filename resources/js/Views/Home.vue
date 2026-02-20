@@ -51,8 +51,8 @@
                 </div>
 
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
-                    <div v-for="i in 3" :key="i" class="reveal-on-scroll h-full">
-                        <div class="group h-full bg-zinc-50 dark:bg-zinc-900/40 p-12 rounded-[3.5rem] border border-black/5 dark:border-white/5 hover:border-meetrix-orange/30 hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-all duration-700 flex flex-col justify-between translate-y-8 opacity-0 group-[.in-view]:translate-y-0 group-[.in-view]:opacity-100"
+                    <div v-for="i in 3" :key="i" class="reveal-on-scroll group h-full">
+                        <div class="h-full bg-zinc-50 dark:bg-zinc-900/40 p-12 rounded-[3.5rem] border border-black/5 dark:border-white/5 hover:border-meetrix-orange/30 hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-all duration-700 flex flex-col justify-between translate-y-8 opacity-0 group-[.in-view]:translate-y-0 group-[.in-view]:opacity-100"
                             :style="{ transitionDelay: `${i * 150}ms` }">
                             <div>
                                 <span class="text-meetrix-orange font-black text-[10px] uppercase tracking-[0.4em] mb-12 block">

@@ -351,25 +351,27 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
+import axios from '../axios';
 
 const billingCycle = ref('monthly');
 const route = useRoute();
+const catalog = ref(null);
 
-const geoPricing = {
+const fallbackGeoPricing = {
     BR: {
         currency: 'BRL',
-        schedule: { starter: 29, pro: 49 },
-        payments: { pro: 39, premium: 79, feePro: 2.5, feePremium: 1.5 },
+        schedule: { starter: 29, annualStarter: 23 },
+        payments: { pro: 39, annualPro: 31, premium: 79, annualPremium: 63, feePro: 2.5, feePremium: 1.5 },
     },
     USD: {
         currency: 'USD',
-        schedule: { starter: 7, pro: 9 },
-        payments: { pro: 9, premium: 19, feePro: 1.25, feePremium: 0.75 },
+        schedule: { starter: 7, annualStarter: 6 },
+        payments: { pro: 9, annualPro: 7, premium: 19, annualPremium: 15, feePro: 1.25, feePremium: 0.75 },
     },
     EUR: {
         currency: 'EUR',
-        schedule: { starter: 7, pro: 9 },
-        payments: { pro: 9, premium: 19, feePro: 1.25, feePremium: 0.75 },
+        schedule: { starter: 7, annualStarter: 6 },
+        payments: { pro: 9, annualPro: 7, premium: 19, annualPremium: 15, feePro: 1.25, feePremium: 0.75 },
     },
 };
 
@@ -378,7 +380,7 @@ const activeLocale = computed(() => {
     return String(rawLocale || 'en').replace('_', '-');
 });
 
-const regionCode = computed(() => {
+const inferredRegionCode = computed(() => {
     const queryRegion = String(route.query.region || '').toUpperCase();
     if (queryRegion === 'BR') return 'BR';
     if (queryRegion === 'US' || queryRegion === 'USD' || queryRegion === 'NA') return 'USD';
@@ -390,21 +392,52 @@ const regionCode = computed(() => {
     return 'EUR';
 });
 
-const regionPricing = computed(() => geoPricing[regionCode.value]);
+const regionCode = computed(() => String(catalog.value?.region || inferredRegionCode.value).toUpperCase());
+
+const regionPricing = computed(() => {
+    if (!catalog.value?.plans) {
+        return fallbackGeoPricing[regionCode.value] || fallbackGeoPricing.EUR;
+    }
+
+    const schedule = catalog.value.plans.scheduling_only || {};
+    const payments = catalog.value.plans.scheduling_with_payments || {};
+    const fallback = fallbackGeoPricing[regionCode.value] || fallbackGeoPricing.EUR;
+
+    return {
+        currency: catalog.value.currency || fallback.currency,
+        schedule: {
+            starter: Number(schedule.monthly_price ?? fallback.schedule.starter),
+            annualStarter: Number(schedule.annual_price ?? fallback.schedule.annualStarter),
+        },
+        payments: {
+            pro: Number(payments.monthly_price ?? fallback.payments.pro),
+            annualPro: Number(payments.annual_price ?? fallback.payments.annualPro),
+            premium: Number(payments.premium_price ?? fallback.payments.premium),
+            annualPremium: Number(
+                payments.premium_price ? Math.round(Number(payments.premium_price) * 0.8) : fallback.payments.annualPremium
+            ),
+            feePro: Number(payments.platform_fee_percent ?? fallback.payments.feePro),
+            feePremium: Number(payments.premium_fee_percent ?? fallback.payments.feePremium),
+        },
+    };
+});
 
 const schedulePrice = computed(() => {
-    const base = regionPricing.value.schedule.starter;
-    return billingCycle.value === 'monthly' ? base : Math.round(base * 0.8);
+    return billingCycle.value === 'monthly'
+        ? regionPricing.value.schedule.starter
+        : regionPricing.value.schedule.annualStarter;
 });
 
 const paymentsProPrice = computed(() => {
-    const base = regionPricing.value.payments.pro;
-    return billingCycle.value === 'monthly' ? base : Math.round(base * 0.8);
+    return billingCycle.value === 'monthly'
+        ? regionPricing.value.payments.pro
+        : regionPricing.value.payments.annualPro;
 });
 
 const paymentsPremiumPrice = computed(() => {
-    const base = regionPricing.value.payments.premium;
-    return billingCycle.value === 'monthly' ? base : Math.round(base * 0.8);
+    return billingCycle.value === 'monthly'
+        ? regionPricing.value.payments.premium
+        : regionPricing.value.payments.annualPremium;
 });
 
 const regionLabel = computed(() => {
@@ -453,7 +486,26 @@ const trackFunnel = (event, payload = {}) => {
     window.dispatchEvent(new CustomEvent('meetrix:funnel', { detail: funnelEvent }));
 };
 
+const fetchPricingCatalog = async () => {
+    try {
+        const countryCode = String(route.query.country_code || route.query.country || '').toUpperCase();
+        const { data } = await axios.get('/api/pricing/catalog', {
+            params: {
+                country_code: countryCode || undefined,
+                locale: activeLocale.value,
+            },
+        });
+
+        catalog.value = data;
+    } catch (error) {
+        console.warn('Pricing catalog fallback enabled:', error?.message || error);
+        catalog.value = null;
+    }
+};
+
 onMounted(() => {
+    fetchPricingCatalog();
+
     // Basic Intersection Observer for scroll reveals
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {

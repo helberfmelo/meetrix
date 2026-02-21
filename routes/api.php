@@ -80,6 +80,7 @@ Route::middleware(['auth:sanctum', 'superadmin'])->prefix('super-admin')->group(
 });
 
 // Public Routes
+Route::get('/pricing/catalog', [\App\Http\Controllers\PricingCatalogController::class, 'index']);
 Route::get('/p/{slug}', [\App\Http\Controllers\PageController::class, 'show']); // Public Page View
 Route::post('/p/{slug}/click', [\App\Http\Controllers\PageController::class, 'recordClick']); // Track Click
 Route::get('/p/{slug}/slots', [\App\Http\Controllers\BookingSlotController::class, 'index']); // Get Slots

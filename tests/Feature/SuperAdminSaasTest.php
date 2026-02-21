@@ -3,6 +3,8 @@
 namespace Tests\Feature;
 
 use App\Models\BillingTransaction;
+use App\Models\Booking;
+use App\Models\SchedulingPage;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Sanctum\Sanctum;
@@ -60,6 +62,110 @@ class SuperAdminSaasTest extends TestCase
         $response = $this->getJson('/api/super-admin/overview');
 
         $response->assertStatus(403);
+    }
+
+    public function test_super_admin_overview_exposes_financial_kpis_for_pr06(): void
+    {
+        config()->set('analytics.currency_to_brl', [
+            'BRL' => 1,
+            'USD' => 5,
+            'EUR' => 6,
+        ]);
+
+        $admin = User::factory()->create([
+            'is_super_admin' => true,
+            'is_active' => true,
+        ]);
+
+        $customerBr = User::factory()->create([
+            'is_super_admin' => false,
+            'is_active' => true,
+            'country_code' => 'BR',
+            'account_mode' => 'scheduling_only',
+        ]);
+
+        $customerUs = User::factory()->create([
+            'is_super_admin' => false,
+            'is_active' => true,
+            'country_code' => 'US',
+            'account_mode' => 'scheduling_with_payments',
+        ]);
+
+        $pageBr = SchedulingPage::create([
+            'user_id' => $customerBr->id,
+            'slug' => 'page-br-' . uniqid(),
+            'title' => 'Page BR',
+        ]);
+
+        $pageUs = SchedulingPage::create([
+            'user_id' => $customerUs->id,
+            'slug' => 'page-us-' . uniqid(),
+            'title' => 'Page US',
+        ]);
+
+        Booking::create([
+            'scheduling_page_id' => $pageBr->id,
+            'customer_name' => 'Cliente BR',
+            'customer_email' => 'cliente-br@example.com',
+            'start_at' => now()->addDay(),
+            'end_at' => now()->addDay()->addMinutes(30),
+            'status' => 'confirmed',
+            'is_paid' => true,
+            'amount_paid' => 120,
+        ]);
+
+        Booking::create([
+            'scheduling_page_id' => $pageUs->id,
+            'customer_name' => 'Cliente US',
+            'customer_email' => 'cliente-us@example.com',
+            'start_at' => now()->addDays(2),
+            'end_at' => now()->addDays(2)->addMinutes(30),
+            'status' => 'confirmed',
+            'is_paid' => false,
+            'amount_paid' => 0,
+        ]);
+
+        BillingTransaction::create([
+            'user_id' => $customerBr->id,
+            'source' => 'booking',
+            'status' => 'paid',
+            'amount' => 120,
+            'currency' => 'BRL',
+            'description' => 'Booking BR pago',
+            'paid_at' => now(),
+        ]);
+
+        BillingTransaction::create([
+            'user_id' => $customerUs->id,
+            'source' => 'booking',
+            'status' => 'paid',
+            'amount' => 40,
+            'currency' => 'USD',
+            'description' => 'Booking US pago',
+            'paid_at' => now(),
+        ]);
+
+        BillingTransaction::create([
+            'user_id' => $customerUs->id,
+            'source' => 'booking',
+            'status' => 'failed',
+            'amount' => 15,
+            'currency' => 'USD',
+            'description' => 'Falha gateway',
+        ]);
+
+        Sanctum::actingAs($admin);
+
+        $response = $this->getJson('/api/super-admin/overview');
+
+        $response->assertOk()
+            ->assertJsonPath('kpis.revenue_converted_brl', 320)
+            ->assertJsonPath('kpis.paid_appointments_rate', 50)
+            ->assertJsonPath('kpis.mode_upgrade_rate', 50)
+            ->assertJsonPath('financial.revenue_converted_brl', 320)
+            ->assertJsonFragment(['currency' => 'USD'])
+            ->assertJsonFragment(['country_code' => 'BR'])
+            ->assertJsonFragment(['country_code' => 'US']);
     }
 
     public function test_super_admin_can_check_mail_diagnostics_and_send_test_mail(): void

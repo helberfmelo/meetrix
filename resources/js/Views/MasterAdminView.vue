@@ -21,10 +21,57 @@
             </div>
         </header>
 
-        <section v-if="overview" class="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-8 gap-3">
+        <section v-if="overview" class="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-5 gap-3">
             <article class="rounded-2xl border border-black/5 dark:border-white/10 bg-white dark:bg-zinc-900 p-4" v-for="card in kpiCards" :key="card.label">
                 <p class="text-[9px] font-black uppercase tracking-wider text-slate-500">{{ card.label }}</p>
                 <p class="text-2xl font-black text-zinc-950 dark:text-white mt-2">{{ card.value }}</p>
+                <p v-if="card.hint" class="text-[9px] text-slate-500 mt-1">{{ card.hint }}</p>
+            </article>
+        </section>
+
+        <section v-if="overview?.financial" class="grid grid-cols-1 xl:grid-cols-2 gap-6">
+            <article class="rounded-3xl border border-black/5 dark:border-white/10 bg-white dark:bg-zinc-900 p-6 space-y-4">
+                <div class="flex items-center justify-between gap-3">
+                    <h2 class="text-lg font-black text-zinc-950 dark:text-white uppercase tracking-wide">Receita por Moeda</h2>
+                    <span class="text-xs text-slate-500">Base BRL: {{ formatCurrency(overview.financial.revenue_converted_brl, 'BRL') }}</span>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full text-sm">
+                        <thead>
+                            <tr class="text-left text-[10px] uppercase tracking-wider text-slate-500">
+                                <th class="py-2">Moeda</th>
+                                <th class="py-2">Receita</th>
+                                <th class="py-2">Em BRL</th>
+                                <th class="py-2">Transacoes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="row in revenueByCurrency" :key="`currency-${row.currency}`" class="border-t border-black/5 dark:border-white/10">
+                                <td class="py-2 font-bold text-zinc-900 dark:text-zinc-100">{{ row.currency }}</td>
+                                <td class="py-2 text-zinc-900 dark:text-zinc-100">{{ formatCurrency(row.amount, row.currency) }}</td>
+                                <td class="py-2 text-zinc-900 dark:text-zinc-100">{{ formatCurrency(row.amount_brl, 'BRL') }}</td>
+                                <td class="py-2 text-zinc-900 dark:text-zinc-100">{{ row.transactions }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </article>
+
+            <article class="rounded-3xl border border-black/5 dark:border-white/10 bg-white dark:bg-zinc-900 p-6 space-y-4">
+                <h2 class="text-lg font-black text-zinc-950 dark:text-white uppercase tracking-wide">GMV por Pais</h2>
+                <div class="space-y-3">
+                    <div v-for="row in gmvByCountry" :key="`country-${row.country_code}`" class="rounded-xl border border-black/5 dark:border-white/10 p-3">
+                        <div class="flex items-center justify-between gap-3">
+                            <p class="text-sm font-bold text-zinc-900 dark:text-zinc-100">{{ row.country_code }}</p>
+                            <p class="text-sm font-bold text-zinc-900 dark:text-zinc-100">{{ formatCurrency(row.total_brl, 'BRL') }}</p>
+                        </div>
+                        <p class="text-xs text-slate-500 mt-1">{{ row.transactions }} transacoes pagas</p>
+                        <p class="text-xs text-slate-500 mt-1">{{ formatCountryCurrencies(row.currencies) }}</p>
+                    </div>
+                    <p v-if="overview.financial.fx_missing_currencies?.length" class="text-xs text-amber-600">
+                        Sem taxa BRL para: {{ overview.financial.fx_missing_currencies.join(', ') }}.
+                    </p>
+                </div>
             </article>
         </section>
 
@@ -290,8 +337,14 @@ const kpiCards = computed(() => {
         { label: t('common.bookings'), value: overview.value.kpis.bookings_total },
         { label: 'Pagamentos', value: overview.value.kpis.payments_paid_total },
         { label: 'Receita Mes', value: formatCurrency(overview.value.kpis.revenue_current_month, 'BRL') },
+        { label: 'Receita BRL', value: formatCurrency(overview.value.kpis.revenue_converted_brl, 'BRL') },
+        { label: '% Atendimentos Pagos', value: formatPercent(overview.value.kpis.paid_appointments_rate) },
+        { label: '% Upgrade de Modo', value: formatPercent(overview.value.kpis.mode_upgrade_rate) },
     ];
 });
+
+const revenueByCurrency = computed(() => overview.value?.financial?.revenue_by_currency || []);
+const gmvByCountry = computed(() => overview.value?.financial?.gmv_by_country || []);
 
 const resetMessages = () => {
     feedback.value = '';
@@ -477,6 +530,19 @@ const formatDate = (value) => {
 const formatCurrency = (value, currency = 'BRL') => {
     if (value === null || value === undefined) return '-';
     return new Intl.NumberFormat('pt-BR', { style: 'currency', currency }).format(Number(value));
+};
+
+const formatPercent = (value) => {
+    if (value === null || value === undefined) return '-';
+    return `${Number(value).toFixed(2)}%`;
+};
+
+const formatCountryCurrencies = (currencies = []) => {
+    if (!currencies.length) return 'Sem distribuicao de moeda.';
+
+    return currencies
+        .map((item) => `${item.currency}: ${formatCurrency(item.amount, item.currency)}`)
+        .join(' | ');
 };
 
 onMounted(async () => {

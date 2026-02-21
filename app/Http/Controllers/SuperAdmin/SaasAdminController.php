@@ -11,6 +11,8 @@ use App\Models\SchedulingPage;
 use App\Models\Team;
 use App\Models\User;
 use App\Support\ApiError;
+use App\Support\FinancialObservability;
+use App\Services\FinancialKpiService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
@@ -18,12 +20,18 @@ use Illuminate\Validation\Rule;
 
 class SaasAdminController extends Controller
 {
+    public function __construct(
+        private readonly FinancialKpiService $financialKpiService
+    ) {
+    }
+
     /**
      * High-level SaaS metrics and operational snapshots.
      */
     public function overview()
     {
         $clientsQuery = User::query()->where('is_super_admin', false);
+        $financialSnapshot = $this->financialKpiService->snapshot();
 
         $currentMonthRevenue = BillingTransaction::query()
             ->where('status', 'paid')
@@ -45,6 +53,9 @@ class SaasAdminController extends Controller
                 'bookings_total' => Booking::count(),
                 'payments_paid_total' => BillingTransaction::where('status', 'paid')->count(),
                 'revenue_current_month' => (float) $currentMonthRevenue,
+                'revenue_converted_brl' => (float) ($financialSnapshot['revenue_converted_brl'] ?? 0),
+                'paid_appointments_rate' => (float) data_get($financialSnapshot, 'paid_appointments.rate', 0),
+                'mode_upgrade_rate' => (float) data_get($financialSnapshot, 'mode_upgrade.rate', 0),
             ],
             'subscriptions' => $clientsQuery
                 ->selectRaw("COALESCE(subscription_tier, 'free') as tier, COUNT(*) as total")
@@ -63,6 +74,7 @@ class SaasAdminController extends Controller
                 ->latest()
                 ->limit(12)
                 ->get(),
+            'financial' => $financialSnapshot,
         ]);
     }
 
@@ -268,6 +280,17 @@ class SaasAdminController extends Controller
 
         if ($action === 'retry_payment') {
             if (!in_array($transaction->status, ['failed', 'cancelled'], true)) {
+                FinancialObservability::warning(
+                    'super_admin.payment_action',
+                    'payment_retry_not_allowed',
+                    'Tentativa de reprocessamento em status invalido.',
+                    [
+                        'transaction_id' => $transaction->id,
+                        'status' => $transaction->status,
+                        'requested_by' => $request->user()->id,
+                    ]
+                );
+
                 return ApiError::response(
                     'Reprocessamento permitido apenas para pagamentos failed/cancelled.',
                     'payment_retry_not_allowed',
@@ -276,34 +299,62 @@ class SaasAdminController extends Controller
                 );
             }
 
-            $metadata = is_array($transaction->metadata) ? $transaction->metadata : [];
-            $retryCount = (int) data_get($metadata, 'retry.count', 0) + 1;
-            $metadata['retry'] = [
-                'count' => $retryCount,
-                'requested_by' => $request->user()->id,
-                'reason' => $validated['reason'] ?? null,
-                'requested_at' => now()->toIso8601String(),
-            ];
+            try {
+                $metadata = is_array($transaction->metadata) ? $transaction->metadata : [];
+                $retryCount = (int) data_get($metadata, 'retry.count', 0) + 1;
+                $metadata['retry'] = [
+                    'count' => $retryCount,
+                    'requested_by' => $request->user()->id,
+                    'reason' => $validated['reason'] ?? null,
+                    'requested_at' => now()->toIso8601String(),
+                ];
 
-            $transaction->update([
-                'status' => 'pending',
-                'metadata' => $metadata,
-                'paid_at' => null,
-            ]);
+                $transaction->update([
+                    'status' => 'pending',
+                    'metadata' => $metadata,
+                    'paid_at' => null,
+                ]);
 
-            $this->logActivity($request, $transaction->user, 'payment_retry', [
-                'billing_transaction_id' => $transaction->id,
-                'reason' => $validated['reason'] ?? null,
-                'retry_count' => $retryCount,
-            ]);
+                $this->logActivity($request, $transaction->user, 'payment_retry', [
+                    'billing_transaction_id' => $transaction->id,
+                    'reason' => $validated['reason'] ?? null,
+                    'retry_count' => $retryCount,
+                ]);
 
-            return response()->json([
-                'message' => 'Pagamento marcado para reprocessamento.',
-                'transaction' => $transaction->fresh(),
-            ]);
+                return response()->json([
+                    'message' => 'Pagamento marcado para reprocessamento.',
+                    'transaction' => $transaction->fresh(),
+                ]);
+            } catch (\Throwable $exception) {
+                FinancialObservability::error(
+                    'super_admin.payment_action',
+                    'payment_retry_failed',
+                    $exception->getMessage(),
+                    [
+                        'transaction_id' => $transaction->id,
+                        'requested_by' => $request->user()->id,
+                    ]
+                );
+
+                return ApiError::response(
+                    'Falha ao preparar o reprocessamento. Tente novamente.',
+                    'payment_retry_failed',
+                    500
+                );
+            }
         }
 
         if (empty($validated['amount']) || empty($validated['adjustment_type']) || empty($validated['reason'])) {
+            FinancialObservability::warning(
+                'super_admin.payment_action',
+                'manual_adjustment_missing_fields',
+                'Ajuste manual sem campos obrigatorios.',
+                [
+                    'transaction_id' => $transaction->id,
+                    'requested_by' => $request->user()->id,
+                ]
+            );
+
             return ApiError::response(
                 'Ajuste manual exige valor, tipo e motivo.',
                 'manual_adjustment_missing_fields',
@@ -313,6 +364,17 @@ class SaasAdminController extends Controller
 
         $amount = round((float) $validated['amount'], 2);
         if ($amount <= 0) {
+            FinancialObservability::warning(
+                'super_admin.payment_action',
+                'manual_adjustment_invalid_amount',
+                'Ajuste manual com valor invalido.',
+                [
+                    'transaction_id' => $transaction->id,
+                    'requested_by' => $request->user()->id,
+                    'amount' => $validated['amount'],
+                ]
+            );
+
             return ApiError::response(
                 'Valor de ajuste deve ser maior que zero.',
                 'manual_adjustment_invalid_amount',
@@ -323,36 +385,56 @@ class SaasAdminController extends Controller
         $direction = (string) $validated['adjustment_type'];
         $signedAmount = $direction === 'credit' ? -1 * $amount : $amount;
 
-        $adjustment = BillingTransaction::create([
-            'user_id' => $transaction->user_id,
-            'booking_id' => $transaction->booking_id,
-            'source' => 'manual',
-            'status' => 'paid',
-            'amount' => $signedAmount,
-            'currency' => $transaction->currency,
-            'description' => "Ajuste manual ({$direction}) para transacao #{$transaction->id}",
-            'metadata' => [
-                'event' => 'manual_adjustment',
-                'reference_transaction_id' => $transaction->id,
-                'adjustment_type' => $direction,
+        try {
+            $adjustment = BillingTransaction::create([
+                'user_id' => $transaction->user_id,
+                'booking_id' => $transaction->booking_id,
+                'source' => 'manual',
+                'status' => 'paid',
+                'amount' => $signedAmount,
+                'currency' => $transaction->currency,
+                'description' => "Ajuste manual ({$direction}) para transacao #{$transaction->id}",
+                'metadata' => [
+                    'event' => 'manual_adjustment',
+                    'reference_transaction_id' => $transaction->id,
+                    'adjustment_type' => $direction,
+                    'reason' => $validated['reason'],
+                    'requested_by' => $request->user()->id,
+                ],
+                'paid_at' => now(),
+            ]);
+
+            $this->logActivity($request, $transaction->user, 'manual_adjustment', [
+                'billing_transaction_id' => $transaction->id,
+                'manual_adjustment_id' => $adjustment->id,
+                'amount' => $signedAmount,
                 'reason' => $validated['reason'],
-                'requested_by' => $request->user()->id,
-            ],
-            'paid_at' => now(),
-        ]);
+            ]);
 
-        $this->logActivity($request, $transaction->user, 'manual_adjustment', [
-            'billing_transaction_id' => $transaction->id,
-            'manual_adjustment_id' => $adjustment->id,
-            'amount' => $signedAmount,
-            'reason' => $validated['reason'],
-        ]);
+            return response()->json([
+                'message' => 'Ajuste manual aplicado com sucesso.',
+                'manual_adjustment' => $adjustment,
+                'reference_transaction' => $transaction->fresh(),
+            ]);
+        } catch (\Throwable $exception) {
+            FinancialObservability::error(
+                'super_admin.payment_action',
+                'manual_adjustment_failed',
+                $exception->getMessage(),
+                [
+                    'transaction_id' => $transaction->id,
+                    'requested_by' => $request->user()->id,
+                    'adjustment_type' => $direction,
+                    'amount' => $signedAmount,
+                ]
+            );
 
-        return response()->json([
-            'message' => 'Ajuste manual aplicado com sucesso.',
-            'manual_adjustment' => $adjustment,
-            'reference_transaction' => $transaction->fresh(),
-        ]);
+            return ApiError::response(
+                'Falha ao aplicar ajuste manual. Tente novamente.',
+                'manual_adjustment_failed',
+                500
+            );
+        }
     }
 
     /**

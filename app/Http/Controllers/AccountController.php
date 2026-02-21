@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Subscription;
 use App\Services\GeoPricingCatalogService;
 use App\Support\ApiError;
+use App\Support\FinancialObservability;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -161,6 +162,17 @@ class AccountController extends Controller
         $currentInterval = (string) ($user->billing_cycle ?? 'monthly');
 
         if ($targetPlan === $currentPlan && $targetInterval === $currentInterval) {
+            FinancialObservability::warning(
+                'account.subscription.change',
+                'subscription_plan_noop',
+                'Tentativa de alteracao sem mudanca de plano/ciclo.',
+                [
+                    'user_id' => $user->id,
+                    'plan' => $targetPlan,
+                    'interval' => $targetInterval,
+                ]
+            );
+
             return ApiError::response(
                 'A conta ja esta no plano e ciclo selecionados.',
                 'subscription_plan_noop',
@@ -172,6 +184,17 @@ class AccountController extends Controller
         $planConfig = $options['plans'][$targetPlan] ?? null;
 
         if (!is_array($planConfig)) {
+            FinancialObservability::warning(
+                'account.subscription.change',
+                'subscription_plan_not_available',
+                'Plano indisponivel para a regiao da conta.',
+                [
+                    'user_id' => $user->id,
+                    'plan' => $targetPlan,
+                    'region' => $options['region'],
+                ]
+            );
+
             return ApiError::response(
                 'Plano indisponivel para a regiao atual.',
                 'subscription_plan_not_available',
@@ -266,6 +289,17 @@ class AccountController extends Controller
         } catch (\Throwable $exception) {
             DB::rollBack();
 
+            FinancialObservability::error(
+                'account.subscription.change',
+                'subscription_change_failed',
+                $exception->getMessage(),
+                [
+                    'user_id' => $user->id,
+                    'plan' => $targetPlan,
+                    'interval' => $targetInterval,
+                ]
+            );
+
             return ApiError::response(
                 'Falha ao atualizar a assinatura. Tente novamente.',
                 'subscription_change_failed',
@@ -286,6 +320,16 @@ class AccountController extends Controller
         ]);
 
         if (($user->subscription_tier ?? 'free') === 'free') {
+            FinancialObservability::warning(
+                'account.subscription.cancel',
+                'subscription_not_active',
+                'Cancelamento solicitado sem assinatura ativa.',
+                [
+                    'user_id' => $user->id,
+                    'subscription_tier' => $user->subscription_tier,
+                ]
+            );
+
             return ApiError::response(
                 'Nao existe assinatura ativa para cancelar.',
                 'subscription_not_active',
@@ -341,6 +385,15 @@ class AccountController extends Controller
             ]);
         } catch (\Throwable $exception) {
             DB::rollBack();
+
+            FinancialObservability::error(
+                'account.subscription.cancel',
+                'subscription_cancel_failed',
+                $exception->getMessage(),
+                [
+                    'user_id' => $user->id,
+                ]
+            );
 
             return ApiError::response(
                 'Falha ao cancelar assinatura. Tente novamente.',

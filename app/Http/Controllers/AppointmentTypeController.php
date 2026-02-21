@@ -29,7 +29,7 @@ class AppointmentTypeController extends Controller
             'is_active' => 'boolean'
         ]);
 
-        $type = $page->appointmentTypes()->create($validated);
+        $type = $page->appointmentTypes()->create($this->sanitizeTypeForAccountMode($validated, $user));
 
         return response()->json($type, 201);
     }
@@ -48,7 +48,7 @@ class AppointmentTypeController extends Controller
             'is_active' => 'boolean'
         ]);
 
-        $type->update($validated);
+        $type->update($this->sanitizeTypeForAccountMode($validated, $user));
 
         return response()->json($type);
     }
@@ -79,13 +79,28 @@ class AppointmentTypeController extends Controller
             'types.*.is_active' => 'boolean'
         ]);
 
-        \DB::transaction(function () use ($page, $validated) {
+        \DB::transaction(function () use ($page, $validated, $user) {
             $page->appointmentTypes()->delete();
             foreach ($validated['types'] as $typeData) {
-                $page->appointmentTypes()->create($typeData);
+                $page->appointmentTypes()->create($this->sanitizeTypeForAccountMode($typeData, $user));
             }
         });
 
         return response()->json($page->appointmentTypes()->get());
+    }
+
+    private function sanitizeTypeForAccountMode(array $typeData, $user): array
+    {
+        if (($user->account_mode ?? 'scheduling_only') === 'scheduling_with_payments') {
+            if (isset($typeData['currency'])) {
+                $typeData['currency'] = strtoupper($typeData['currency']);
+            }
+            return $typeData;
+        }
+
+        $typeData['price'] = 0;
+        $typeData['currency'] = strtoupper($user->currency ?? 'BRL');
+
+        return $typeData;
     }
 }

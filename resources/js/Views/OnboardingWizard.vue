@@ -252,13 +252,14 @@
 
 <script setup>
 import { ref, reactive, computed, watch } from 'vue';
-import { useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import { useAuthStore } from '../stores/auth';
 import { usePageStore } from '../stores/page';
 import axios from '../axios';
 
 const { t } = useI18n();
+const route = useRoute();
 const router = useRouter();
 const authStore = useAuthStore();
 const pageStore = usePageStore();
@@ -272,12 +273,22 @@ const days = [
     { id: 4, label: 'Thu' }, { id: 5, label: 'Fri' }, { id: 6, label: 'Sat' }, { id: 0, label: 'Sun' }
 ];
 
+const validAccountModes = ['scheduling_only', 'scheduling_with_payments'];
+const normalizeAccountMode = (value) => {
+    const mode = String(value || '').trim();
+    return validAccountModes.includes(mode) ? mode : null;
+};
+
+const initialAccountMode = normalizeAccountMode(route.query.mode)
+    || normalizeAccountMode(authStore.user?.account_mode)
+    || 'scheduling_only';
+
 const form = reactive({
     name: authStore.user?.name || '',
     email: '',
     password: '',
     password_confirmation: '',
-    accountMode: 'scheduling_only',
+    accountMode: initialAccountMode,
     timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC',
     pageTitle: authStore.user ? `${authStore.user.name}'s Calendar` : 'My Calendar',
     pageSlug: '',
@@ -346,7 +357,17 @@ watch(() => authStore.user, (newUser) => {
         form.pageTitle = `${newUser.name}'s Calendar`;
         generateSlug();
     }
+    if (newUser && !normalizeAccountMode(route.query.mode) && normalizeAccountMode(newUser.account_mode)) {
+        form.accountMode = normalizeAccountMode(newUser.account_mode);
+    }
 }, { immediate: true });
+
+watch(() => route.query.mode, (newMode) => {
+    const normalizedMode = normalizeAccountMode(newMode);
+    if (normalizedMode) {
+        form.accountMode = normalizedMode;
+    }
+});
 
 const generateSlug = () => {
     form.pageSlug = form.pageTitle
@@ -429,15 +450,19 @@ const nextStep = async () => {
 
         // 3. Mark Onboarding as Complete
         console.log('Finalizing onboarding status...');
-        await axios.post('/api/onboarding/complete');
+        await axios.post('/api/onboarding/complete', {
+            account_mode: form.accountMode,
+        });
+        await authStore.fetchUser();
 
         trackOnboardingEvent('onboarding_completed', {
             authenticated: Boolean(authStore.user),
         });
         
-        console.log('Step 3 Successful. Redirecting to Checkout...');
+        const nextRoute = form.accountMode === 'scheduling_with_payments' ? '/checkout' : '/dashboard';
+        console.log('Step 3 Successful. Redirecting to:', nextRoute);
         loading.value = false;
-        router.push('/checkout');
+        router.push(nextRoute);
     } catch (error) {
         console.error('Onboarding finalization error:', error);
         alert(t('admin.save_failed') + ": " + (error.response?.data?.message || error.message));

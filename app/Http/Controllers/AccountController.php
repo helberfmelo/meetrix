@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 
@@ -86,6 +87,46 @@ class AccountController extends Controller
         return response()->json([
             'message' => 'Preferências atualizadas com sucesso.',
             'user' => $request->user()->fresh(),
+        ]);
+    }
+
+    /**
+     * Upgrade or switch account operating mode.
+     */
+    public function updateMode(Request $request)
+    {
+        $user = $request->user();
+
+        $validated = $request->validate([
+            'account_mode' => ['required', Rule::in(['scheduling_only', 'scheduling_with_payments'])],
+        ]);
+
+        $mode = $validated['account_mode'];
+        $region = $user->region ?? 'BR';
+        $fee = DB::table('geo_pricing')
+            ->where('region_code', $region)
+            ->where('account_mode', $mode)
+            ->where('is_active', true)
+            ->value('platform_fee_percent');
+
+        $resolvedFee = $fee !== null ? (float) $fee : 0.0;
+
+        $user->update([
+            'account_mode' => $mode,
+            'platform_fee_percent' => $resolvedFee,
+        ]);
+
+        $tenant = $user->tenant;
+        if ($tenant) {
+            $tenant->update([
+                'account_mode' => $mode,
+                'platform_fee_percent' => $resolvedFee,
+            ]);
+        }
+
+        return response()->json([
+            'message' => 'Modo de conta atualizado com sucesso.',
+            'user' => $user->fresh(),
         ]);
     }
 

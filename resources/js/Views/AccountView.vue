@@ -47,10 +47,26 @@
                 <h2 class="text-lg font-black text-zinc-950 dark:text-white uppercase tracking-wide">Resumo</h2>
                 <div v-if="summary?.user" class="space-y-2 text-sm">
                     <p class="text-slate-600 dark:text-slate-300"><span class="font-bold">E-mail:</span> {{ summary.user.email }}</p>
+                    <p class="text-slate-600 dark:text-slate-300"><span class="font-bold">Modo:</span> {{ formatMode(summary.user.account_mode) }}</p>
+                    <p class="text-slate-600 dark:text-slate-300"><span class="font-bold">Regiao:</span> {{ summary.user.region || 'BR' }}</p>
+                    <p class="text-slate-600 dark:text-slate-300"><span class="font-bold">Moeda:</span> {{ summary.user.currency || 'BRL' }}</p>
                     <p class="text-slate-600 dark:text-slate-300"><span class="font-bold">Idioma:</span> {{ summary.user.preferred_locale || 'auto' }}</p>
                     <p class="text-slate-600 dark:text-slate-300"><span class="font-bold">Fuso horário:</span> {{ summary.user.timezone || 'UTC' }}</p>
                     <p class="text-slate-600 dark:text-slate-300"><span class="font-bold">Paginas:</span> {{ summary.user.scheduling_pages_count }}</p>
                     <p class="text-slate-600 dark:text-slate-300"><span class="font-bold">Times:</span> {{ summary.user.teams_count }}</p>
+                    <div class="pt-3 border-t border-black/5 dark:border-white/10">
+                        <button
+                            v-if="summary.user.account_mode === 'scheduling_only'"
+                            :disabled="upgradingMode"
+                            @click="upgradeToPayments"
+                            class="w-full rounded-xl px-4 py-3 bg-meetrix-orange text-zinc-950 text-[10px] font-black uppercase tracking-[0.2em] disabled:opacity-60"
+                        >
+                            {{ upgradingMode ? 'Ativando...' : 'Ativar Cobranca no Agendamento' }}
+                        </button>
+                        <p v-else class="text-[10px] font-black uppercase tracking-[0.15em] text-meetrix-green">
+                            Cobranca integrada ativa para esta conta.
+                        </p>
+                    </div>
                 </div>
                 <p v-else class="text-sm text-slate-500">Carregando...</p>
             </article>
@@ -162,8 +178,10 @@
 
 <script setup>
 import { onMounted, ref } from 'vue';
+import { useRouter } from 'vue-router';
 import axios from '../axios';
 
+const router = useRouter();
 const summary = ref(null);
 const billing = ref([]);
 
@@ -187,6 +205,7 @@ const password = ref({
 const savingProfile = ref(false);
 const savingPreferences = ref(false);
 const savingPassword = ref(false);
+const upgradingMode = ref(false);
 const feedback = ref('');
 const error = ref('');
 
@@ -277,6 +296,30 @@ const statusClass = (status) => {
     if (status === 'pending') return 'bg-yellow-100 text-yellow-700';
     if (status === 'failed') return 'bg-red-100 text-red-700';
     return 'bg-zinc-100 text-zinc-700';
+};
+
+const formatMode = (mode) => {
+    if (mode === 'scheduling_with_payments') return 'Agenda + cobranca';
+    return 'Apenas agenda';
+};
+
+const upgradeToPayments = async () => {
+    resetMessages();
+    upgradingMode.value = true;
+
+    try {
+        await axios.patch('/api/account/mode', {
+            account_mode: 'scheduling_with_payments',
+        });
+
+        await loadSummary();
+        feedback.value = 'Modo atualizado para agenda + cobranca.';
+        router.push('/checkout');
+    } catch (e) {
+        error.value = e.response?.data?.message || 'Falha ao atualizar modo de conta.';
+    } finally {
+        upgradingMode.value = false;
+    }
 };
 
 onMounted(async () => {

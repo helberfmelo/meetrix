@@ -40,8 +40,12 @@
                                 type="number" 
                                 v-model.number="type.price"
                                 @input="update"
+                                :disabled="!paymentsEnabled"
                                 class="mt-1 block w-full rounded-md border-gray-300 dark:border-white/10 bg-white dark:bg-zinc-950 text-zinc-900 dark:text-white shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                             >
+                            <p v-if="!paymentsEnabled" class="mt-1 text-[10px] font-semibold text-slate-400 uppercase tracking-widest">
+                                Modo agenda ativa: preco fixado em 0.
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -62,12 +66,28 @@ const props = defineProps({
     modelValue: {
         type: Object,
         required: true
-    }
+    },
+    paymentsEnabled: {
+        type: Boolean,
+        default: true,
+    },
+    defaultCurrency: {
+        type: String,
+        default: 'BRL',
+    },
 });
 
 const emit = defineEmits(['update:modelValue', 'update']);
 
 const update = () => {
+    if (!props.paymentsEnabled) {
+        props.modelValue.appointmentTypes = props.modelValue.appointmentTypes.map((type) => ({
+            ...type,
+            price: 0,
+            currency: String(props.defaultCurrency || 'BRL').toUpperCase(),
+        }));
+    }
+
     emit('update:modelValue', props.modelValue);
     emit('update');
 };
@@ -77,7 +97,7 @@ const addType = () => {
         name: t('admin.new_service_placeholder'),
         duration_minutes: 30,
         price: 0,
-        currency: 'BRL',
+        currency: String(props.defaultCurrency || 'BRL').toUpperCase(),
         is_active: true
     }];
     emit('update:modelValue', { ...props.modelValue, appointmentTypes: newTypes });

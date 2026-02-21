@@ -63,6 +63,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/account/profile', [AccountController::class, 'updateProfile']);
     Route::put('/account/preferences', [AccountController::class, 'updatePreferences']);
     Route::put('/account/password', [AccountController::class, 'updatePassword']);
+    Route::patch('/account/mode', [AccountController::class, 'updateMode']);
     Route::get('/account/billing-history', [AccountController::class, 'billingHistory']);
 });
 

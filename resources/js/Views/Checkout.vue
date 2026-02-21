@@ -107,9 +107,11 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
+import { useAuthStore } from '../stores/auth';
 import axios from '../axios';
 
 const router = useRouter();
+const authStore = useAuthStore();
 const couponCode = ref('');
 const appliedCoupon = ref(null);
 const loadingCoupon = ref(false);
@@ -169,7 +171,15 @@ const handleCheckout = async () => {
     }
 };
 
-onMounted(() => {
+onMounted(async () => {
+    if (authStore.token && !authStore.user) {
+        await authStore.init();
+    }
+
+    if (authStore.user && authStore.user.account_mode !== 'scheduling_with_payments') {
+        router.replace('/dashboard');
+    }
+
     // If we're testing and know the user wants cupom100, we could pre-fill
     // couponCode.value = 'cupom100';
 });

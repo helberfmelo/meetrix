@@ -51,6 +51,7 @@
                 <component 
                     :is="currentSection.component" 
                     v-model="pageConfig" 
+                    v-bind="currentSectionProps"
                     @update="markDirty"
                 />
             </div>
@@ -96,6 +97,7 @@
 import { ref, computed, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { usePageStore } from '../stores/page';
+import { useAuthStore } from '../stores/auth';
 import { useI18n } from 'vue-i18n';
 
 // Placeholder section components
@@ -109,6 +111,7 @@ import EditorSectionBranding from '../Components/Editor/EditorSectionBranding.vu
 const { t } = useI18n();
 const route = useRoute();
 const pageStore = usePageStore();
+const authStore = useAuthStore();
 const saving = ref(false);
 const isPreviewMode = ref(false);
 
@@ -139,6 +142,19 @@ const translatedSections = computed(() => sections.map(s => ({
 })));
 
 const currentSection = computed(() => translatedSections.value.find(s => s.id === activeSection.value));
+const paymentsEnabled = computed(() => (authStore.user?.account_mode ?? 'scheduling_only') === 'scheduling_with_payments');
+const accountCurrency = computed(() => (authStore.user?.currency || 'BRL').toUpperCase());
+
+const currentSectionProps = computed(() => {
+    if (currentSection.value?.id !== 'types') {
+        return {};
+    }
+
+    return {
+        paymentsEnabled: paymentsEnabled.value,
+        defaultCurrency: accountCurrency.value,
+    };
+});
 
 onMounted(async () => {
     if (route.params.slug) {
@@ -177,7 +193,14 @@ const saveChanges = async () => {
 
         // 3. Save Appointment Types (Bulk)
         if (pageConfig.value.appointmentTypes) {
-            await pageStore.updateAppointmentTypes(pageConfig.value.id, pageConfig.value.appointmentTypes);
+            const normalizedTypes = pageConfig.value.appointmentTypes.map((type) => ({
+                ...type,
+                price: paymentsEnabled.value ? Number(type.price || 0) : 0,
+                currency: (paymentsEnabled.value ? (type.currency || accountCurrency.value) : accountCurrency.value).toUpperCase(),
+            }));
+
+            pageConfig.value.appointmentTypes = normalizedTypes;
+            await pageStore.updateAppointmentTypes(pageConfig.value.id, normalizedTypes);
         }
 
         alert(t('admin.save_success'));

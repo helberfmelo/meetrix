@@ -36,7 +36,7 @@ Corrigir textos hardcoded em portugues detectados em producao e alinhar i18n:
 
 ## Evidencias de teste
 - [x] Build frontend executado
-- [ ] Smoke visual desktop e mobile (pt-BR, pt, es, fr, de, it, ja, ko, ru, tr, zh, zh-CN, ar) executado
+- [x] Smoke visual desktop e mobile (pt-BR, pt, es, fr, de, it, ja, ko, ru, tr, zh, zh-CN, ar) executado
 
 Comandos executados:
 ```bash
@@ -47,9 +47,9 @@ Resultado:
 - Build OK (vite build)
 
 ## Gate
-- [ ] Zero textos hardcoded em portugues nos trechos corrigidos
+- [x] Zero textos hardcoded em portugues nos trechos corrigidos
 - [x] Build verde
-- [ ] Smoke visual em producao validado
+- [x] Smoke visual em producao validado
 
 ## QA em producao (Antigravity)
 - Relatorio: `docs/RELATORIO_QA_VISUAL_I18N_PRODUCAO.md`
@@ -60,3 +60,4 @@ Resultado:
 - Este PR implementa as correcoes descritas no relatorio do Atigravity.
 - Correcao adicional aplicada: habilitar `tr`, `zh`, `ar` no roteamento/i18n e LanguageSwitcher.
 - Reteste parcial: `tr`, `zh`, `ar` OK na Home e Booking (rota `/p/helber`).
+- Reteste completo: `pt-br`, `pt`, `es`, `fr`, `de`, `it`, `ja`, `ko`, `ru`, `zh-cn` OK na Home e Booking (rota `/p/helber`).

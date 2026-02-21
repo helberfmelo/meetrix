@@ -6,6 +6,11 @@ Este teste foi realizado com sucesso.
 - Reteste direcionado para `tr`, `zh`, `ar` usando a rota `/p/helber`.
 - Resultado: Home e Booking Page (sufixo de duracao) aprovados para esses idiomas.
 
+## Reteste completo (2026-02-21)
+- Ajuste de rota: Booking Page validada em `/<locale>/p/helber` (antes estava em `/<locale>/helber`).
+- Resultado: todos os idiomas revalidados sem ocorrencias de "NÃO ENCONTRADO" na Home ou no sufixo de duracao da Booking Page.
+- Status geral: ✅ OK para `pt-br`, `pt`, `es`, `fr`, `de`, `it`, `ja`, `ko`, `ru`, `zh-cn`.
+
 ## Idioma: `/pt-br`
 
 ### 1) Home (desktop)
@@ -344,3 +349,17 @@ Este teste foi realizado com sucesso.
 - **Status**: ✅ OK
 
 ---
+
+
+### Validação QA Visual – Automação (Desktop + Mobile)
+
+- **PT-BR**: OK
+- **PT**: OK
+- **ES**: OK
+- **FR**: OK
+- **DE**: OK
+- **IT**: OK
+- **JA**: OK
+- **KO**: OK
+- **RU**: OK
+- **ZH-CN**: OK

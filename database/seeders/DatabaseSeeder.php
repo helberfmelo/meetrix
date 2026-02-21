@@ -17,6 +17,8 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        $this->call(GeoPricingSeeder::class);
+
         // 1. Create Admin User
         $user = User::updateOrCreate(
             ['email' => 'admin@meetrix.pro'],
@@ -25,6 +27,10 @@ class DatabaseSeeder extends Seeder
                 'password' => Hash::make('MeetrixMaster2026Sovereign!#'),
                 'is_super_admin' => true,
                 'is_active' => true,
+                'account_mode' => 'scheduling_only',
+                'region' => 'BR',
+                'currency' => 'BRL',
+                'platform_fee_percent' => 0,
                 'email_verified_at' => now(),
             ]
         );

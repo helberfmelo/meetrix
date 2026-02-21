@@ -16,10 +16,13 @@ class Tenant extends Model
         'settings',
         'region',
         'currency',
+        'account_mode',
+        'platform_fee_percent',
     ];
 
     protected $casts = [
         'settings' => 'array',
+        'platform_fee_percent' => 'decimal:2',
     ];
 
     public function user()

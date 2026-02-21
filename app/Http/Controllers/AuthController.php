@@ -16,14 +16,17 @@ class AuthController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
+            'account_mode' => 'nullable|in:scheduling_only,scheduling_with_payments',
             'country_code' => 'nullable|string|size:2',
             'currency' => 'nullable|string|size:3',
             'timezone' => 'nullable|timezone',
             'preferred_locale' => 'nullable|string|max:10',
         ]);
 
-        $countryCode = $request->country_code ?? 'BR';
-        $currency = $request->currency ?? 'BRL';
+        $countryCode = strtoupper($request->country_code ?? 'BR');
+        $accountMode = $request->account_mode ?? 'scheduling_only';
+        $region = $this->resolveRegion($countryCode);
+        $currency = strtoupper($request->currency ?? $this->resolveCurrency($region));
 
         // Geo-Fence Logic (Sovereign Shield) - Only if enabled in config
         if (config('pricing.geoip_enabled')) {
@@ -40,6 +43,10 @@ class AuthController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'country_code' => $countryCode,
+            'account_mode' => $accountMode,
+            'region' => $region,
+            'currency' => $currency,
+            'platform_fee_percent' => 0,
             'timezone' => $request->timezone ?? 'UTC',
             'preferred_locale' => $request->preferred_locale,
             'is_active' => true,
@@ -49,8 +56,10 @@ class AuthController extends Controller
         $user->tenant()->create([
             'name' => "{$user->name}'s Node",
             'slug' => \Illuminate\Support\Str::slug($user->name) . '-' . rand(100, 999), // Ensure unique slug for tenant
-            'region' => $countryCode === 'BR' ? 'BR' : ($countryCode === 'EU' ? 'EU' : 'Global'),
+            'region' => $region,
             'currency' => $currency,
+            'account_mode' => $accountMode,
+            'platform_fee_percent' => 0,
         ]);
 
         $token = $user->createToken('auth_token')->plainTextToken;
@@ -59,6 +68,24 @@ class AuthController extends Controller
             'access_token' => $token,
             'token_type' => 'Bearer',
         ]);
+    }
+
+    private function resolveRegion(string $countryCode): string
+    {
+        return match ($countryCode) {
+            'BR' => 'BR',
+            'US', 'CA', 'AU' => 'USD',
+            default => 'EUR',
+        };
+    }
+
+    private function resolveCurrency(string $region): string
+    {
+        return match ($region) {
+            'BR' => 'BRL',
+            'USD' => 'USD',
+            default => 'EUR',
+        };
     }
 
     public function login(Request $request)

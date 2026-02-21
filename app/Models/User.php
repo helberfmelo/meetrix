@@ -30,6 +30,10 @@ class User extends Authenticatable
         'trial_ends_at',
         'subscription_ends_at',
         'country_code',
+        'account_mode',
+        'region',
+        'currency',
+        'platform_fee_percent',
         'preferred_locale',
         'timezone',
         'last_login_at',
@@ -52,6 +56,7 @@ class User extends Authenticatable
         'trial_ends_at' => 'datetime',
         'subscription_ends_at' => 'datetime',
         'last_login_at' => 'datetime',
+        'platform_fee_percent' => 'decimal:2',
         'is_super_admin' => 'boolean',
         'is_active' => 'boolean',
     ];

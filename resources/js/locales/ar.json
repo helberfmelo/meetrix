@@ -115,7 +115,7 @@
         "initializing": "جاري التهيئة...",
         "activate": "تفعيل",
         "build_first_page_title": "أنشئ أول صفحة حجز لك",
-        "build_first_page_desc": "أنشئ صفحة احترافية لبدء قبول المواعيد في غضon دقائق.",
+        "build_first_page_desc": "أنشئ صفحة احترافية لبدء قبول المواعيد في غضون دقائق.",
         "teams_list": "قائمة_الفرق",
         "team_name": "اسم الفريق",
         "members": "الأعضاء",
@@ -130,7 +130,7 @@
         "usage": "الاستخدام",
         "expires": "تنتهي الصلاحية",
         "actions": "الإجراءات",
-        "off": "خصم",
+        "off": "إيقاف",
         "never": "أبدًا",
         "deactivate": "تعطيل",
         "delete": "حذف",
@@ -219,7 +219,11 @@
         "system_default": "افتراضي النظام",
         "pro_feature_tag": "ميزة PRO",
         "whatsapp_pro": "WhatsApp Pro",
-        "whatsapp_pro_desc": "تذكيرات تلقائية عبر WhatsApp."
+        "whatsapp_pro_desc": "تذكيرات تلقائية عبر WhatsApp.",
+        "failed_create_team": "تعذر إنشاء الفريق",
+        "enter_email": "أدخل بريد العضو الإلكتروني:",
+        "invited_success": "تمت دعوة العضو بنجاح!",
+        "invitation_failed": "فشلت الدعوة"
     },
     "booking": {
         "select_service": "اختر الخدمة",

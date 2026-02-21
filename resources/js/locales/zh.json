@@ -130,7 +130,7 @@
         "usage": "使用量",
         "expires": "到期日期",
         "actions": "操作",
-        "off": "优惠",
+        "off": "关闭",
         "never": "从不",
         "deactivate": "停用",
         "delete": "删除",
@@ -210,7 +210,7 @@
         "top_sources": "热门来源",
         "direct_link": "直接链接",
         "advanced_tracking_pro": "专业版提供高级来源跟踪功能",
-        "logo_url_label": "Logo URL",
+        "logo_url_label": "标志 URL",
         "logo_pro_tip": "专业提示：使用背景透明的 PNG 图片效果更佳。",
         "primary_color_label": "主色调",
         "typography_label": "字体排版",
@@ -219,7 +219,11 @@
         "system_default": "系统默认",
         "pro_feature_tag": "专业版功能",
         "whatsapp_pro": "WhatsApp Pro",
-        "whatsapp_pro_desc": "通过 WhatsApp 发送自动提醒。"
+        "whatsapp_pro_desc": "通过 WhatsApp 发送自动提醒。",
+        "failed_create_team": "创建团队失败",
+        "enter_email": "请输入成员邮箱地址：",
+        "invited_success": "成员邀请成功！",
+        "invitation_failed": "邀请失败"
     },
     "booking": {
         "select_service": "选择服务",

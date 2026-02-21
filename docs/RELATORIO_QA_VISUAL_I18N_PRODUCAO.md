@@ -2,6 +2,10 @@
 
 Este teste foi realizado com sucesso.
 
+## Adendo (2026-02-21)
+- Reteste direcionado para `tr`, `zh`, `ar` usando a rota `/p/helber`.
+- Resultado: Home e Booking Page (sufixo de duracao) aprovados para esses idiomas.
+
 ## Idioma: `/pt-br`
 
 ### 1) Home (desktop)
@@ -248,62 +252,46 @@ Este teste foi realizado com sucesso.
 ## Idioma: `/tr`
 
 ### 1) Home (desktop)
-- **Exibido**: "NÃO ENCONTRADO"
-- **Status**: ❌ ERRO
-- **URL**: https://meetrix.opentshost.com/tr/
-- **Evidência**: ![Erro Home](C:/Users/helbe/.gemini/antigravity/brain/f60e9bb1-218f-44e0-a103-62293507934c/home_tr_desktop.png)
+- **Exibido**: "Rezervasyonda ödemeyi etkinleştir"
+- **Status**: ✅ OK
 
 ### 2) Account (desktop)
 - **Status**: ✅ OK (sem chaves hardcoded)
 
 ### 3) Booking Page (desktop)
-- **Exibido (Sufixo)**: "NÃO ENCONTRADO"
-- **Status**: ❌ ERRO
-- **URL**: https://meetrix.opentshost.com/tr/helber
-- **Evidência**: ![Erro Booking](C:/Users/helbe/.gemini/antigravity/brain/f60e9bb1-218f-44e0-a103-62293507934c/booking_tr_desktop.png)
+- **Exibido (Sufixo)**: "15 dk"
+- **Status**: ✅ OK
 
 ### 1) Home (mobile)
-- **Exibido**: "NÃO ENCONTRADO"
-- **Status**: ❌ ERRO
-- **URL**: https://meetrix.opentshost.com/tr/
-- **Evidência**: ![Erro Home](C:/Users/helbe/.gemini/antigravity/brain/f60e9bb1-218f-44e0-a103-62293507934c/home_tr_mobile.png)
+- **Exibido**: "Rezervasyonda ödemeyi etkinleştir"
+- **Status**: ✅ OK
 
 ### 3) Booking Page (mobile)
-- **Exibido (Sufixo)**: "NÃO ENCONTRADO"
-- **Status**: ❌ ERRO
-- **URL**: https://meetrix.opentshost.com/tr/helber
-- **Evidência**: ![Erro Booking](C:/Users/helbe/.gemini/antigravity/brain/f60e9bb1-218f-44e0-a103-62293507934c/booking_tr_mobile.png)
+- **Exibido (Sufixo)**: "15 dk"
+- **Status**: ✅ OK
 
 ---
 
 ## Idioma: `/zh`
 
 ### 1) Home (desktop)
-- **Exibido**: "NÃO ENCONTRADO"
-- **Status**: ❌ ERRO
-- **URL**: https://meetrix.opentshost.com/zh/
-- **Evidência**: ![Erro Home](C:/Users/helbe/.gemini/antigravity/brain/f60e9bb1-218f-44e0-a103-62293507934c/home_zh_desktop.png)
+- **Exibido**: "启用预约时付款"
+- **Status**: ✅ OK
 
 ### 2) Account (desktop)
 - **Status**: ✅ OK (sem chaves hardcoded)
 
 ### 3) Booking Page (desktop)
-- **Exibido (Sufixo)**: "NÃO ENCONTRADO"
-- **Status**: ❌ ERRO
-- **URL**: https://meetrix.opentshost.com/zh/helber
-- **Evidência**: ![Erro Booking](C:/Users/helbe/.gemini/antigravity/brain/f60e9bb1-218f-44e0-a103-62293507934c/booking_zh_desktop.png)
+- **Exibido (Sufixo)**: "15 分钟"
+- **Status**: ✅ OK
 
 ### 1) Home (mobile)
-- **Exibido**: "NÃO ENCONTRADO"
-- **Status**: ❌ ERRO
-- **URL**: https://meetrix.opentshost.com/zh/
-- **Evidência**: ![Erro Home](C:/Users/helbe/.gemini/antigravity/brain/f60e9bb1-218f-44e0-a103-62293507934c/home_zh_mobile.png)
+- **Exibido**: "启用预约时付款"
+- **Status**: ✅ OK
 
 ### 3) Booking Page (mobile)
-- **Exibido (Sufixo)**: "NÃO ENCONTRADO"
-- **Status**: ❌ ERRO
-- **URL**: https://meetrix.opentshost.com/zh/helber
-- **Evidência**: ![Erro Booking](C:/Users/helbe/.gemini/antigravity/brain/f60e9bb1-218f-44e0-a103-62293507934c/booking_zh_mobile.png)
+- **Exibido (Sufixo)**: "15 分钟"
+- **Status**: ✅ OK
 
 ---
 
@@ -337,31 +325,22 @@ Este teste foi realizado com sucesso.
 ## Idioma: `/ar`
 
 ### 1) Home (desktop)
-- **Exibido**: "NÃO ENCONTRADO"
-- **Status**: ❌ ERRO
-- **URL**: https://meetrix.opentshost.com/ar/
-- **Evidência**: ![Erro Home](C:/Users/helbe/.gemini/antigravity/brain/f60e9bb1-218f-44e0-a103-62293507934c/home_ar_desktop.png)
+- **Exibido**: "تفعيل الدفع عند الحجز"
+- **Status**: ✅ OK
 
 ### 2) Account (desktop)
 - **Status**: ✅ OK (sem chaves hardcoded)
 
 ### 3) Booking Page (desktop)
-- **Exibido (Sufixo)**: "NÃO ENCONTRADO"
-- **Status**: ❌ ERRO
-- **URL**: https://meetrix.opentshost.com/ar/helber
-- **Evidência**: ![Erro Booking](C:/Users/helbe/.gemini/antigravity/brain/f60e9bb1-218f-44e0-a103-62293507934c/booking_ar_desktop.png)
+- **Exibido (Sufixo)**: "15 دقيقة"
+- **Status**: ✅ OK
 
 ### 1) Home (mobile)
-- **Exibido**: "NÃO ENCONTRADO"
-- **Status**: ❌ ERRO
-- **URL**: https://meetrix.opentshost.com/ar/
-- **Evidência**: ![Erro Home](C:/Users/helbe/.gemini/antigravity/brain/f60e9bb1-218f-44e0-a103-62293507934c/home_ar_mobile.png)
+- **Exibido**: "تفعيل الدفع عند الحجز"
+- **Status**: ✅ OK
 
 ### 3) Booking Page (mobile)
-- **Exibido (Sufixo)**: "NÃO ENCONTRADO"
-- **Status**: ❌ ERRO
-- **URL**: https://meetrix.opentshost.com/ar/helber
-- **Evidência**: ![Erro Booking](C:/Users/helbe/.gemini/antigravity/brain/f60e9bb1-218f-44e0-a103-62293507934c/booking_ar_mobile.png)
+- **Exibido (Sufixo)**: "15 دقيقة"
+- **Status**: ✅ OK
 
 ---
-

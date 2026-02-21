@@ -59,3 +59,4 @@ Resultado:
 ## Observacoes
 - Este PR implementa as correcoes descritas no relatorio do Atigravity.
 - Correcao adicional aplicada: habilitar `tr`, `zh`, `ar` no roteamento/i18n e LanguageSwitcher.
+- Reteste parcial: `tr`, `zh`, `ar` OK na Home e Booking (rota `/p/helber`).

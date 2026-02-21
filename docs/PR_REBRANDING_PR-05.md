@@ -52,23 +52,23 @@ Resultado:
 - [x] Sem quebra visual crítica
 
 ## Deploy e validação em produção
-- [ ] GitHub Actions `deploy.yml` verde
-- [ ] Validação em produção concluída
-- [ ] Polling de workflow a cada 15s realizado
+- [x] GitHub Actions `deploy.yml` verde
+- [x] Validação em produção concluída
+- [x] Polling de workflow a cada 15s realizado
 
 Validado em produção:
-- [ ] Home
-- [ ] Navegação principal
-- [ ] Seções alteradas da landing
-- [ ] CTAs
-- [ ] Signup e onboarding
+- [x] Home
+- [x] Navegação principal
+- [x] Seções alteradas da landing
+- [x] CTAs
+- [x] Signup e onboarding
 
 ## Rollback
 - Tag de referência: `snapshot/pre-rebranding-2026-02-21`
 - Plano de rollback para este PR:
   - Reverter commit do PR-05 no GitHub
   - Restaurar metadados e remover handlers de eventos no frontend
-- [ ] Rollback testado (quando aplicável)
+- [x] Rollback testado (procedimento validado via snapshot)
 
 ## Checklist final
 - [x] Escopo do PR está aderente ao plano

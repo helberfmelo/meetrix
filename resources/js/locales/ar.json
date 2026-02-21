@@ -68,7 +68,8 @@
             "المدفوعات عبر Stripe",
             "هوية بصرية مخصصة",
             "دعم ذو أولوية"
-        ]
+        ],
+        "activate_billing": "تفعيل الدفع عند الحجز"
     },
     "dashboard": {
         "title": "لوحة القيادة",
@@ -225,6 +226,15 @@
         "invited_success": "تمت دعوة العضو بنجاح!",
         "invitation_failed": "فشلت الدعوة"
     },
+    "account": {
+        "activate_billing": "تفعيل الدفع عند الحجز",
+        "activating_payments": "جارٍ التفعيل...",
+        "updating": "جارٍ التحديث...",
+        "update_plan": "تحديث الخطة",
+        "canceling": "جارٍ الإلغاء...",
+        "cancel_subscription": "إلغاء الاشتراك",
+        "update_password": "تحديث كلمة المرور"
+    },
     "booking": {
         "select_service": "اختر الخدمة",
         "agenda": "الجدول",
@@ -240,7 +250,8 @@
         "success_title": "تم بنجاح!",
         "success_msg": "تم تأكيد حجزك. يرجى مراجعة بريدك الإلكتروني للحصول على التفاصيل.",
         "back_home": "العودة للرئيسية",
-        "failed_alert": "فشل الحجز. يرجى المحاولة مرة أخرى."
+        "failed_alert": "فشل الحجز. يرجى المحاولة مرة أخرى.",
+        "minutes_short": "دقيقة"
     },
     "onboarding": {
         "step_1": "الملف الشخصي",

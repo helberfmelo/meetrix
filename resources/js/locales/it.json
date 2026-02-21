@@ -69,7 +69,8 @@
             "Branding Personalizzato",
             "Supporto Prioritario"
         ],
-        "feature_label": "FUNZIONE"
+        "feature_label": "FUNZIONE",
+        "activate_billing": "Attiva il pagamento alla prenotazione"
     },
     "dashboard": {
         "title": "Dashboard",
@@ -272,6 +273,15 @@
         "invited_success": "Membro invitato con successo!",
         "invitation_failed": "Invito non riuscito"
     },
+    "account": {
+        "activate_billing": "Attiva il pagamento alla prenotazione",
+        "activating_payments": "Attivazione...",
+        "updating": "Aggiornamento...",
+        "update_plan": "Aggiorna piano",
+        "canceling": "Annullamento...",
+        "cancel_subscription": "Annulla abbonamento",
+        "update_password": "Aggiorna password"
+    },
     "booking": {
         "select_service": "Seleziona il Servizio",
         "agenda": "Agenda",
@@ -287,7 +297,8 @@
         "success_title": "SUCCESSO!",
         "success_msg": "La tua prenotazione è confermata. Controlla la tua e-mail per i dettagli.",
         "back_home": "TORNA ALLA HOME",
-        "failed_alert": "Prenotazione fallita. Per favore, riprova."
+        "failed_alert": "Prenotazione fallita. Per favore, riprova.",
+        "minutes_short": "min"
     },
     "onboarding": {
         "step_1": "Profilo",

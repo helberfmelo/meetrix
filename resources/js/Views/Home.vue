@@ -111,7 +111,7 @@
                     <div class="rounded-2xl bg-white/5 border border-white/10 px-4 py-4">Recorrencia para pacotes</div>
                 </div>
                 <router-link to="/onboarding?mode=scheduling_with_payments" @click="trackFunnel('path_selected', { path: 'scheduling_with_payments', placement: 'payments' })" class="mt-7 inline-flex items-center justify-center px-8 py-4 rounded-2xl bg-meetrix-orange text-zinc-950 text-[10px] sm:text-xs font-black uppercase tracking-[0.22em] hover:bg-white transition-colors">
-                        Ativar cobranca no agendamento
+                        {{ $t('home.activate_billing') }}
                 </router-link>
             </div>
         </section>
@@ -340,7 +340,7 @@
                         Comecar gratuitamente
                     </router-link>
                     <router-link to="/onboarding?mode=scheduling_with_payments" @click="trackFunnel('path_selected', { path: 'scheduling_with_payments', placement: 'final' })" class="inline-flex items-center justify-center px-8 py-4 rounded-2xl border border-white/20 text-white text-[10px] sm:text-xs font-black uppercase tracking-[0.22em] hover:bg-white hover:text-zinc-950 transition-colors">
-                        Ativar cobranca no agendamento
+                        {{ $t('home.activate_billing') }}
                     </router-link>
                 </div>
             </div>

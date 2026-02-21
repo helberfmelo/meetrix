@@ -69,7 +69,8 @@
             "Individuelles Branding",
             "Prioritärer Support"
         ],
-        "feature_label": "FUNKTION"
+        "feature_label": "FUNKTION",
+        "activate_billing": "Zahlung bei Buchung aktivieren"
     },
     "dashboard": {
         "title": "Dashboard",
@@ -272,6 +273,15 @@
         "invited_success": "Mitglied erfolgreich eingeladen!",
         "invitation_failed": "Einladung fehlgeschlagen"
     },
+    "account": {
+        "activate_billing": "Zahlung bei Buchung aktivieren",
+        "activating_payments": "Wird aktiviert...",
+        "updating": "Wird aktualisiert...",
+        "update_plan": "Plan aktualisieren",
+        "canceling": "Wird abgebrochen...",
+        "cancel_subscription": "Abonnement kündigen",
+        "update_password": "Passwort aktualisieren"
+    },
     "booking": {
         "select_service": "Wählen Sie eine Dienstleistung",
         "agenda": "Termine",
@@ -287,7 +297,8 @@
         "success_title": "ERFOLG!",
         "success_msg": "Ihre Buchung wurde bestätigt. Prüfen Sie Ihre E-Mails für Details.",
         "back_home": "ZURÜCK ZUR STARTSEITE",
-        "failed_alert": "Buchung fehlgeschlagen. Bitte versuchen Sie es erneut."
+        "failed_alert": "Buchung fehlgeschlagen. Bitte versuchen Sie es erneut.",
+        "minutes_short": "Min"
     },
     "onboarding": {
         "step_1": "Profil",

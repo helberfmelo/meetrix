@@ -69,7 +69,8 @@
             "Branding Personnalisé",
             "Support Prioritaire"
         ],
-        "feature_label": "FONCTION"
+        "feature_label": "FONCTION",
+        "activate_billing": "Activer le paiement à la réservation"
     },
     "dashboard": {
         "title": "Tableau de bord",
@@ -272,6 +273,15 @@
         "invited_success": "Membre invité avec succès !",
         "invitation_failed": "Échec de l'invitation"
     },
+    "account": {
+        "activate_billing": "Activer le paiement à la réservation",
+        "activating_payments": "Activation...",
+        "updating": "Mise à jour...",
+        "update_plan": "Mettre à jour le plan",
+        "canceling": "Annulation...",
+        "cancel_subscription": "Annuler l'abonnement",
+        "update_password": "Mettre à jour le mot de passe"
+    },
     "booking": {
         "select_service": "Sélectionnez le Service",
         "agenda": "Agenda",
@@ -287,7 +297,8 @@
         "success_title": "SUCCÈS !",
         "success_msg": "Votre réservation est confirmée. Vérifiez vos e-mails pour les détails.",
         "back_home": "RETOUR À L'ACCUEIL",
-        "failed_alert": "Échec de la réservation. Veuillez réessayer."
+        "failed_alert": "Échec de la réservation. Veuillez réessayer.",
+        "minutes_short": "min"
     },
     "onboarding": {
         "step_1": "Profil",

@@ -68,7 +68,8 @@
             "Stripe 支付集成",
             "自定义品牌定制",
             "优先客户支持"
-        ]
+        ],
+        "activate_billing": "启用预约时付款"
     },
     "dashboard": {
         "title": "仪表板",
@@ -225,6 +226,15 @@
         "invited_success": "成员邀请成功！",
         "invitation_failed": "邀请失败"
     },
+    "account": {
+        "activate_billing": "启用预约时付款",
+        "activating_payments": "正在启用...",
+        "updating": "正在更新...",
+        "update_plan": "更新套餐",
+        "canceling": "正在取消...",
+        "cancel_subscription": "取消订阅",
+        "update_password": "更新密码"
+    },
     "booking": {
         "select_service": "选择服务",
         "agenda": "日程表",
@@ -240,7 +250,8 @@
         "success_title": "预订成功！",
         "success_msg": "您的预订已确认。请查看您的电子邮件获取详细信息。",
         "back_home": "返回主页",
-        "failed_alert": "预订失败，请重试。"
+        "failed_alert": "预订失败，请重试。",
+        "minutes_short": "分钟"
     },
     "onboarding": {
         "step_1": "个人资料",

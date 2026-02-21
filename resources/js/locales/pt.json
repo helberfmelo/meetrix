@@ -69,7 +69,8 @@
             "Automação financeira",
             "Prioridade operacional"
         ],
-        "feature_label": "ETAPA"
+        "feature_label": "ETAPA",
+        "activate_billing": "Ativar cobranca no agendamento"
     },
     "dashboard": {
         "title": "Painel",
@@ -288,6 +289,15 @@
         "poll_copied": "Link da enquete copiado!",
         "delete_poll_confirm": "Excluir esta enquete?",
         "failed_delete_poll": "Falha ao excluir enquete"
+    },
+    "account": {
+        "activate_billing": "Ativar Cobranca no Agendamento",
+        "activating_payments": "Ativando...",
+        "updating": "Atualizando...",
+        "update_plan": "Atualizar Plano",
+        "canceling": "Cancelando...",
+        "cancel_subscription": "Cancelar Assinatura",
+        "update_password": "Atualizar Senha"
     },
     "booking": {
         "select_service": "Selecione o Serviço",

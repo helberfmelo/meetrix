@@ -62,7 +62,7 @@
                                 @click="upgradeToPayments"
                                 class="w-full rounded-xl px-4 py-3 bg-meetrix-orange text-zinc-950 text-[10px] font-black uppercase tracking-[0.2em] disabled:opacity-60"
                             >
-                                {{ upgradingMode ? 'Ativando...' : 'Ativar Cobranca no Agendamento' }}
+                                {{ upgradingMode ? $t('account.activating_payments') : $t('account.activate_billing') }}
                             </button>
                             <p v-else class="text-[10px] font-black uppercase tracking-[0.15em] text-meetrix-green">
                                 Cobranca integrada ativa para esta conta.
@@ -113,7 +113,7 @@
                             :disabled="updatingSubscription"
                             class="w-full rounded-xl px-4 py-3 bg-zinc-950 dark:bg-white text-white dark:text-zinc-950 text-[10px] font-black uppercase tracking-[0.2em] disabled:opacity-60"
                         >
-                            {{ updatingSubscription ? 'Atualizando...' : 'Atualizar Plano' }}
+                            {{ updatingSubscription ? $t('account.updating') : $t('account.update_plan') }}
                         </button>
                     </form>
 
@@ -122,7 +122,7 @@
                         :disabled="cancelingSubscription || !canCancelSubscription"
                         class="w-full rounded-xl px-4 py-3 border border-red-300 text-red-600 text-[10px] font-black uppercase tracking-[0.2em] disabled:opacity-50"
                     >
-                        {{ cancelingSubscription ? 'Cancelando...' : 'Cancelar Assinatura' }}
+                        {{ cancelingSubscription ? $t('account.canceling') : $t('account.cancel_subscription') }}
                     </button>
                 </article>
             </div>
@@ -180,7 +180,7 @@
                         :disabled="savingPassword"
                         class="rounded-xl px-4 py-3 bg-zinc-950 dark:bg-white text-white dark:text-zinc-950 text-[10px] font-black uppercase tracking-[0.2em] disabled:opacity-60"
                     >
-                        {{ savingPassword ? 'Atualizando...' : 'Atualizar Senha' }}
+                        {{ savingPassword ? $t('account.updating') : $t('account.update_password') }}
                     </button>
                 </form>
             </article>

@@ -69,7 +69,8 @@
             "Financial automation",
             "Operational priority"
         ],
-        "feature_label": "STEP"
+        "feature_label": "STEP",
+        "activate_billing": "Enable payments at booking"
     },
     "dashboard": {
         "title": "Dashboard",
@@ -283,6 +284,15 @@
         "poll_launch": "Launch Poll",
         "poll_enter_title_alert": "Please enter a poll title.",
         "poll_create_failed_alert": "Failed to create poll. Check the selected dates."
+    },
+    "account": {
+        "activate_billing": "Enable payments at booking",
+        "activating_payments": "Enabling...",
+        "updating": "Updating...",
+        "update_plan": "Update Plan",
+        "canceling": "Canceling...",
+        "cancel_subscription": "Cancel Subscription",
+        "update_password": "Update Password"
     },
     "booking": {
         "select_service": "Select Service",

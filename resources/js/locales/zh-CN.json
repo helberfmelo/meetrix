@@ -69,7 +69,8 @@
             "自定义品牌",
             "优先支持"
         ],
-        "feature_label": "功能"
+        "feature_label": "功能",
+        "activate_billing": "启用预约时付款"
     },
     "dashboard": {
         "title": "控制面板",
@@ -243,6 +244,15 @@
         "invited_success": "成员邀请成功！",
         "invitation_failed": "邀请失败"
     },
+    "account": {
+        "activate_billing": "启用预约时付款",
+        "activating_payments": "正在启用...",
+        "updating": "正在更新...",
+        "update_plan": "更新套餐",
+        "canceling": "正在取消...",
+        "cancel_subscription": "取消订阅",
+        "update_password": "更新密码"
+    },
     "booking": {
         "select_service": "选择服务",
         "agenda": "议程",
@@ -257,7 +267,8 @@
         "processing": "处理中...",
         "success_title": "成功！",
         "success_msg": "您的预约已确认。请查收电子邮件了解详情。",
-        "back_home": "返回首页"
+        "back_home": "返回首页",
+        "minutes_short": "分钟"
     },
     "onboarding": {
         "step_1": "个人资料",

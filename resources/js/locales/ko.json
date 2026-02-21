@@ -69,7 +69,8 @@
             "커스텀 브랜딩",
             "우선순위 지원"
         ],
-        "feature_label": "기능"
+        "feature_label": "기능",
+        "activate_billing": "예약 시 결제 활성화"
     },
     "dashboard": {
         "title": "대시보드",
@@ -243,6 +244,15 @@
         "invited_success": "멤버를 초대했습니다!",
         "invitation_failed": "초대 실패"
     },
+    "account": {
+        "activate_billing": "예약 시 결제 활성화",
+        "activating_payments": "활성화 중...",
+        "updating": "업데이트 중...",
+        "update_plan": "요금제 업데이트",
+        "canceling": "취소 중...",
+        "cancel_subscription": "구독 취소",
+        "update_password": "비밀번호 업데이트"
+    },
     "booking": {
         "select_service": "서비스 선택",
         "agenda": "의제",
@@ -257,7 +267,8 @@
         "processing": "처리 중...",
         "success_title": "성공!",
         "success_msg": "예약이 확정되었습니다. 이메일을 확인해 주세요.",
-        "back_home": "홈으로 돌아가기"
+        "back_home": "홈으로 돌아가기",
+        "minutes_short": "분"
     },
     "onboarding": {
         "step_1": "프로필",

@@ -69,7 +69,8 @@
             "カスタムブランディング",
             "優先サポート"
         ],
-        "feature_label": "機能"
+        "feature_label": "機能",
+        "activate_billing": "予約時の支払いを有効化"
     },
     "dashboard": {
         "title": "ダッシュボード",
@@ -272,6 +273,15 @@
         "invited_success": "メンバーを招待しました!",
         "invitation_failed": "招待に失敗しました"
     },
+    "account": {
+        "activate_billing": "予約時の支払いを有効化",
+        "activating_payments": "有効化中...",
+        "updating": "更新中...",
+        "update_plan": "プランを更新",
+        "canceling": "キャンセル中...",
+        "cancel_subscription": "サブスクリプションを解約",
+        "update_password": "パスワードを更新"
+    },
     "booking": {
         "select_service": "サービスを選択",
         "agenda": "スケジュール",
@@ -287,7 +297,8 @@
         "success_title": "完了！",
         "success_msg": "予約が確定しました。詳細はメールをご確認ください。",
         "back_home": "ホームに戻る",
-        "failed_alert": "予約に失敗しました。もう一度お試しください。"
+        "failed_alert": "予約に失敗しました。もう一度お試しください。",
+        "minutes_short": "分"
     },
     "onboarding": {
         "step_1": "プロフィール",

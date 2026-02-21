@@ -68,7 +68,8 @@
             "Stripe ile ödemeler",
             "Özel Markalama",
             "Öncelikli Destek"
-        ]
+        ],
+        "activate_billing": "Rezervasyonda ödemeyi etkinleştir"
     },
     "dashboard": {
         "title": "Panel",
@@ -225,6 +226,15 @@
         "invited_success": "Üye başarıyla davet edildi!",
         "invitation_failed": "Davet başarısız"
     },
+    "account": {
+        "activate_billing": "Rezervasyonda ödemeyi etkinleştir",
+        "activating_payments": "Etkinleştiriliyor...",
+        "updating": "Güncelleniyor...",
+        "update_plan": "Planı güncelle",
+        "canceling": "İptal ediliyor...",
+        "cancel_subscription": "Aboneliği iptal et",
+        "update_password": "Şifreyi güncelle"
+    },
     "booking": {
         "select_service": "Hizmet Seçin",
         "agenda": "Ajanda",
@@ -240,7 +250,8 @@
         "success_title": "BAŞARILI!",
         "success_msg": "Rezervasyonunuz onaylandı. Detaylar için lütfen e-postanızı kontrol edin.",
         "back_home": "ANA SAYFAYA DÖN",
-        "failed_alert": "Rezervasyon başarısız oldu. Lütfen tekrar deneyin."
+        "failed_alert": "Rezervasyon başarısız oldu. Lütfen tekrar deneyin.",
+        "minutes_short": "dk"
     },
     "onboarding": {
         "step_1": "Profil",

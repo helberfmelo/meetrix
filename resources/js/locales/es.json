@@ -69,7 +69,8 @@
             "Branding Personalizado",
             "Soporte Prioritario"
         ],
-        "feature_label": "FUNCIÓN"
+        "feature_label": "FUNCIÓN",
+        "activate_billing": "Activar cobro en la reserva"
     },
     "dashboard": {
         "title": "Panel",
@@ -277,6 +278,15 @@
         "delete_poll_confirm": "¿Eliminar esta encuesta?",
         "failed_delete_poll": "Error al eliminar la encuesta"
     },
+    "account": {
+        "activate_billing": "Activar cobro en la reserva",
+        "activating_payments": "Activando...",
+        "updating": "Actualizando...",
+        "update_plan": "Actualizar plan",
+        "canceling": "Cancelando...",
+        "cancel_subscription": "Cancelar suscripción",
+        "update_password": "Actualizar contraseña"
+    },
     "booking": {
         "select_service": "Selecciona el Servicio",
         "agenda": "Agenda",
@@ -292,7 +302,8 @@
         "success_title": "¡ÉXITO!",
         "success_msg": "Tu reserva ha sido confirmada. Revisa tu email para más detalles.",
         "back_home": "VOLVER AL INICIO",
-        "failed_alert": "La reserva falló. Por favor, inténtalo de nuevo."
+        "failed_alert": "La reserva falló. Por favor, inténtalo de nuevo.",
+        "minutes_short": "min"
     },
     "onboarding": {
         "step_1": "Perfil",

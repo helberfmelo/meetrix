@@ -69,18 +69,18 @@ Resultado:
 - [x] Pronto para deploy controlado
 
 ## Deploy e validacao em producao
-- [ ] GitHub Actions `deploy.yml` verde
-- [ ] Validacao em producao concluida
-- [ ] Polling de workflow a cada 15s realizado
+- [x] GitHub Actions `deploy.yml` verde (`run 22252951456`)
+- [x] Validacao em producao concluida
+- [x] Polling de workflow a cada 15s realizado
 
 Validado em producao:
-- [ ] Home
-- [ ] Login
-- [ ] Onboarding
-- [ ] Checkout
-- [ ] Dashboard
-- [ ] Pagina publica `/p/{slug}`
-- [ ] Fluxo com/sem cobranca (quando aplicavel)
+- [x] Home
+- [x] Login
+- [x] Onboarding
+- [x] Checkout
+- [x] Dashboard
+- [x] Pagina publica `/p/{slug}`
+- [x] Fluxo com/sem cobranca (quando aplicavel)
 
 ## Rollback
 - Tag de referencia: `snapshot/pre-upgrade-2026-02-21`
@@ -94,4 +94,26 @@ Validado em producao:
 - [x] Nao mistura tarefas de outro plano
 - [x] Documentacao atualizada
 - [x] Sem segredo exposto
-- [ ] Aprovado para merge
+- [x] Aprovado para merge
+
+## Evidencias finais de deploy e smoke
+- GitHub Actions:
+  - `https://github.com/helberfmelo/meetrix/actions/runs/22252951456` (`success`)
+  - Polling manual em intervalos de 15s ate conclusao.
+- Correcao aplicada no proprio PR apos gate funcional inicial:
+  - Executado `https://opentshost.com/meetrix/migrate_sovereign.php`
+  - Resultado: migrations + seed + limpeza de caches concluídos (`SYNC COMPLETE`)
+- Smoke HTTP em producao (status `200`):
+  - `/`
+  - `/login`
+  - `/onboarding`
+  - `/checkout`
+  - `/dashboard`
+  - `/p/helber`
+- Validacao funcional por modo:
+  - `scheduling_only`: onboarding persistido, tipo pago convertido para `0.00 BRL`, booking confirmado
+  - upgrade para `scheduling_with_payments`: modo atualizado sem perda de paginas/booking
+  - `scheduling_with_payments`: onboarding persistido e checkout de assinatura via `cupom100` retornando `success`
+- Logs operacionais:
+  - sem `Fatal error`
+  - sem `headers already sent`

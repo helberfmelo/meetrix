@@ -35,9 +35,13 @@
 <script setup>
 import { ref, computed } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { useRoute, useRouter } from 'vue-router';
+import { withLocalePrefix } from '../utils/localeRoute';
 
 const { locale } = useI18n();
 const isOpen = ref(false);
+const route = useRoute();
+const router = useRouter();
 
 const locales = {
     'en': '🇺🇸',
@@ -75,6 +79,11 @@ const getLabel = (loc) => labels[loc] || loc;
 const changeLocale = (newLocale) => {
     locale.value = newLocale;
     localStorage.setItem('locale', newLocale);
+    router.replace({
+        path: withLocalePrefix(route.path, newLocale),
+        query: route.query,
+        hash: route.hash,
+    });
     isOpen.value = false;
 };
 </script>

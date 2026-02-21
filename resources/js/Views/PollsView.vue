@@ -52,10 +52,14 @@
 import { ref, onMounted } from 'vue';
 import axios from '../axios';
 import { useI18n } from 'vue-i18n';
+import { useRoute } from 'vue-router';
+import { DEFAULT_I18N_LOCALE, urlSegmentToLocale, withLocalePrefix } from '../utils/localeRoute';
 
 const { t } = useI18n();
+const route = useRoute();
 const polls = ref([]);
 const loading = ref(true);
+const currentLocale = () => urlSegmentToLocale(route.params.locale) || DEFAULT_I18N_LOCALE;
 
 const fetchPolls = async () => {
     try {
@@ -69,7 +73,7 @@ const fetchPolls = async () => {
 };
 
 const copyLink = (slug) => {
-    const url = `${window.location.origin}/vote/${slug}`;
+    const url = `${window.location.origin}${withLocalePrefix(`/vote/${slug}`, currentLocale())}`;
     navigator.clipboard.writeText(url);
     alert(t('admin.poll_copied'));
 };

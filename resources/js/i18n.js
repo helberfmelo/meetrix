@@ -12,6 +12,7 @@ import ja from './locales/ja.json';
 import ko from './locales/ko.json';
 import it from './locales/it.json';
 import ru from './locales/ru.json';
+import { extractLocaleSegment, resolveLocalePreference } from './utils/localeRoute';
 
 const messages = {
     'en': en,
@@ -31,7 +32,12 @@ const messages = {
 // Determine default locale
 const savedLocale = localStorage.getItem('locale');
 const browserLocale = navigator.language;
-const defaultLocale = savedLocale || (messages[browserLocale] ? browserLocale : 'en');
+const urlLocale = extractLocaleSegment(window.location.pathname);
+const defaultLocale = resolveLocalePreference({
+    urlLocale,
+    savedLocale,
+    browserLocale,
+});
 
 const i18n = createI18n({
     legacy: false, // Use Composition API

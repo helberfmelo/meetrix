@@ -10,12 +10,12 @@
             </div>
             
             <nav class="mt-12 flex-1 px-4 space-y-2">
-                <router-link v-for="item in navItems" :key="item.path" :to="item.path" 
+                <router-link v-for="item in navItems" :key="item.path" :to="item.to" 
                     class="group flex items-center gap-4 px-6 py-4 rounded-3xl transition-all relative overflow-hidden"
                     active-class="bg-zinc-200 text-zinc-950 dark:bg-zinc-800 dark:text-white shadow-premium"
-                    :class="[route.path === item.path ? '' : 'text-slate-500 hover:text-zinc-950 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5']"
+                    :class="[currentPath === item.path ? '' : 'text-slate-500 hover:text-zinc-950 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5']"
                 >
-                    <div v-if="route.path === item.path" class="absolute left-0 top-2 bottom-2 w-1 bg-meetrix-orange rounded-full"></div>
+                    <div v-if="currentPath === item.path" class="absolute left-0 top-2 bottom-2 w-1 bg-meetrix-orange rounded-full"></div>
                     <i :class="[item.icon, 'text-lg group-hover:scale-110 transition-all']"></i>
                     <span class="hidden lg:block text-[10px] font-black uppercase tracking-[0.2em]">{{ item.label }}</span>
                 </router-link>
@@ -83,7 +83,7 @@
                 <router-link
                     v-for="item in mobileNavItems"
                     :key="item.path"
-                    :to="item.path"
+                    :to="item.to"
                     class="min-w-[68px] py-3 px-1 flex flex-col items-center justify-center gap-1 text-[8px] font-black uppercase tracking-wide transition-colors"
                     :class="isNavActive(item.path) ? 'text-meetrix-orange' : 'text-slate-500'"
                 >
@@ -102,6 +102,7 @@ import { useRouter, useRoute } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import LanguageSwitcher from '../Components/LanguageSwitcher.vue';
 import ThemeToggle from '../Components/ThemeToggle.vue';
+import { DEFAULT_I18N_LOCALE, stripLocalePrefix, urlSegmentToLocale, withLocalePrefix } from '../utils/localeRoute';
 
 const authStore = useAuthStore();
 const router = useRouter();
@@ -109,37 +110,40 @@ const route = useRoute();
 const { t } = useI18n();
 
 const user = computed(() => authStore.user);
-const logoTarget = computed(() => (authStore.isAuthenticated ? '/dashboard' : '/'));
+const activeLocale = computed(() => urlSegmentToLocale(route.params.locale) || DEFAULT_I18N_LOCALE);
+const toPath = (path) => withLocalePrefix(path, activeLocale.value);
+const currentPath = computed(() => stripLocalePrefix(route.path));
+const logoTarget = computed(() => toPath(authStore.isAuthenticated ? '/dashboard' : '/'));
 
 const navItems = computed(() => [
-    { path: '/dashboard', label: t('common.dashboard'), icon: 'fas fa-chart-pie' },
-    { path: '/dashboard/pages', label: t('common.pages'), icon: 'fas fa-file-lines' },
-    { path: '/dashboard/bookings', label: t('common.bookings'), icon: 'fas fa-calendar-check' },
-    { path: '/dashboard/teams', label: t('common.teams'), icon: 'fas fa-users-viewfinder' },
-    { path: '/dashboard/integrations', label: t('common.integrations'), icon: 'fas fa-plug-circle-bolt' },
-    { path: '/dashboard/polls', label: t('common.polls'), icon: 'fas fa-square-poll-vertical' },
-    { path: '/dashboard/coupons', label: t('common.coupons'), icon: 'fas fa-ticket' },
-    { path: '/dashboard/account', label: t('common.profile'), icon: 'fas fa-user-gear' },
-    ...(user.value?.is_super_admin ? [{ path: '/dashboard/master-admin', label: 'Master Admin', icon: 'fas fa-shield-halved' }] : []),
+    { path: '/dashboard', to: toPath('/dashboard'), label: t('common.dashboard'), icon: 'fas fa-chart-pie' },
+    { path: '/dashboard/pages', to: toPath('/dashboard/pages'), label: t('common.pages'), icon: 'fas fa-file-lines' },
+    { path: '/dashboard/bookings', to: toPath('/dashboard/bookings'), label: t('common.bookings'), icon: 'fas fa-calendar-check' },
+    { path: '/dashboard/teams', to: toPath('/dashboard/teams'), label: t('common.teams'), icon: 'fas fa-users-viewfinder' },
+    { path: '/dashboard/integrations', to: toPath('/dashboard/integrations'), label: t('common.integrations'), icon: 'fas fa-plug-circle-bolt' },
+    { path: '/dashboard/polls', to: toPath('/dashboard/polls'), label: t('common.polls'), icon: 'fas fa-square-poll-vertical' },
+    { path: '/dashboard/coupons', to: toPath('/dashboard/coupons'), label: t('common.coupons'), icon: 'fas fa-ticket' },
+    { path: '/dashboard/account', to: toPath('/dashboard/account'), label: t('common.profile'), icon: 'fas fa-user-gear' },
+    ...(user.value?.is_super_admin ? [{ path: '/dashboard/master-admin', to: toPath('/dashboard/master-admin'), label: 'Master Admin', icon: 'fas fa-shield-halved' }] : []),
 ]);
 
 const mobileNavItems = computed(() => navItems.value);
 
 const breadcrumb = computed(() => {
-    const active = navItems.value.find(i => i.path === route.path);
+    const active = navItems.value.find(i => i.path === currentPath.value);
     return active ? `${t('admin.breadcrumb_prefix')} ${active.label}` : `${t('admin.breadcrumb_prefix')} ${t('admin.overview')}`;
 });
 
 const isNavActive = (path) => {
-    if (path === '/dashboard/pages' && route.path.startsWith('/dashboard/editor/')) {
+    if (path === '/dashboard/pages' && currentPath.value.startsWith('/dashboard/editor/')) {
         return true;
     }
-    return route.path === path || route.path.startsWith(`${path}/`);
+    return currentPath.value === path || currentPath.value.startsWith(`${path}/`);
 };
 
 const handleLogout = () => {
     authStore.logout();
-    router.push('/login');
+    router.push(toPath('/login'));
 };
 </script>
 

@@ -56,9 +56,9 @@ Resultado:
 - [x] Sem quebra visual crítica
 
 ## Deploy e validação em produção
-- [ ] GitHub Actions `deploy.yml` verde
-- [ ] Validação em produção concluída
-- [ ] Polling de workflow a cada 15s realizado
+- [x] GitHub Actions `deploy.yml` verde
+- [x] Validação em produção concluída
+- [x] Polling de workflow a cada 15s realizado
 
 Validado em produção:
 - [x] Home

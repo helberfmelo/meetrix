@@ -51,5 +51,11 @@ Resultado:
 - [x] Build verde
 - [ ] Smoke visual em producao validado
 
+## QA em producao (Antigravity)
+- Relatorio: `docs/RELATORIO_QA_VISUAL_I18N_PRODUCAO.md`
+- Resultado: falhou para `tr`, `zh`, `ar` na Home e nao encontrou o sufixo de duracao nas Booking Pages.
+- Acao corretiva: habilitar `tr`, `zh`, `ar` no roteamento/i18n e ajustar LanguageSwitcher.
+
 ## Observacoes
 - Este PR implementa as correcoes descritas no relatorio do Atigravity.
+- Correcao adicional aplicada: habilitar `tr`, `zh`, `ar` no roteamento/i18n e LanguageSwitcher.

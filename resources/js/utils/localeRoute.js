@@ -1,5 +1,6 @@
 const URL_TO_I18N_LOCALE = {
     pt_br: 'pt-BR',
+    zh: 'zh',
     zh_cn: 'zh-CN',
     en: 'en',
     es: 'es',
@@ -10,6 +11,8 @@ const URL_TO_I18N_LOCALE = {
     ko: 'ko',
     it: 'it',
     ru: 'ru',
+    tr: 'tr',
+    ar: 'ar',
 };
 
 const I18N_LOCALE_ALIASES = {

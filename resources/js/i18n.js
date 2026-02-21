@@ -8,10 +8,13 @@ import fr from './locales/fr.json';
 import de from './locales/de.json';
 import pt from './locales/pt.json';
 import zhCN from './locales/zh-CN.json';
+import zh from './locales/zh.json';
 import ja from './locales/ja.json';
 import ko from './locales/ko.json';
 import it from './locales/it.json';
 import ru from './locales/ru.json';
+import tr from './locales/tr.json';
+import ar from './locales/ar.json';
 import { extractLocaleSegment, resolveLocalePreference } from './utils/localeRoute';
 
 const messages = {
@@ -22,11 +25,14 @@ const messages = {
     'fr': fr,
     'de': de,
     'pt': pt,
+    'zh': zh,
     'zh-CN': zhCN,
     'ja': ja,
     'ko': ko,
     'it': it,
-    'ru': ru
+    'ru': ru,
+    'tr': tr,
+    'ar': ar
 };
 
 // Determine default locale

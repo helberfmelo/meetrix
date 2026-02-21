@@ -65,18 +65,18 @@ Resultado:
 - [x] Pronto para deploy controlado
 
 ## Deploy e validacao em producao
-- [ ] GitHub Actions `deploy.yml` verde
-- [ ] Validacao em producao concluida
-- [ ] Polling de workflow a cada 15s realizado
+- [x] GitHub Actions `deploy.yml` verde (`run 22252825769`)
+- [x] Validacao em producao concluida
+- [x] Polling de workflow a cada 15s realizado
 
 Validado em producao:
-- [ ] Home
-- [ ] Login
-- [ ] Onboarding
-- [ ] Checkout
-- [ ] Dashboard
-- [ ] Pagina publica `/p/{slug}`
-- [ ] Fluxo com/sem cobranca (quando aplicavel)
+- [x] Home
+- [x] Login
+- [x] Onboarding
+- [x] Checkout
+- [x] Dashboard
+- [x] Pagina publica `/p/{slug}`
+- [x] Fluxo com/sem cobranca (quando aplicavel)
 
 ## Rollback
 - Tag de referencia: `snapshot/pre-upgrade-2026-02-21`
@@ -90,4 +90,23 @@ Validado em producao:
 - [x] Nao mistura tarefas de outro plano
 - [x] Documentacao atualizada
 - [x] Sem segredo exposto
-- [ ] Aprovado para merge
+- [x] Aprovado para merge
+
+## Evidencias finais de deploy e smoke
+- GitHub Actions:
+  - `https://github.com/helberfmelo/meetrix/actions/runs/22252825769` (`success`)
+  - Polling manual em intervalos de 15s ate conclusao.
+- Smoke em producao (status `200`):
+  - `/`
+  - `/login`
+  - `/onboarding`
+  - `/checkout`
+  - `/dashboard`
+  - `/p/helber`
+- Booking sem pagamento em producao:
+  - endpoint `POST /api/bookings` confirmado
+  - retorno `Booking confirmed!` com `booking_status=confirmed` (id `30`)
+- Logs operacionais:
+  - `read_logs.php` com status `200`
+  - sem `Fatal error`
+  - sem `headers already sent`

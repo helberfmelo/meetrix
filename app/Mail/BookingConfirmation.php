@@ -4,7 +4,6 @@ namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
 use App\Models\Booking;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
@@ -40,7 +39,7 @@ class BookingConfirmation extends Mailable
     public function content(): Content
     {
         return new Content(
-            markdown: 'emails.bookings.confirmation',
+            text: 'emails.bookings.confirmation_plain',
         );
     }
 

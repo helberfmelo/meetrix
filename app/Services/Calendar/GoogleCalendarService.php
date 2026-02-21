@@ -54,7 +54,11 @@ class GoogleCalendarService implements CalendarServiceInterface
             ],
         ]);
 
-        $event = $service->events->insert('primary', $event);
+        // Force Google to notify attendees, ensuring they receive invite e-mails
+        // even when host-level SMTP deliverability is unstable.
+        $event = $service->events->insert('primary', $event, [
+            'sendUpdates' => 'all',
+        ]);
 
         return $event->getId();
     }

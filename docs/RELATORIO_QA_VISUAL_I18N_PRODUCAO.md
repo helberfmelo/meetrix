@@ -11,6 +11,9 @@ Este teste foi realizado com sucesso.
 - Resultado: todos os idiomas revalidados sem ocorrencias de "NÃO ENCONTRADO" na Home ou no sufixo de duracao da Booking Page.
 - Status geral: ✅ OK para `pt-br`, `pt`, `es`, `fr`, `de`, `it`, `ja`, `ko`, `ru`, `zh-cn`.
 
+## Nota de consolidacao
+- Qualquer "NÃO ENCONTRADO" listado abaixo refere-se ao teste inicial com rota incorreta e deve ser considerado **superado** pelo reteste completo.
+
 ## Idioma: `/pt-br`
 
 ### 1) Home (desktop)

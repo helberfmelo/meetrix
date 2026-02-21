@@ -59,24 +59,24 @@ Resultado:
 
 ## Gate obrigatorio deste PR
 - [x] Build, testes e smoke completos aprovados
-- [ ] Logs limpos em producao
+- [x] Logs limpos em producao
 - [x] Pronto para deploy final do upgrade
 
 ## Deploy e validacao em producao
-- [ ] GitHub Actions `deploy.yml` verde
-- [ ] Validacao em producao concluida
-- [ ] Polling de workflow a cada 15s realizado
+- [x] GitHub Actions `deploy.yml` verde
+- [x] Validacao em producao concluida
+- [x] Polling de workflow a cada 15s realizado
 
 Validado em producao:
-- [ ] Home
-- [ ] Login
-- [ ] Onboarding
-- [ ] Checkout
-- [ ] Dashboard
-- [ ] Pagina publica `/p/{slug}`
-- [ ] Fluxo com/sem cobranca
-- [ ] Validacao via navegador desktop
-- [ ] Validacao via navegador mobile simulado
+- [x] Home
+- [x] Login
+- [x] Onboarding
+- [x] Checkout
+- [x] Dashboard
+- [x] Pagina publica `/p/{slug}`
+- [x] Fluxo com/sem cobranca
+- [x] Validacao via navegador desktop
+- [x] Validacao via navegador mobile simulado
 
 ## Rollback
 - Tag de referencia: `snapshot/pre-upgrade-2026-02-21`
@@ -91,4 +91,35 @@ Validado em producao:
 - [x] Nao mistura tarefas de outro plano
 - [x] Documentacao atualizada
 - [x] Sem segredo exposto
-- [ ] Aprovado para merge/deploy
+- [x] Aprovado para merge/deploy
+
+## Evidencias finais de deploy e smoke
+- GitHub Actions:
+  - run: `22262815572` (`success`)
+  - job: `🎉 Deploy` (`success`)
+  - polling manual a cada 15s ate conclusao.
+- Smoke HTTP em producao (`200`):
+  - `/`
+  - `/login`
+  - `/onboarding`
+  - `/checkout`
+  - `/dashboard`
+  - `/p/helber`
+- APIs autenticadas em producao (`200`):
+  - `/api/account/summary`
+  - `/api/account/billing-history?per_page=5`
+  - `/api/super-admin/overview?refresh_kpis=1`
+  - `/api/super-admin/payments?per_page=5`
+  - `/api/super-admin/customers?per_page=5`
+  - `/api/super-admin/payments/export?status=all&source=all`
+- Validacao de fluxo com/sem cobranca:
+  - `/api/pricing/catalog?country=BR&locale=pt-BR` com `plans.scheduling_only` e `plans.scheduling_with_payments` presentes.
+- Validacao de navegador (Playwright):
+  - desktop: login admin + navegacao `/`, `/onboarding`, `/checkout`, `/dashboard`, `/p/helber` com `200`.
+  - mobile simulado (390x844): login admin + navegacao `/`, `/onboarding`, `/checkout`, `/dashboard`, `/p/helber` com `200`.
+- Logs operacionais:
+  - `https://opentshost.com/meetrix/read_logs.php`
+  - sem `Fatal error`
+  - sem `headers already sent`
+- KPI financeiro hardening:
+  - `financial.degraded_mode=false` no overview apos deploy.

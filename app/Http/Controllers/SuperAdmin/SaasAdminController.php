@@ -28,10 +28,10 @@ class SaasAdminController extends Controller
     /**
      * High-level SaaS metrics and operational snapshots.
      */
-    public function overview()
+    public function overview(Request $request)
     {
         $clientsQuery = User::query()->where('is_super_admin', false);
-        $financialSnapshot = $this->financialKpiService->snapshot();
+        $financialSnapshot = $this->financialKpiService->snapshot($request->boolean('refresh_kpis', false));
 
         $currentMonthRevenue = BillingTransaction::query()
             ->where('status', 'paid')

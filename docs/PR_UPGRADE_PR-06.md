@@ -74,25 +74,25 @@ Resultado:
 - [x] Consistencia eventos vs banco (validada por teste de overview financeiro com dados controlados)
 - [x] Painel com dados controlados (Master Admin + teste automatizado de KPI PR-06)
 - [x] Sem erro critico local nos fluxos financeiros alterados
-- [ ] Sem erro critico novo em logs de producao (pendente validacao pos-deploy)
+- [x] Sem erro critico novo em logs de producao
 
 ## Deploy e validacao em producao
-- [ ] GitHub Actions `deploy.yml` verde
-- [ ] Validacao em producao concluida
-- [ ] Polling de workflow a cada 15s realizado
+- [x] GitHub Actions `deploy.yml` verde
+- [x] Validacao em producao concluida
+- [x] Polling de workflow a cada 15s realizado
 
 Validado em producao:
-- [ ] Home
-- [ ] Login
-- [ ] Onboarding
-- [ ] Checkout
-- [ ] Dashboard
-- [ ] Pagina publica `/p/{slug}`
-- [ ] Fluxo com/sem cobranca (quando aplicavel)
+- [x] Home
+- [x] Login
+- [x] Onboarding
+- [x] Checkout
+- [x] Dashboard
+- [x] Pagina publica `/p/{slug}`
+- [x] Fluxo com/sem cobranca (quando aplicavel)
 
 Status:
-- Implementacao e validacao local concluidas.
-- Gate de deploy/producao pendente de execucao no fluxo operacional de release.
+- Implementacao, deploy e validacao concluida.
+- Gate operacional de producao aprovado para liberacao do PR-07.
 
 ## Rollback
 - Tag de referencia: `snapshot/pre-upgrade-2026-02-21`
@@ -107,4 +107,31 @@ Status:
 - [x] Nao mistura tarefas de outro plano
 - [x] Documentacao atualizada
 - [x] Sem segredo exposto
-- [ ] Aprovado para merge/deploy em producao (pendente gate de deploy)
+- [x] Aprovado para merge/deploy em producao
+
+## Evidencias finais de deploy e smoke
+- GitHub Actions:
+  - run: `22262303752` (`success`)
+  - job: `🎉 Deploy` (`success`)
+  - polling manual em intervalos de 15s ate conclusao.
+- Smoke HTTP em producao (`200`):
+  - `/`
+  - `/login`
+  - `/onboarding`
+  - `/checkout`
+  - `/dashboard`
+  - `/p/helber`
+- APIs autenticadas validadas em producao (`200`):
+  - `/api/account/summary`
+  - `/api/account/billing-history?per_page=5`
+  - `/api/super-admin/overview`
+  - `/api/super-admin/payments?per_page=5`
+  - `/api/super-admin/customers?per_page=5`
+  - `/api/super-admin/payments/export?status=all&source=all`
+- Validacao funcional dos novos KPIs:
+  - `financial` presente no payload de `/api/super-admin/overview`
+  - KPIs presentes: `revenue_converted_brl`, `paid_appointments_rate`, `mode_upgrade_rate`
+- Logs operacionais:
+  - `https://opentshost.com/meetrix/read_logs.php`
+  - sem `Fatal error`
+  - sem `headers already sent`

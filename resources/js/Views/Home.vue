@@ -24,6 +24,7 @@
                         
                         <router-link
                             to="/onboarding"
+                            @click="trackFunnel('cta_main_click', { placement: 'hero' })"
                             class="w-full sm:w-auto group inline-flex items-center justify-center gap-3 sm:gap-4 px-6 py-3 rounded-2xl bg-zinc-950 dark:bg-white text-white dark:text-zinc-950 hover:bg-meetrix-orange hover:text-zinc-950 transition-all shadow-xl"
                         >
                             <span class="w-8 h-8 sm:w-9 sm:h-9 rounded-full border border-white/30 dark:border-zinc-950/20 flex items-center justify-center group-hover:border-zinc-950/30 group-hover:bg-zinc-950/10 transition-all duration-500">
@@ -89,7 +90,7 @@
                     </p>
                 </div>
                 <div class="lg:col-span-4">
-                    <router-link to="/onboarding?mode=scheduling_only" class="inline-flex items-center justify-center w-full px-8 py-4 rounded-2xl bg-zinc-950 dark:bg-white text-white dark:text-zinc-950 text-[10px] sm:text-xs font-black uppercase tracking-[0.2em] hover:bg-meetrix-orange hover:text-zinc-950 transition-colors">
+                    <router-link to="/onboarding?mode=scheduling_only" @click="trackFunnel('path_selected', { path: 'scheduling_only', placement: 'organization' })" class="inline-flex items-center justify-center w-full px-8 py-4 rounded-2xl bg-zinc-950 dark:bg-white text-white dark:text-zinc-950 text-[10px] sm:text-xs font-black uppercase tracking-[0.2em] hover:bg-meetrix-orange hover:text-zinc-950 transition-colors">
                         Organizar minha agenda
                     </router-link>
                 </div>
@@ -109,8 +110,8 @@
                     <div class="rounded-2xl bg-white/5 border border-white/10 px-4 py-4">Pre-autorizacao</div>
                     <div class="rounded-2xl bg-white/5 border border-white/10 px-4 py-4">Recorrencia para pacotes</div>
                 </div>
-                <router-link to="/onboarding?mode=scheduling_with_payments" class="mt-7 inline-flex items-center justify-center px-8 py-4 rounded-2xl bg-meetrix-orange text-zinc-950 text-[10px] sm:text-xs font-black uppercase tracking-[0.22em] hover:bg-white transition-colors">
-                    Ativar cobranca no agendamento
+                <router-link to="/onboarding?mode=scheduling_with_payments" @click="trackFunnel('path_selected', { path: 'scheduling_with_payments', placement: 'payments' })" class="mt-7 inline-flex items-center justify-center px-8 py-4 rounded-2xl bg-meetrix-orange text-zinc-950 text-[10px] sm:text-xs font-black uppercase tracking-[0.22em] hover:bg-white transition-colors">
+                        Ativar cobranca no agendamento
                 </router-link>
             </div>
         </section>
@@ -239,7 +240,7 @@
                 <p class="mt-4 max-w-3xl text-base sm:text-lg opacity-80">
                     Migre gradualmente, mantenha sua operacao e evolua de agenda para agenda com cobranca sem reiniciar sua estrutura.
                 </p>
-                <router-link to="/onboarding" class="mt-7 inline-flex items-center justify-center px-7 py-3 rounded-2xl bg-meetrix-orange text-zinc-950 text-[10px] sm:text-xs font-black uppercase tracking-[0.2em] hover:bg-white transition-colors">
+                <router-link to="/onboarding" @click="trackFunnel('cta_main_click', { placement: 'transition' })" class="mt-7 inline-flex items-center justify-center px-7 py-3 rounded-2xl bg-meetrix-orange text-zinc-950 text-[10px] sm:text-xs font-black uppercase tracking-[0.2em] hover:bg-white transition-colors">
                     Importar minha agenda
                 </router-link>
             </div>
@@ -296,7 +297,7 @@
                 <p class="mt-4 text-base sm:text-lg text-slate-500 dark:text-slate-300 max-w-3xl">
                     Traga seus fluxos atuais, preserve seu ritmo de atendimento e evolua sem interromper operacao.
                 </p>
-                <router-link to="/onboarding" class="mt-7 inline-flex items-center justify-center px-8 py-4 rounded-2xl bg-zinc-950 dark:bg-white text-white dark:text-zinc-950 text-[10px] sm:text-xs font-black uppercase tracking-[0.2em] hover:bg-meetrix-orange hover:text-zinc-950 transition-colors">
+                <router-link to="/onboarding" @click="trackFunnel('cta_main_click', { placement: 'migration' })" class="mt-7 inline-flex items-center justify-center px-8 py-4 rounded-2xl bg-zinc-950 dark:bg-white text-white dark:text-zinc-950 text-[10px] sm:text-xs font-black uppercase tracking-[0.2em] hover:bg-meetrix-orange hover:text-zinc-950 transition-colors">
                     Importar minha agenda
                 </router-link>
             </div>
@@ -335,10 +336,10 @@
                     Sem forcar decisao inicial. Primeiro, eficiencia operacional. Depois, monetizacao progressiva.
                 </p>
                 <div class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
-                    <router-link to="/onboarding" class="inline-flex items-center justify-center px-8 py-4 rounded-2xl bg-meetrix-orange text-zinc-950 text-[10px] sm:text-xs font-black uppercase tracking-[0.22em] hover:bg-white transition-colors">
+                    <router-link to="/onboarding" @click="trackFunnel('cta_main_click', { placement: 'final' })" class="inline-flex items-center justify-center px-8 py-4 rounded-2xl bg-meetrix-orange text-zinc-950 text-[10px] sm:text-xs font-black uppercase tracking-[0.22em] hover:bg-white transition-colors">
                         Comecar gratuitamente
                     </router-link>
-                    <router-link to="/onboarding?mode=scheduling_with_payments" class="inline-flex items-center justify-center px-8 py-4 rounded-2xl border border-white/20 text-white text-[10px] sm:text-xs font-black uppercase tracking-[0.22em] hover:bg-white hover:text-zinc-950 transition-colors">
+                    <router-link to="/onboarding?mode=scheduling_with_payments" @click="trackFunnel('path_selected', { path: 'scheduling_with_payments', placement: 'final' })" class="inline-flex items-center justify-center px-8 py-4 rounded-2xl border border-white/20 text-white text-[10px] sm:text-xs font-black uppercase tracking-[0.22em] hover:bg-white hover:text-zinc-950 transition-colors">
                         Ativar cobranca no agendamento
                     </router-link>
                 </div>
@@ -433,6 +434,24 @@ const formatPercent = (value) => `${new Intl.NumberFormat(activeLocale.value, {
     minimumFractionDigits: value % 1 === 0 ? 0 : 2,
     maximumFractionDigits: 2,
 }).format(value)}%`;
+
+const trackFunnel = (event, payload = {}) => {
+    if (typeof window === 'undefined') return;
+
+    const funnelEvent = {
+        event,
+        source: 'home',
+        locale: activeLocale.value,
+        region: regionCode.value,
+        timestamp: new Date().toISOString(),
+        ...payload,
+    };
+
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push(funnelEvent);
+
+    window.dispatchEvent(new CustomEvent('meetrix:funnel', { detail: funnelEvent }));
+};
 
 onMounted(() => {
     // Basic Intersection Observer for scroll reveals

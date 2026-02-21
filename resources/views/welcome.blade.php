@@ -16,6 +16,7 @@ if (request()->has('sovereign_fix')) {
 $request = request();
 $host = $request->getSchemeAndHttpHost();
 $fullUrl = $request->fullUrl();
+$canonicalUrl = $request->url();
 $pathSegments = array_values(array_filter(explode('/', trim($request->path(), '/'))));
 $rawLocaleSegment = strtolower($pathSegments[0] ?? '');
 
@@ -38,32 +39,32 @@ $localizedMeta = [
     'en' => [
         'html_lang' => 'en',
         'og_locale' => 'en_US',
-        'title' => 'Meetrix.PRO | Scheduling and Meetings Platform',
-        'description' => 'Create branded booking pages, manage teams, collect availability votes, and automate appointments with Meetrix.PRO.',
+        'title' => 'Meetrix.PRO | Schedule With or Without Payment at Booking',
+        'description' => 'Organize appointments and optionally collect payment at booking. Start with schedule-only mode and upgrade when you are ready.',
     ],
     'pt_br' => [
         'html_lang' => 'pt-BR',
         'og_locale' => 'pt_BR',
-        'title' => 'Meetrix.PRO | Plataforma de Agendamentos e Reuniões',
-        'description' => 'Crie páginas de agendamento com sua marca, gerencie equipes, colete votos de disponibilidade e automatize reuniões com o Meetrix.PRO.',
+        'title' => 'Meetrix.PRO | Agenda com ou sem Cobrança no Agendamento',
+        'description' => 'Organize atendimentos e ative cobrança no agendamento quando fizer sentido. Comece no modo agenda e evolua sem perder histórico.',
     ],
     'pt' => [
         'html_lang' => 'pt-PT',
         'og_locale' => 'pt_PT',
-        'title' => 'Meetrix.PRO | Plataforma de Agendamentos e Reuniões',
-        'description' => 'Crie páginas de agendamento com a sua marca, gira equipas, recolha votos de disponibilidade e automatize marcações com o Meetrix.PRO.',
+        'title' => 'Meetrix.PRO | Agenda com ou sem Cobrança na Marcação',
+        'description' => 'Organize marcações e ative cobrança no agendamento quando fizer sentido. Comece simples e evolua depois.',
     ],
     'es' => [
         'html_lang' => 'es',
         'og_locale' => 'es_ES',
-        'title' => 'Meetrix.PRO | Plataforma de Reservas y Reuniones',
-        'description' => 'Crea páginas de reservas con tu marca, administra equipos, recoge votos de disponibilidad y automatiza reuniones con Meetrix.PRO.',
+        'title' => 'Meetrix.PRO | Agenda con o sin cobro en la reserva',
+        'description' => 'Organiza citas y activa el cobro en la reserva cuando sea necesario. Empieza simple y evoluciona sin perder historial.',
     ],
     'fr' => [
         'html_lang' => 'fr',
         'og_locale' => 'fr_FR',
-        'title' => 'Meetrix.PRO | Plateforme de Planification et Réunions',
-        'description' => 'Créez des pages de réservation à votre image, gérez vos équipes, collectez les disponibilités et automatisez les rendez-vous avec Meetrix.PRO.',
+        'title' => 'Meetrix.PRO | Agenda avec ou sans paiement a la reservation',
+        'description' => 'Organisez vos rendez-vous et activez le paiement a la reservation lorsque necessaire. Commencez simplement puis evoluez.',
     ],
     'de' => [
         'html_lang' => 'de',
@@ -133,7 +134,7 @@ $alternateLocaleUrls = [
         <link rel="icon" type="image/png" sizes="512x512" href="{{ asset('icons/m-orange.png') }}">
         <link rel="shortcut icon" href="{{ asset('favicon.ico') }}">
         <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('apple-touch-icon.png') }}">
-        <link rel="canonical" href="{{ $fullUrl }}">
+        <link rel="canonical" href="{{ $canonicalUrl }}">
 
         @foreach ($alternateLocaleUrls as $alternate)
             <link rel="alternate" hreflang="{{ $alternate['hreflang'] }}" href="{{ $alternate['url'] }}">
@@ -145,7 +146,7 @@ $alternateLocaleUrls = [
         <meta property="og:locale" content="{{ $meta['og_locale'] }}">
         <meta property="og:title" content="{{ $meta['title'] }}">
         <meta property="og:description" content="{{ $meta['description'] }}">
-        <meta property="og:url" content="{{ $fullUrl }}">
+        <meta property="og:url" content="{{ $canonicalUrl }}">
         <meta property="og:image" content="{{ $ogImageUrl }}">
         <meta property="og:image:type" content="image/png">
         <meta property="og:image:width" content="1200">

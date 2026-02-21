@@ -59,7 +59,7 @@
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <button
                                     type="button"
-                                    @click="form.accountMode = 'scheduling_only'"
+                                    @click="selectAccountMode('scheduling_only')"
                                     :class="[
                                         'text-left rounded-2xl border-2 px-5 py-4 transition-all',
                                         form.accountMode === 'scheduling_only'
@@ -72,7 +72,7 @@
                                 </button>
                                 <button
                                     type="button"
-                                    @click="form.accountMode = 'scheduling_with_payments'"
+                                    @click="selectAccountMode('scheduling_with_payments')"
                                     :class="[
                                         'text-left rounded-2xl border-2 px-5 py-4 transition-all',
                                         form.accountMode === 'scheduling_with_payments'
@@ -316,6 +316,27 @@ const availSubtitle = computed(() => (
         : t('onboarding.avail_subtitle_schedule')
 ));
 
+const trackOnboardingEvent = (event, payload = {}) => {
+    if (typeof window === 'undefined') return;
+
+    const funnelEvent = {
+        event,
+        source: 'onboarding',
+        mode: form.accountMode,
+        timestamp: new Date().toISOString(),
+        ...payload,
+    };
+
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push(funnelEvent);
+    window.dispatchEvent(new CustomEvent('meetrix:funnel', { detail: funnelEvent }));
+};
+
+const selectAccountMode = (mode) => {
+    form.accountMode = mode;
+    trackOnboardingEvent('path_selected', { path: mode, placement: 'onboarding_step_1' });
+};
+
 // Sync name when user logs in during onboarding
 watch(() => authStore.user, (newUser) => {
     if (newUser && !form.name) {
@@ -346,6 +367,12 @@ const toggleDay = (id) => {
 
 const nextStep = async () => {
     console.log('Next step initiated. Current step:', step.value);
+
+    if (step.value === 1) {
+        trackOnboardingEvent('signup_start', {
+            authenticated: Boolean(authStore.user),
+        });
+    }
     
     if (step.value === 1 && !authStore.user) {
         console.log('Attempting guest registration...');
@@ -403,6 +430,10 @@ const nextStep = async () => {
         // 3. Mark Onboarding as Complete
         console.log('Finalizing onboarding status...');
         await axios.post('/api/onboarding/complete');
+
+        trackOnboardingEvent('onboarding_completed', {
+            authenticated: Boolean(authStore.user),
+        });
         
         console.log('Step 3 Successful. Redirecting to Checkout...');
         loading.value = false;

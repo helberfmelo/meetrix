@@ -4,15 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Models\BillingTransaction;
 use App\Models\Coupon;
+use App\Models\Subscription;
+use App\Services\Payments\PaymentFeature;
 use Illuminate\Http\Request;
-use Stripe\Checkout\Session;
-use Stripe\Stripe;
+use Stripe\StripeClient;
 
 class SubscriptionController extends Controller
 {
-    public function __construct()
+    public function __construct(private readonly PaymentFeature $paymentFeature)
     {
-        Stripe::setApiKey(env('STRIPE_SECRET'));
     }
 
     /**
@@ -28,7 +28,7 @@ class SubscriptionController extends Controller
 
         $user = $request->user();
         $isAnnual = $validated['interval'] === 'annual';
-        
+
         // Define Price IDs (Should be in .env)
         $priceId = $isAnnual 
             ? env('STRIPE_PRO_ANNUAL_PRICE_ID') 
@@ -49,6 +49,7 @@ class SubscriptionController extends Controller
                 'user_id' => $user->id,
                 'plan' => $validated['plan'],
                 'interval' => $validated['interval'],
+                'account_mode' => $user->account_mode ?? 'scheduling_only',
             ],
         ];
 
@@ -68,6 +69,28 @@ class SubscriptionController extends Controller
                     'billing_cycle' => $validated['interval'],
                     'trial_ends_at' => now()->addMonth(), // Give a month even if 100% off
                 ]);
+
+                Subscription::updateOrCreate(
+                    [
+                        'user_id' => $user->id,
+                        'provider' => 'stripe',
+                        'plan_code' => $validated['plan'],
+                        'billing_cycle' => $validated['interval'],
+                    ],
+                    [
+                        'account_mode' => $user->account_mode ?? 'scheduling_only',
+                        'currency' => $user->currency ?? 'BRL',
+                        'status' => 'active',
+                        'price' => 0,
+                        'started_at' => now(),
+                        'current_period_start' => now(),
+                        'current_period_end' => now()->addMonth(),
+                        'metadata' => [
+                            'coupon_code' => $coupon->code,
+                            'feature_gate' => $this->paymentFeature->isEnabledForUser($user),
+                        ],
+                    ]
+                );
 
                 BillingTransaction::create([
                     'user_id' => $user->id,
@@ -93,6 +116,20 @@ class SubscriptionController extends Controller
             }
         }
 
+        $subscription = Subscription::create([
+            'user_id' => $user->id,
+            'plan_code' => $validated['plan'],
+            'billing_cycle' => $validated['interval'],
+            'account_mode' => $user->account_mode ?? 'scheduling_only',
+            'provider' => 'stripe',
+            'price' => 0,
+            'currency' => $user->currency ?? 'BRL',
+            'status' => 'pending',
+            'metadata' => [
+                'feature_gate' => $this->paymentFeature->isEnabledForUser($user),
+            ],
+        ]);
+
         $transaction = BillingTransaction::create([
             'user_id' => $user->id,
             'source' => 'subscription',
@@ -109,9 +146,10 @@ class SubscriptionController extends Controller
         ]);
 
         $sessionOptions['metadata']['transaction_id'] = $transaction->id;
+        $sessionOptions['metadata']['subscription_record_id'] = $subscription->id;
         $sessionOptions['metadata']['coupon_code'] = $coupon?->code;
 
-        $session = Session::create($sessionOptions);
+        $session = $this->stripe()->checkout->sessions->create($sessionOptions);
 
         $transaction->update([
             'external_reference' => $session->id,
@@ -120,5 +158,12 @@ class SubscriptionController extends Controller
         return response()->json([
             'checkout_url' => $session->url
         ]);
+    }
+
+    private function stripe(): StripeClient
+    {
+        $secret = (string) (config('payments.stripe.secret') ?: config('services.stripe.secret') ?: env('STRIPE_SECRET'));
+
+        return new StripeClient($secret);
     }
 }

@@ -116,6 +116,36 @@ class User extends Authenticatable
         return $this->hasMany(BillingTransaction::class);
     }
 
+    public function connectedAccounts()
+    {
+        return $this->hasMany(ConnectedAccount::class);
+    }
+
+    public function paymentIntents()
+    {
+        return $this->hasMany(PaymentIntent::class);
+    }
+
+    public function payments()
+    {
+        return $this->hasMany(Payment::class);
+    }
+
+    public function transfers()
+    {
+        return $this->hasMany(Transfer::class);
+    }
+
+    public function subscriptions()
+    {
+        return $this->hasMany(Subscription::class);
+    }
+
+    public function payouts()
+    {
+        return $this->hasMany(Payout::class);
+    }
+
     /**
      * Admin actions performed by this user.
      */

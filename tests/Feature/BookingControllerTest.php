@@ -114,4 +114,57 @@ class BookingControllerTest extends TestCase
         $response->assertStatus(422)
             ->assertJsonPath('message', 'Selected service is not available for this page.');
     }
+
+    public function test_scheduling_only_account_confirms_booking_without_gateway_dependency(): void
+    {
+        config()->set('payments.enabled', false);
+        config()->set('payments.rollout_user_ids', []);
+
+        $owner = User::factory()->create([
+            'account_mode' => 'scheduling_only',
+            'currency' => 'BRL',
+        ]);
+
+        $page = SchedulingPage::create([
+            'user_id' => $owner->id,
+            'slug' => 'schedule-only-mode',
+            'title' => 'Schedule Only',
+            'is_active' => true,
+            'config' => [
+                'form_fields' => [
+                    ['name' => 'customer_name', 'label' => 'Name', 'type' => 'text', 'required' => true],
+                    ['name' => 'customer_email', 'label' => 'Email', 'type' => 'email', 'required' => true],
+                ],
+            ],
+        ]);
+
+        $type = AppointmentType::create([
+            'scheduling_page_id' => $page->id,
+            'name' => 'Legacy Paid Service',
+            'duration_minutes' => 30,
+            'price' => 180,
+            'currency' => 'BRL',
+            'is_active' => true,
+        ]);
+
+        $response = $this->postJson('/api/bookings', [
+            'scheduling_page_id' => $page->id,
+            'appointment_type_id' => $type->id,
+            'start_at' => now()->addDays(2)->setHour(10)->setMinute(0)->setSecond(0)->toIso8601String(),
+            'timezone' => 'UTC',
+            'customer_name' => 'Schedule Only User',
+            'customer_email' => 'schedule-only@example.com',
+        ]);
+
+        $response->assertStatus(201)
+            ->assertJsonPath('booking.status', 'confirmed');
+
+        $this->assertDatabaseHas('billing_transactions', [
+            'user_id' => $owner->id,
+            'source' => 'booking',
+            'status' => 'paid',
+            'amount' => 0,
+            'currency' => 'BRL',
+        ]);
+    }
 }

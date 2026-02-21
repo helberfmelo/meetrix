@@ -8,16 +8,23 @@ use App\Models\BillingTransaction;
 use App\Models\Booking;
 use App\Models\Coupon;
 use App\Models\SchedulingPage;
+use App\Services\Payments\PaymentFeature;
+use App\Services\Payments\StripeConnectService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
-use Stripe\Checkout\Session;
-use Stripe\Stripe;
+use Stripe\StripeClient;
 
 class BookingController extends Controller
 {
+    public function __construct(
+        private readonly PaymentFeature $paymentFeature,
+        private readonly StripeConnectService $stripeConnectService
+    ) {
+    }
+
     /**
      * Store a newly created booking.
      */
@@ -29,9 +36,12 @@ class BookingController extends Controller
             'start_at' => 'required|date',
             'timezone' => 'nullable|string',
             'coupon_code' => 'nullable|string',
+            'payment_flow' => 'nullable|in:full,deposit,preauth',
+            'deposit_percent' => 'nullable|numeric|min:1|max:99.99',
         ]);
 
         $page = SchedulingPage::query()
+            ->with('user')
             ->where('id', $baseValidation['scheduling_page_id'])
             ->where('is_active', true)
             ->first();
@@ -126,7 +136,15 @@ class BookingController extends Controller
             }
         }
 
+        $merchant = $page->user;
+        $accountMode = $merchant?->account_mode ?? 'scheduling_only';
         $finalPrice = (float) $type->price;
+
+        // Scheduling-only accounts must never depend on a payment gateway.
+        if ($accountMode !== 'scheduling_with_payments') {
+            $finalPrice = 0.0;
+        }
+
         $coupon = null;
 
         if (!empty($baseValidation['coupon_code'])) {
@@ -162,34 +180,76 @@ class BookingController extends Controller
             ]);
 
             if ($finalPrice > 0) {
-                Stripe::setApiKey(env('STRIPE_SECRET'));
+                if (!$this->paymentFeature->isEnabledForUser($merchant)) {
+                    DB::rollBack();
+
+                    return response()->json([
+                        'message' => 'Pagamentos ainda nao habilitados para esta conta.',
+                        'error_code' => 'payments_feature_disabled',
+                    ], 409);
+                }
+
+                $paymentFlow = $baseValidation['payment_flow'] ?? 'full';
+                $depositPercent = isset($baseValidation['deposit_percent']) ? (float) $baseValidation['deposit_percent'] : 30.0;
+                $chargeAmount = $this->resolveChargeAmount($finalPrice, $paymentFlow, $depositPercent);
+                $currency = strtoupper((string) ($type->currency ?? 'BRL'));
+                $amountCents = (int) round($chargeAmount * 100, 0, PHP_ROUND_HALF_UP);
+
+                $splitPayload = $this->stripeConnectService->resolveSplitPayload($merchant, $amountCents, $currency);
 
                 $transaction = BillingTransaction::create([
                     'user_id' => $page->user_id,
                     'booking_id' => $booking->id,
                     'source' => 'booking',
                     'status' => 'pending',
-                    'amount' => $finalPrice,
-                    'currency' => $type->currency ?? 'BRL',
+                    'amount' => $chargeAmount,
+                    'currency' => $currency,
                     'coupon_code' => $coupon?->code,
-                    'description' => "Pagamento de agendamento: {$type->name}",
+                    'description' => "Pagamento de agendamento ({$paymentFlow}): {$type->name}",
                     'metadata' => [
                         'scheduling_page_id' => $page->id,
                         'appointment_type_id' => $type->id,
                         'start_at' => $startTime->toIso8601String(),
+                        'payment_flow' => $paymentFlow,
+                        'full_amount' => $finalPrice,
+                        'deposit_percent' => $paymentFlow === 'deposit' ? $depositPercent : null,
+                        'feature_gate' => true,
                     ],
                 ]);
 
-                $session = Session::create([
+                $metadata = [
+                    'booking_id' => (string) $booking->id,
+                    'transaction_id' => (string) $transaction->id,
+                    'coupon_code' => $coupon?->code,
+                    'source' => 'booking',
+                    'user_id' => (string) $page->user_id,
+                    'payment_flow' => $paymentFlow,
+                    'full_amount' => (string) $finalPrice,
+                    'deposit_percent' => (string) ($paymentFlow === 'deposit' ? $depositPercent : 0),
+                ];
+
+                if ($splitPayload) {
+                    $metadata['connected_account_id'] = (string) $splitPayload['connected_account']->id;
+                    $metadata['connected_account_ref'] = (string) $splitPayload['connected_account']->provider_account_id;
+                    $metadata['platform_fee_percent'] = (string) $splitPayload['platform_fee_percent'];
+                    $metadata['platform_fee_amount_cents'] = (string) $splitPayload['platform_fee_amount_cents'];
+                    $metadata['net_amount_cents'] = (string) $splitPayload['net_amount_cents'];
+                } else {
+                    $metadata['platform_fee_percent'] = (string) max(0, (float) ($merchant->platform_fee_percent ?? 0));
+                    $metadata['platform_fee_amount_cents'] = '0';
+                    $metadata['net_amount_cents'] = (string) $amountCents;
+                }
+
+                $sessionData = [
                     'payment_method_types' => ['card'],
                     'line_items' => [[
                         'price_data' => [
-                            'currency' => strtolower($type->currency ?? 'BRL'),
+                            'currency' => strtolower($currency),
                             'product_data' => [
                                 'name' => "Booking: {$type->name}",
                                 'description' => 'Scheduled for ' . $startTime->setTimezone($customerTimezone)->format('d/m/Y H:i'),
                             ],
-                            'unit_amount' => (int) round($finalPrice * 100),
+                            'unit_amount' => $amountCents,
                         ],
                         'quantity' => 1,
                     ]],
@@ -197,13 +257,20 @@ class BookingController extends Controller
                     'success_url' => url("/p/{$page->slug}?success=1&booking={$booking->id}"),
                     'cancel_url' => url("/p/{$page->slug}?cancel=1"),
                     'customer_email' => $customerEmail,
-                    'metadata' => [
-                        'booking_id' => (string) $booking->id,
-                        'transaction_id' => (string) $transaction->id,
-                        'coupon_code' => $coupon?->code,
-                        'source' => 'booking',
-                    ],
-                ]);
+                    'metadata' => $metadata,
+                ];
+
+                if ($splitPayload) {
+                    $sessionData['payment_intent_data'] = $splitPayload['payment_intent_data'];
+                }
+
+                if ($paymentFlow === 'preauth') {
+                    $sessionData['payment_intent_data'] = array_merge($sessionData['payment_intent_data'] ?? [], [
+                        'capture_method' => 'manual',
+                    ]);
+                }
+
+                $session = $this->stripe()->checkout->sessions->create($sessionData);
 
                 $booking->update(['stripe_session_id' => $session->id]);
                 $transaction->update(['external_reference' => $session->id]);
@@ -309,6 +376,21 @@ class BookingController extends Controller
         }
 
         return (string) config('mail.default', 'log');
+    }
+
+    private function resolveChargeAmount(float $fullAmount, string $paymentFlow, float $depositPercent): float
+    {
+        return match ($paymentFlow) {
+            'deposit' => round(max(0, $fullAmount) * (max(1, min(99.99, $depositPercent)) / 100), 2),
+            default => round(max(0, $fullAmount), 2),
+        };
+    }
+
+    private function stripe(): StripeClient
+    {
+        $secret = (string) (config('payments.stripe.secret') ?: config('services.stripe.secret') ?: env('STRIPE_SECRET'));
+
+        return new StripeClient($secret);
     }
 
     /**

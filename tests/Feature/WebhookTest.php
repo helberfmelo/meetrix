@@ -15,6 +15,8 @@ class WebhookTest extends TestCase
      */
     public function test_subscription_created_webhook()
     {
+        config()->set('payments.stripe.webhook_secret', '');
+
         $user = User::factory()->create(['subscription_tier' => 'free']);
 
         $payload = [
@@ -43,6 +45,8 @@ class WebhookTest extends TestCase
      */
     public function test_subscription_deleted_webhook()
     {
+        config()->set('payments.stripe.webhook_secret', '');
+
         $user = User::factory()->create([
             'subscription_tier' => 'pro',
             'stripe_id' => 'cus_test123'

@@ -47,7 +47,7 @@
         "billing_monthly": "Aylık Faturalandırma",
         "billing_annual": "Yıllık Faturalandırma",
         "plan_free": "Bireysel",
-        "plan_pro": "Professional",
+        "plan_pro": "Profesyonel",
         "plan_pro_tag": "Popüler",
         "price_month": "ay",
         "price_free_value": "0 ₺",
@@ -130,7 +130,7 @@
         "usage": "Kullanım",
         "expires": "Sona Erme",
         "actions": "İşlemler",
-        "off": "İNDİRİMLİ",
+        "off": "KAPALI",
         "never": "ASLA",
         "deactivate": "DEVRE DIŞI BIRAK",
         "delete": "SİL",
@@ -219,7 +219,11 @@
         "system_default": "Sistem Varsayılanı",
         "pro_feature_tag": "PRO ÖZELLİK",
         "whatsapp_pro": "WhatsApp Pro",
-        "whatsapp_pro_desc": "WhatsApp üzerinden otomatik hatırlatıcılar."
+        "whatsapp_pro_desc": "WhatsApp üzerinden otomatik hatırlatıcılar.",
+        "failed_create_team": "Ekip oluşturulamadı",
+        "enter_email": "Üye e-posta adresini girin:",
+        "invited_success": "Üye başarıyla davet edildi!",
+        "invitation_failed": "Davet başarısız"
     },
     "booking": {
         "select_service": "Hizmet Seçin",

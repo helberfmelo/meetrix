@@ -45,6 +45,47 @@
                                 :placeholder="$t('onboarding.name_placeholder')"
                             >
                         </div>
+
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between">
+                                <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">{{ $t('onboarding.mode_label') }}</label>
+                                <div class="group/tooltip relative">
+                                    <i class="fas fa-circle-info text-slate-400 cursor-help"></i>
+                                    <div class="absolute bottom-full right-0 mb-3 w-52 p-3 bg-zinc-950 text-white text-[9px] font-bold rounded-xl opacity-0 group-hover/tooltip:opacity-100 transition-all pointer-events-none z-50 shadow-2xl border border-white/10 uppercase tracking-wider">
+                                        {{ $t('onboarding.tooltip_mode') }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <button
+                                    type="button"
+                                    @click="form.accountMode = 'scheduling_only'"
+                                    :class="[
+                                        'text-left rounded-2xl border-2 px-5 py-4 transition-all',
+                                        form.accountMode === 'scheduling_only'
+                                            ? 'border-meetrix-orange bg-zinc-100 dark:bg-zinc-950'
+                                            : 'border-black/5 dark:border-white/5 bg-white dark:bg-zinc-900/40'
+                                    ]"
+                                >
+                                    <p class="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-950 dark:text-white">{{ $t('onboarding.mode_schedule_title') }}</p>
+                                    <p class="mt-2 text-xs sm:text-sm font-medium text-slate-500 dark:text-slate-300">{{ $t('onboarding.mode_schedule_desc') }}</p>
+                                </button>
+                                <button
+                                    type="button"
+                                    @click="form.accountMode = 'scheduling_with_payments'"
+                                    :class="[
+                                        'text-left rounded-2xl border-2 px-5 py-4 transition-all',
+                                        form.accountMode === 'scheduling_with_payments'
+                                            ? 'border-meetrix-orange bg-zinc-100 dark:bg-zinc-950'
+                                            : 'border-black/5 dark:border-white/5 bg-white dark:bg-zinc-900/40'
+                                    ]"
+                                >
+                                    <p class="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-950 dark:text-white">{{ $t('onboarding.mode_payments_title') }}</p>
+                                    <p class="mt-2 text-xs sm:text-sm font-medium text-slate-500 dark:text-slate-300">{{ $t('onboarding.mode_payments_desc') }}</p>
+                                </button>
+                            </div>
+                            <p class="text-xs font-semibold text-slate-500 dark:text-slate-300">{{ $t('onboarding.mode_hint') }}</p>
+                        </div>
                         
                         <!-- Guest Registration Fields -->
                         <div v-if="!authStore.user" class="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -104,7 +145,8 @@
 
                 <div v-if="step === 2" class="animate-in fade-in slide-in-from-right-12 duration-700">
                     <h2 class="text-3xl sm:text-5xl font-black text-zinc-950 dark:text-white mb-3 sm:mb-4 uppercase tracking-tighter font-outfit">{{ $t('onboarding.page_title') }}</h2>
-                    <p class="text-slate-500 mb-8 sm:mb-12 font-bold text-[10px] sm:text-xs uppercase tracking-wide sm:tracking-widest">{{ $t('onboarding.page_subtitle') }}</p>
+                    <p class="text-slate-500 mb-3 sm:mb-4 font-bold text-[10px] sm:text-xs uppercase tracking-wide sm:tracking-widest">{{ pageSubtitle }}</p>
+                    <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-300 mb-8 sm:mb-12 font-semibold">{{ modeSummary }}</p>
                     
                     <div class="space-y-8">
                         <div class="space-y-4">
@@ -149,7 +191,8 @@
 
                 <div v-if="step === 3" class="animate-in fade-in zoom-in-95 duration-700">
                     <h2 class="text-3xl sm:text-5xl font-black text-zinc-950 dark:text-white mb-3 sm:mb-4 uppercase tracking-tighter font-outfit">{{ $t('onboarding.avail_title') }}</h2>
-                    <p class="text-slate-500 mb-3 sm:mb-4 font-bold text-[10px] sm:text-xs uppercase tracking-wide sm:tracking-widest">{{ $t('onboarding.avail_subtitle') }}</p>
+                    <p class="text-slate-500 mb-3 sm:mb-4 font-bold text-[10px] sm:text-xs uppercase tracking-wide sm:tracking-widest">{{ availSubtitle }}</p>
+                    <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-300 mb-3 sm:mb-4 font-semibold">{{ modeSummary }}</p>
                     <p class="text-slate-500 dark:text-slate-300 mb-8 sm:mb-12 text-xs sm:text-sm font-medium leading-relaxed">
                         {{ $t('onboarding.avail_more_rules_hint') }}
                     </p>
@@ -234,6 +277,7 @@ const form = reactive({
     email: '',
     password: '',
     password_confirmation: '',
+    accountMode: 'scheduling_only',
     timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC',
     pageTitle: authStore.user ? `${authStore.user.name}'s Calendar` : 'My Calendar',
     pageSlug: '',
@@ -253,6 +297,24 @@ const canProceedStep1 = computed(() => {
         && form.password === form.password_confirmation
     );
 });
+
+const modeSummary = computed(() => (
+    form.accountMode === 'scheduling_with_payments'
+        ? t('onboarding.mode_payments_summary')
+        : t('onboarding.mode_schedule_summary')
+));
+
+const pageSubtitle = computed(() => (
+    form.accountMode === 'scheduling_with_payments'
+        ? t('onboarding.page_subtitle_payments')
+        : t('onboarding.page_subtitle_schedule')
+));
+
+const availSubtitle = computed(() => (
+    form.accountMode === 'scheduling_with_payments'
+        ? t('onboarding.avail_subtitle_payments')
+        : t('onboarding.avail_subtitle_schedule')
+));
 
 // Sync name when user logs in during onboarding
 watch(() => authStore.user, (newUser) => {
@@ -294,6 +356,7 @@ const nextStep = async () => {
                 email: form.email,
                 password: form.password,
                 password_confirmation: form.password_confirmation,
+                account_mode: form.accountMode,
                 country_code: 'BR', // Defaulting for robust flow
                 currency: 'BRL'      // Defaulting for robust flow
             });

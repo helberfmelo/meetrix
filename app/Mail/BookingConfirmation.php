@@ -14,6 +14,7 @@ class BookingConfirmation extends Mailable
     use Queueable, SerializesModels;
 
     public $booking;
+    public $manageUrl;
 
     /**
      * Create a new message instance.
@@ -21,6 +22,11 @@ class BookingConfirmation extends Mailable
     public function __construct(Booking $booking)
     {
         $this->booking = $booking->load(['schedulingPage', 'appointmentType']);
+        $token = $this->booking->public_token;
+        $slug = $this->booking->schedulingPage?->slug;
+        $this->manageUrl = ($token && $slug)
+            ? url("/p/{$slug}/manage?token={$token}")
+            : null;
     }
 
     /**

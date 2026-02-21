@@ -251,7 +251,18 @@
         "success_msg": "تم تأكيد حجزك. يرجى مراجعة بريدك الإلكتروني للحصول على التفاصيل.",
         "back_home": "العودة للرئيسية",
         "failed_alert": "فشل الحجز. يرجى المحاولة مرة أخرى.",
-        "minutes_short": "دقيقة"
+        "minutes_short": "دقيقة",
+        "manage_title": "ادارة الحجز",
+        "manage_subtitle": "اعد جدولة موعدك او الغه.",
+        "manage_cancel": "الغاء الحجز",
+        "manage_reschedule": "اعادة الجدولة",
+        "manage_cancel_confirm": "تأكيد الغاء هذا الحجز؟",
+        "manage_cancel_success": "تم الغاء الحجز.",
+        "manage_reschedule_success": "تمت اعادة جدولة الحجز.",
+        "manage_error": "تعذر تحديث الحجز.",
+        "manage_invalid": "الحجز غير صالح او منتهي.",
+        "manage_current": "الحجز الحالي",
+        "manage_new_time": "وقت جديد"
     },
     "onboarding": {
         "step_1": "الملف الشخصي",

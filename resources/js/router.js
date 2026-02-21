@@ -16,6 +16,7 @@ import {
 
 import PagesList from './Views/PagesList.vue';
 import BookingPage from './Views/BookingPage.vue';
+import BookingManage from './Views/BookingManage.vue';
 
 import Login from './Views/Login.vue';
 
@@ -48,6 +49,10 @@ const routes = [
             {
                 path: 'p/:slug',
                 component: BookingPage
+            },
+            {
+                path: 'p/:slug/manage',
+                component: BookingManage
             },
             {
                 path: 'login',

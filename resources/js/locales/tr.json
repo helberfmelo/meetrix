@@ -251,7 +251,18 @@
         "success_msg": "Rezervasyonunuz onaylandı. Detaylar için lütfen e-postanızı kontrol edin.",
         "back_home": "ANA SAYFAYA DÖN",
         "failed_alert": "Rezervasyon başarısız oldu. Lütfen tekrar deneyin.",
-        "minutes_short": "dk"
+        "minutes_short": "dk",
+        "manage_title": "Rezervasyonu yonet",
+        "manage_subtitle": "Randevunuzu yeniden planlayin veya iptal edin.",
+        "manage_cancel": "Rezervasyonu iptal et",
+        "manage_reschedule": "Yeniden planla",
+        "manage_cancel_confirm": "Bu rezervasyonu iptal etmek istiyor musunuz?",
+        "manage_cancel_success": "Rezervasyon iptal edildi.",
+        "manage_reschedule_success": "Rezervasyon yeniden planlandi.",
+        "manage_error": "Rezervasyon guncellenemedi.",
+        "manage_invalid": "Gecersiz veya suresi dolmus rezervasyon.",
+        "manage_current": "Mevcut rezervasyon",
+        "manage_new_time": "Yeni saat"
     },
     "onboarding": {
         "step_1": "Profil",

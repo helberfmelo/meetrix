@@ -328,7 +328,18 @@
         "status_cancelled": "Cancelado",
         "status_rejected": "Rejeitado",
         "status_no_show": "Não compareceu",
-        "status_unknown": "Desconhecido"
+        "status_unknown": "Desconhecido",
+        "manage_title": "Gerenciar agendamento",
+        "manage_subtitle": "Reagende ou cancele seu horario.",
+        "manage_cancel": "Cancelar agendamento",
+        "manage_reschedule": "Reagendar",
+        "manage_cancel_confirm": "Confirmar cancelamento deste agendamento?",
+        "manage_cancel_success": "Agendamento cancelado.",
+        "manage_reschedule_success": "Agendamento reagendado.",
+        "manage_error": "Falha ao atualizar agendamento.",
+        "manage_invalid": "Agendamento invalido ou expirado.",
+        "manage_current": "Agendamento atual",
+        "manage_new_time": "Novo horario"
     },
     "onboarding": {
         "step_1": "Perfil",

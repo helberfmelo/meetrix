@@ -91,6 +91,9 @@ Route::get('/p/{slug}', [\App\Http\Controllers\PageController::class, 'show']); 
 Route::post('/p/{slug}/click', [\App\Http\Controllers\PageController::class, 'recordClick']); // Track Click
 Route::get('/p/{slug}/slots', [\App\Http\Controllers\BookingSlotController::class, 'index']); // Get Slots
 Route::post('/bookings', [\App\Http\Controllers\BookingController::class, 'store']); // Create Booking
+Route::get('/public/p/{slug}/booking/{token}', [\App\Http\Controllers\PublicBookingController::class, 'show']);
+Route::post('/public/p/{slug}/booking/{token}/cancel', [\App\Http\Controllers\PublicBookingController::class, 'cancel']);
+Route::post('/public/p/{slug}/booking/{token}/reschedule', [\App\Http\Controllers\PublicBookingController::class, 'reschedule']);
 
 // Meeting Polls (Public)
 Route::get('/p/polls/{slug}', [\App\Http\Controllers\PollController::class, 'show']);

@@ -298,7 +298,18 @@
         "success_msg": "Ihre Buchung wurde bestätigt. Prüfen Sie Ihre E-Mails für Details.",
         "back_home": "ZURÜCK ZUR STARTSEITE",
         "failed_alert": "Buchung fehlgeschlagen. Bitte versuchen Sie es erneut.",
-        "minutes_short": "Min"
+        "minutes_short": "Min",
+        "manage_title": "Buchung verwalten",
+        "manage_subtitle": "Verschieben oder stornieren Sie Ihren Termin.",
+        "manage_cancel": "Buchung stornieren",
+        "manage_reschedule": "Verschieben",
+        "manage_cancel_confirm": "Stornierung dieser Buchung bestaetigen?",
+        "manage_cancel_success": "Buchung storniert.",
+        "manage_reschedule_success": "Buchung verschoben.",
+        "manage_error": "Buchung konnte nicht aktualisiert werden.",
+        "manage_invalid": "Ungueltige oder abgelaufene Buchung.",
+        "manage_current": "Aktuelle Buchung",
+        "manage_new_time": "Neue Uhrzeit"
     },
     "onboarding": {
         "step_1": "Profil",

@@ -28,6 +28,7 @@ class Booking extends Model
         'amount_paid',
         'cancellation_reason',
         'meeting_link',
+        'public_token',
     ];
 
     protected $casts = [

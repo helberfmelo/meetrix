@@ -268,7 +268,18 @@
         "success_title": "成功！",
         "success_msg": "您的预约已确认。请查收电子邮件了解详情。",
         "back_home": "返回首页",
-        "minutes_short": "分钟"
+        "minutes_short": "分钟",
+        "manage_title": "管理预约",
+        "manage_subtitle": "重新安排或取消您的预约。",
+        "manage_cancel": "取消预约",
+        "manage_reschedule": "重新安排",
+        "manage_cancel_confirm": "确认取消该预约？",
+        "manage_cancel_success": "预约已取消。",
+        "manage_reschedule_success": "预约已重新安排。",
+        "manage_error": "更新预约失败。",
+        "manage_invalid": "预约无效或已过期。",
+        "manage_current": "当前预约",
+        "manage_new_time": "新时间"
     },
     "onboarding": {
         "step_1": "个人资料",

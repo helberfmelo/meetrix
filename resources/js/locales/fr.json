@@ -298,7 +298,18 @@
         "success_msg": "Votre réservation est confirmée. Vérifiez vos e-mails pour les détails.",
         "back_home": "RETOUR À L'ACCUEIL",
         "failed_alert": "Échec de la réservation. Veuillez réessayer.",
-        "minutes_short": "min"
+        "minutes_short": "min",
+        "manage_title": "Gerer la reservation",
+        "manage_subtitle": "Replanifiez ou annulez votre rendez-vous.",
+        "manage_cancel": "Annuler la reservation",
+        "manage_reschedule": "Replanifier",
+        "manage_cancel_confirm": "Confirmer l'annulation de cette reservation ?",
+        "manage_cancel_success": "Reservation annulee.",
+        "manage_reschedule_success": "Reservation replanifiee.",
+        "manage_error": "Echec de la mise a jour de la reservation.",
+        "manage_invalid": "Reservation invalide ou expiree.",
+        "manage_current": "Reservation actuelle",
+        "manage_new_time": "Nouveau horaire"
     },
     "onboarding": {
         "step_1": "Profil",

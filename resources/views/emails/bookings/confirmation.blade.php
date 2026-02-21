@@ -13,6 +13,10 @@ Data/Hora: {{ optional($booking->start_at)->format('d/m/Y H:i') }}
 Status: {{ strtoupper($booking->status) }}
 @endcomponent
 
+@if (!empty($manageUrl))
+Gerenciar agendamento: {{ $manageUrl }}
+@endif
+
 Obrigado,<br>
 {{ config('app.name') }}
 @endcomponent

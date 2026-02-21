@@ -298,7 +298,18 @@
         "success_msg": "La tua prenotazione è confermata. Controlla la tua e-mail per i dettagli.",
         "back_home": "TORNA ALLA HOME",
         "failed_alert": "Prenotazione fallita. Per favore, riprova.",
-        "minutes_short": "min"
+        "minutes_short": "min",
+        "manage_title": "Gestire prenotazione",
+        "manage_subtitle": "Ripianifica o annulla il tuo appuntamento.",
+        "manage_cancel": "Annulla prenotazione",
+        "manage_reschedule": "Ripianifica",
+        "manage_cancel_confirm": "Confermi l'annullamento di questa prenotazione?",
+        "manage_cancel_success": "Prenotazione annullata.",
+        "manage_reschedule_success": "Prenotazione ripianificata.",
+        "manage_error": "Impossibile aggiornare la prenotazione.",
+        "manage_invalid": "Prenotazione non valida o scaduta.",
+        "manage_current": "Prenotazione attuale",
+        "manage_new_time": "Nuovo orario"
     },
     "onboarding": {
         "step_1": "Profilo",

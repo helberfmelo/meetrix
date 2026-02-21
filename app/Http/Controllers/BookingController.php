@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Stripe\StripeClient;
+use Illuminate\Support\Str;
 
 class BookingController extends Controller
 {
@@ -177,6 +178,7 @@ class BookingController extends Controller
                 'start_at' => $startTime,
                 'end_at' => $endTime,
                 'status' => $finalPrice > 0 ? 'pending' : 'confirmed',
+                'public_token' => (string) Str::uuid(),
             ]);
 
             if ($finalPrice > 0) {

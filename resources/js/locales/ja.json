@@ -298,7 +298,18 @@
         "success_msg": "予約が確定しました。詳細はメールをご確認ください。",
         "back_home": "ホームに戻る",
         "failed_alert": "予約に失敗しました。もう一度お試しください。",
-        "minutes_short": "分"
+        "minutes_short": "分",
+        "manage_title": "予約の管理",
+        "manage_subtitle": "予約を変更またはキャンセルできます。",
+        "manage_cancel": "予約をキャンセル",
+        "manage_reschedule": "変更する",
+        "manage_cancel_confirm": "この予約をキャンセルしますか？",
+        "manage_cancel_success": "予約をキャンセルしました。",
+        "manage_reschedule_success": "予約を変更しました。",
+        "manage_error": "予約の更新に失敗しました。",
+        "manage_invalid": "無効または期限切れの予約です。",
+        "manage_current": "現在の予約",
+        "manage_new_time": "新しい時間"
     },
     "onboarding": {
         "step_1": "プロフィール",

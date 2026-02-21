@@ -303,7 +303,18 @@
         "success_msg": "Tu reserva ha sido confirmada. Revisa tu email para más detalles.",
         "back_home": "VOLVER AL INICIO",
         "failed_alert": "La reserva falló. Por favor, inténtalo de nuevo.",
-        "minutes_short": "min"
+        "minutes_short": "min",
+        "manage_title": "Gestionar reserva",
+        "manage_subtitle": "Reprograma o cancela tu reserva.",
+        "manage_cancel": "Cancelar reserva",
+        "manage_reschedule": "Reprogramar",
+        "manage_cancel_confirm": "¿Confirmar la cancelación de esta reserva?",
+        "manage_cancel_success": "Reserva cancelada.",
+        "manage_reschedule_success": "Reserva reprogramada.",
+        "manage_error": "No se pudo actualizar la reserva.",
+        "manage_invalid": "Reserva inválida o expirada.",
+        "manage_current": "Reserva actual",
+        "manage_new_time": "Nuevo horario"
     },
     "onboarding": {
         "step_1": "Perfil",

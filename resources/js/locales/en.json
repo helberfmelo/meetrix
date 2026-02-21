@@ -323,7 +323,18 @@
         "status_cancelled": "Cancelled",
         "status_rejected": "Rejected",
         "status_no_show": "No-show",
-        "status_unknown": "Unknown"
+        "status_unknown": "Unknown",
+        "manage_title": "Manage booking",
+        "manage_subtitle": "Reschedule or cancel your appointment.",
+        "manage_cancel": "Cancel booking",
+        "manage_reschedule": "Reschedule",
+        "manage_cancel_confirm": "Confirm cancellation of this booking?",
+        "manage_cancel_success": "Booking cancelled.",
+        "manage_reschedule_success": "Booking rescheduled.",
+        "manage_error": "Failed to update booking.",
+        "manage_invalid": "Invalid or expired booking.",
+        "manage_current": "Current booking",
+        "manage_new_time": "New time"
     },
     "onboarding": {
         "step_1": "Profile",

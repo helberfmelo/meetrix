@@ -76,6 +76,58 @@
             </div>
         </section>
 
+        <!-- Organization -->
+        <section class="py-16 sm:py-20 px-4 sm:px-6 lg:px-24">
+            <div class="max-w-screen-2xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                <div class="lg:col-span-8">
+                    <p class="text-[10px] font-black uppercase tracking-[0.3em] text-meetrix-orange mb-3">ORGANIZACAO</p>
+                    <h2 class="text-[clamp(1.7rem,5vw,3rem)] font-black text-zinc-950 dark:text-white uppercase tracking-tighter leading-[0.9]">
+                        Organize atendimentos, confirme presenca e reduza faltas.
+                    </h2>
+                    <p class="mt-4 text-base sm:text-lg text-slate-500 dark:text-slate-300 max-w-3xl">
+                        Agenda online, lembretes automatizados e fluxo de atendimento mais previsivel para operacoes presenciais e remotas.
+                    </p>
+                </div>
+                <div class="lg:col-span-4">
+                    <router-link to="/onboarding?mode=scheduling_only" class="inline-flex items-center justify-center w-full px-8 py-4 rounded-2xl bg-zinc-950 dark:bg-white text-white dark:text-zinc-950 text-[10px] sm:text-xs font-black uppercase tracking-[0.2em] hover:bg-meetrix-orange hover:text-zinc-950 transition-colors">
+                        Organizar minha agenda
+                    </router-link>
+                </div>
+            </div>
+        </section>
+
+        <!-- Optional Payments -->
+        <section class="py-16 sm:py-20 px-4 sm:px-6 lg:px-24 bg-zinc-950 text-white dark:bg-zinc-900">
+            <div class="max-w-screen-2xl mx-auto">
+                <p class="text-[10px] font-black uppercase tracking-[0.3em] text-meetrix-orange mb-3">COBRANCA OPCIONAL</p>
+                <h2 class="text-[clamp(1.7rem,5vw,3rem)] font-black uppercase tracking-tighter leading-[0.9]">
+                    Ative cobranca integrada quando fizer sentido no seu modelo.
+                </h2>
+                <div class="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-sm sm:text-base font-semibold text-slate-200">
+                    <div class="rounded-2xl bg-white/5 border border-white/10 px-4 py-4">Pagamento antecipado</div>
+                    <div class="rounded-2xl bg-white/5 border border-white/10 px-4 py-4">Sinal para garantir horario</div>
+                    <div class="rounded-2xl bg-white/5 border border-white/10 px-4 py-4">Pre-autorizacao</div>
+                    <div class="rounded-2xl bg-white/5 border border-white/10 px-4 py-4">Recorrencia para pacotes</div>
+                </div>
+                <router-link to="/onboarding?mode=scheduling_with_payments" class="mt-7 inline-flex items-center justify-center px-8 py-4 rounded-2xl bg-meetrix-orange text-zinc-950 text-[10px] sm:text-xs font-black uppercase tracking-[0.22em] hover:bg-white transition-colors">
+                    Ativar cobranca no agendamento
+                </router-link>
+            </div>
+        </section>
+
+        <!-- Financial Gain -->
+        <section class="py-16 sm:py-20 px-4 sm:px-6 lg:px-24">
+            <div class="max-w-screen-2xl mx-auto">
+                <p class="text-[10px] font-black uppercase tracking-[0.3em] text-meetrix-orange mb-3">GANHO FINANCEIRO</p>
+                <h2 class="text-[clamp(1.7rem,5vw,3rem)] font-black text-zinc-950 dark:text-white uppercase tracking-tighter leading-[0.9]">
+                    Menos faltas, menos inadimplencia, mais previsibilidade.
+                </h2>
+                <p class="mt-4 text-base sm:text-lg text-slate-500 dark:text-slate-300 max-w-3xl">
+                    Evitar uma falta recorrente por mes pode pagar o custo da plataforma. O ganho vem da disciplina operacional e da confirmacao automatica.
+                </p>
+            </div>
+        </section>
+
         <!-- Pricing: Extreme Contrast -->
         <section class="py-20 sm:py-32 px-4 sm:px-6 lg:px-24 bg-zinc-50 dark:bg-zinc-950 text-zinc-950 dark:text-white transition-colors duration-500">
             <div class="max-w-screen-2xl mx-auto flex flex-col lg:flex-row gap-24 items-start">
@@ -144,11 +196,144 @@
             </div>
         </section>
 
+        <!-- Integrations -->
+        <section class="py-20 sm:py-24 px-4 sm:px-6 lg:px-24 border-t border-black/5 dark:border-white/5">
+            <div class="max-w-screen-2xl mx-auto">
+                <div class="max-w-4xl mb-10">
+                    <p class="text-[10px] font-black uppercase tracking-[0.3em] text-meetrix-orange mb-4">INTEGRACOES</p>
+                    <h2 class="text-[clamp(1.8rem,6vw,3.6rem)] font-black text-zinc-950 dark:text-white uppercase tracking-tighter leading-[0.92]">
+                        Conecte agenda, reuniao e operacao no mesmo fluxo.
+                    </h2>
+                </div>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div class="rounded-2xl border border-black/5 dark:border-white/10 bg-zinc-100 dark:bg-zinc-900/50 px-5 py-4 text-center text-sm font-black uppercase tracking-[0.18em]">Google Calendar</div>
+                    <div class="rounded-2xl border border-black/5 dark:border-white/10 bg-zinc-100 dark:bg-zinc-900/50 px-5 py-4 text-center text-sm font-black uppercase tracking-[0.18em]">Outlook</div>
+                    <div class="rounded-2xl border border-black/5 dark:border-white/10 bg-zinc-100 dark:bg-zinc-900/50 px-5 py-4 text-center text-sm font-black uppercase tracking-[0.18em]">Zoom</div>
+                    <div class="rounded-2xl border border-black/5 dark:border-white/10 bg-zinc-100 dark:bg-zinc-900/50 px-5 py-4 text-center text-sm font-black uppercase tracking-[0.18em]">Google Meet</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Transition -->
+        <section class="py-20 sm:py-24 px-4 sm:px-6 lg:px-24">
+            <div class="max-w-screen-2xl mx-auto rounded-4xl bg-zinc-950 dark:bg-white text-white dark:text-zinc-950 p-8 sm:p-12 border border-black/5 dark:border-white/10">
+                <p class="text-[10px] font-black uppercase tracking-[0.3em] text-meetrix-orange mb-4">TRANSICAO</p>
+                <h2 class="text-[clamp(1.8rem,6vw,3.4rem)] font-black uppercase tracking-tighter leading-[0.9]">
+                    Ja usa outro sistema de agendamento?
+                </h2>
+                <p class="mt-4 max-w-3xl text-base sm:text-lg opacity-80">
+                    Migre gradualmente, mantenha sua operacao e evolua de agenda para agenda com cobranca sem reiniciar sua estrutura.
+                </p>
+                <router-link to="/onboarding" class="mt-7 inline-flex items-center justify-center px-7 py-3 rounded-2xl bg-meetrix-orange text-zinc-950 text-[10px] sm:text-xs font-black uppercase tracking-[0.2em] hover:bg-white transition-colors">
+                    Importar minha agenda
+                </router-link>
+            </div>
+        </section>
+
+        <!-- Comparison -->
+        <section class="py-20 sm:py-24 px-4 sm:px-6 lg:px-24 border-t border-black/5 dark:border-white/5">
+            <div class="max-w-screen-2xl mx-auto">
+                <h2 class="text-[clamp(1.8rem,6vw,3.6rem)] font-black text-zinc-950 dark:text-white uppercase tracking-tighter leading-[0.9]">
+                    Comparacao direta: agendar apenas ou operar com receita.
+                </h2>
+                <div class="mt-10 grid grid-cols-1 lg:grid-cols-2 gap-5">
+                    <article class="rounded-3xl border border-black/5 dark:border-white/10 bg-zinc-100 dark:bg-zinc-900/50 p-6">
+                        <h3 class="text-xs font-black uppercase tracking-[0.3em] text-slate-500 mb-4">OUTROS FLUXOS</h3>
+                        <ul class="space-y-3 text-sm sm:text-base font-semibold text-slate-600 dark:text-slate-300">
+                            <li class="flex items-start gap-3"><i class="fas fa-minus mt-1 text-slate-400 text-xs"></i><span>Apenas agendam</span></li>
+                            <li class="flex items-start gap-3"><i class="fas fa-minus mt-1 text-slate-400 text-xs"></i><span>Cobranca separada do agendamento</span></li>
+                            <li class="flex items-start gap-3"><i class="fas fa-minus mt-1 text-slate-400 text-xs"></i><span>Confirmacao financeira fora do fluxo</span></li>
+                        </ul>
+                    </article>
+                    <article class="rounded-3xl border border-meetrix-orange/40 bg-white dark:bg-zinc-950 p-6">
+                        <h3 class="text-xs font-black uppercase tracking-[0.3em] text-meetrix-orange mb-4">MEETRIX</h3>
+                        <ul class="space-y-3 text-sm sm:text-base font-semibold text-zinc-700 dark:text-slate-200">
+                            <li class="flex items-start gap-3"><i class="fas fa-check mt-1 text-meetrix-orange text-xs"></i><span>Agenda inteligente com confirmacao</span></li>
+                            <li class="flex items-start gap-3"><i class="fas fa-check mt-1 text-meetrix-orange text-xs"></i><span>Cobranca no agendamento quando necessario</span></li>
+                            <li class="flex items-start gap-3"><i class="fas fa-check mt-1 text-meetrix-orange text-xs"></i><span>Progressao de valor por etapa do atendimento</span></li>
+                        </ul>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- Financial Advantage -->
+        <section class="py-20 sm:py-24 px-4 sm:px-6 lg:px-24">
+            <div class="max-w-screen-2xl mx-auto">
+                <h2 class="text-[clamp(1.8rem,6vw,3.5rem)] font-black text-zinc-950 dark:text-white uppercase tracking-tighter leading-[0.9]">
+                    Use como agenda ou aumente receita cobrando no agendamento.
+                </h2>
+                <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="rounded-2xl bg-zinc-100 dark:bg-zinc-900/50 border border-black/5 dark:border-white/10 p-5 text-sm font-bold">Mensalidade competitiva</div>
+                    <div class="rounded-2xl bg-zinc-100 dark:bg-zinc-900/50 border border-black/5 dark:border-white/10 p-5 text-sm font-bold">Menos faltas e cancelamentos</div>
+                    <div class="rounded-2xl bg-zinc-100 dark:bg-zinc-900/50 border border-black/5 dark:border-white/10 p-5 text-sm font-bold">Fluxo financeiro previsivel por atendimento</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Migration -->
+        <section class="py-16 sm:py-20 px-4 sm:px-6 lg:px-24">
+            <div class="max-w-screen-2xl mx-auto rounded-4xl border border-black/5 dark:border-white/10 bg-zinc-100 dark:bg-zinc-900/50 p-8 sm:p-10">
+                <p class="text-[10px] font-black uppercase tracking-[0.3em] text-meetrix-orange mb-3">MIGRACAO</p>
+                <h2 class="text-[clamp(1.7rem,5vw,3rem)] font-black text-zinc-950 dark:text-white uppercase tracking-tighter leading-[0.9]">
+                    Migre sua agenda em minutos.
+                </h2>
+                <p class="mt-4 text-base sm:text-lg text-slate-500 dark:text-slate-300 max-w-3xl">
+                    Traga seus fluxos atuais, preserve seu ritmo de atendimento e evolua sem interromper operacao.
+                </p>
+                <router-link to="/onboarding" class="mt-7 inline-flex items-center justify-center px-8 py-4 rounded-2xl bg-zinc-950 dark:bg-white text-white dark:text-zinc-950 text-[10px] sm:text-xs font-black uppercase tracking-[0.2em] hover:bg-meetrix-orange hover:text-zinc-950 transition-colors">
+                    Importar minha agenda
+                </router-link>
+            </div>
+        </section>
+
+        <!-- Proof -->
+        <section class="py-20 sm:py-24 px-4 sm:px-6 lg:px-24 border-y border-black/5 dark:border-white/5">
+            <div class="max-w-screen-2xl mx-auto">
+                <h2 class="text-[clamp(1.8rem,6vw,3.5rem)] font-black text-zinc-950 dark:text-white uppercase tracking-tighter leading-[0.9]">
+                    Prova social em resultado operacional.
+                </h2>
+                <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-5">
+                    <article class="rounded-3xl bg-zinc-100 dark:bg-zinc-900/50 border border-black/5 dark:border-white/10 p-6">
+                        <p class="text-4xl font-black text-zinc-950 dark:text-white">+12k</p>
+                        <p class="mt-2 text-sm font-semibold text-slate-500 dark:text-slate-300">atendimentos organizados</p>
+                    </article>
+                    <article class="rounded-3xl bg-zinc-100 dark:bg-zinc-900/50 border border-black/5 dark:border-white/10 p-6">
+                        <p class="text-4xl font-black text-zinc-950 dark:text-white">-37%</p>
+                        <p class="mt-2 text-sm font-semibold text-slate-500 dark:text-slate-300">faltas em operacoes recorrentes</p>
+                    </article>
+                    <article class="rounded-3xl bg-zinc-100 dark:bg-zinc-900/50 border border-black/5 dark:border-white/10 p-6">
+                        <p class="text-4xl font-black text-zinc-950 dark:text-white">+R$ 2.4M</p>
+                        <p class="mt-2 text-sm font-semibold text-slate-500 dark:text-slate-300">volume processado em agendas pagas</p>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- Final CTA -->
+        <section class="py-20 sm:py-24 px-4 sm:px-6 lg:px-24 bg-zinc-950 text-white dark:bg-zinc-900">
+            <div class="max-w-screen-2xl mx-auto text-center">
+                <h2 class="text-[clamp(1.9rem,6vw,4rem)] font-black uppercase tracking-tighter leading-[0.9]">
+                    Comece organizando sua agenda e ative cobrancas quando quiser.
+                </h2>
+                <p class="mt-5 text-base sm:text-lg text-slate-300 max-w-3xl mx-auto">
+                    Sem forcar decisao inicial. Primeiro, eficiencia operacional. Depois, monetizacao progressiva.
+                </p>
+                <div class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
+                    <router-link to="/onboarding" class="inline-flex items-center justify-center px-8 py-4 rounded-2xl bg-meetrix-orange text-zinc-950 text-[10px] sm:text-xs font-black uppercase tracking-[0.22em] hover:bg-white transition-colors">
+                        Comecar gratuitamente
+                    </router-link>
+                    <router-link to="/onboarding?mode=scheduling_with_payments" class="inline-flex items-center justify-center px-8 py-4 rounded-2xl border border-white/20 text-white text-[10px] sm:text-xs font-black uppercase tracking-[0.22em] hover:bg-white hover:text-zinc-950 transition-colors">
+                        Ativar cobranca no agendamento
+                    </router-link>
+                </div>
+            </div>
+        </section>
+
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import LanguageSwitcher from '../Components/LanguageSwitcher.vue';
 
 const billingCycle = ref('monthly');
 

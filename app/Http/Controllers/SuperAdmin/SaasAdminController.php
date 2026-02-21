@@ -307,12 +307,19 @@ class SaasAdminController extends Controller
             ?? (in_array('smtp', $availableMailers, true) ? 'smtp' : (string) config('mail.default', 'log'));
 
         try {
-            Mail::mailer($mailer)->raw(
+            $sentMessage = Mail::mailer($mailer)->raw(
                 'Teste de envio Meetrix. Este e-mail confirma conectividade SMTP do ambiente.',
                 function ($message) use ($validated) {
                     $message->to($validated['email'])->subject('Meetrix - Teste de E-mail');
                 }
             );
+
+            $messageId = $sentMessage?->getMessageId();
+            Log::info('Super admin mail test sent.', [
+                'recipient' => $validated['email'],
+                'mailer' => $mailer,
+                'message_id' => $messageId,
+            ]);
         } catch (\Throwable $exception) {
             Log::error('Super admin mail test failed: ' . $exception->getMessage());
 
@@ -327,6 +334,7 @@ class SaasAdminController extends Controller
             'message' => 'E-mail de teste enviado para a fila de transporte.',
             'mailer' => $mailer,
             'recipient' => $validated['email'],
+            'message_id' => $messageId ?? null,
         ]);
     }
 

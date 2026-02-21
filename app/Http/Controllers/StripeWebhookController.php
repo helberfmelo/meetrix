@@ -61,7 +61,15 @@ class StripeWebhookController extends Controller
                 $mailer = $this->resolveTransactionalMailer();
 
                 try {
-                    Mail::mailer($mailer)->to($booking->customer_email)->send(new BookingConfirmation($booking));
+                    $sentMessage = Mail::mailer($mailer)->to($booking->customer_email)->send(new BookingConfirmation($booking));
+                    $messageId = $sentMessage?->getMessageId();
+
+                    Log::info('Booking confirmation mail sent via webhook.', [
+                        'booking_id' => $booking->id,
+                        'recipient' => $booking->customer_email,
+                        'mailer' => $mailer,
+                        'message_id' => $messageId,
+                    ]);
                 } catch (\Throwable $mailException) {
                     Log::error("Booking confirmation mail failed via webhook [mailer={$mailer}]: " . $mailException->getMessage());
                 }

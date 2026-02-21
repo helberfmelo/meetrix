@@ -247,7 +247,15 @@ class BookingController extends Controller
             $mailer = $this->resolveTransactionalMailer();
 
             try {
-                Mail::mailer($mailer)->to($booking->customer_email)->send(new BookingConfirmation($booking));
+                $sentMessage = Mail::mailer($mailer)->to($booking->customer_email)->send(new BookingConfirmation($booking));
+                $messageId = $sentMessage?->getMessageId();
+
+                Log::info('Booking confirmation mail sent.', [
+                    'booking_id' => $booking->id,
+                    'recipient' => $booking->customer_email,
+                    'mailer' => $mailer,
+                    'message_id' => $messageId,
+                ]);
             } catch (\Throwable $mailException) {
                 // Booking is already committed. Mail failures should not invalidate the booking.
                 Log::error("Booking confirmation mail failed [mailer={$mailer}]: " . $mailException->getMessage());

@@ -85,22 +85,22 @@ Resultado:
 - [x] Sem erro critico local
 
 ## Deploy e validacao em producao
-- [ ] GitHub Actions `deploy.yml` verde
-- [ ] Validacao em producao concluida
-- [ ] Polling de workflow a cada 15s realizado
+- [x] GitHub Actions `deploy.yml` verde (`run 22260660732`)
+- [x] Validacao em producao concluida
+- [x] Polling de workflow a cada 15s realizado
 
 Validado em producao:
-- [ ] Home
-- [ ] Login
-- [ ] Onboarding
-- [ ] Checkout
-- [ ] Dashboard
-- [ ] Pagina publica `/p/{slug}`
-- [ ] Fluxo com/sem cobranca (quando aplicavel)
+- [x] Home
+- [x] Login
+- [x] Onboarding
+- [x] Checkout
+- [x] Dashboard
+- [x] Pagina publica `/p/{slug}`
+- [x] Fluxo com/sem cobranca (quando aplicavel)
 
 Status:
-- Implementacao e gate tecnico local concluidos.
-- Deploy/producao pendentes de push em `main` + acompanhamento do workflow.
+- Implementacao, deploy e smoke funcional concluidos no ciclo do PR-04.
+- Producao validada sem regressao nas rotas obrigatorias.
 
 ## Rollback
 - Tag de referencia: `snapshot/pre-upgrade-2026-02-21`
@@ -116,4 +116,16 @@ Status:
 - [x] Nao mistura tarefas de outro plano
 - [x] Documentacao atualizada
 - [x] Sem segredo exposto
-- [ ] Aprovado para merge/deploy em producao
+- [x] Aprovado para merge/deploy em producao
+
+## Evidencias finais de deploy e smoke
+- GitHub Actions:
+  - `https://github.com/helberfmelo/meetrix/actions/runs/22260660732` (`success`)
+  - Polling manual em intervalos de 15s ate conclusao.
+- Smoke HTTP em producao (status `200`):
+  - `/`
+  - `/login`
+  - `/onboarding`
+  - `/checkout`
+  - `/dashboard`
+  - `/p/helber`

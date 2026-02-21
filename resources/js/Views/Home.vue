@@ -151,13 +151,24 @@
                             <span class="absolute -top-4 -right-4 bg-meetrix-orange text-zinc-950 text-[8px] px-2 py-0.5 rounded-full animate-bounce font-black">-20%</span>
                         </button>
                     </div>
+                    <div class="flex flex-wrap gap-2 mt-6">
+                        <span class="px-3 py-1 rounded-full bg-zinc-950 text-white dark:bg-white dark:text-zinc-950 text-[10px] font-black uppercase tracking-[0.2em]">
+                            {{ regionLabel }}
+                        </span>
+                        <span class="px-3 py-1 rounded-full border border-black/10 dark:border-white/20 text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 dark:text-slate-300">
+                            {{ regionPricing.currency }}
+                        </span>
+                    </div>
                 </div>
                 <div class="w-full lg:w-1/2 grid grid-cols-1 sm:grid-cols-2 gap-px bg-zinc-200 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-800 overflow-hidden rounded-5xl shadow-2xl">
                     <!-- Free -->
                     <div class="bg-white dark:bg-zinc-900 p-8 sm:p-12 flex flex-col h-full justify-between">
                         <div>
                             <h3 class="text-xs font-black uppercase tracking-widest text-slate-400 mb-8">{{ $t('home.plan_free') }}</h3>
-                            <div class="text-4xl sm:text-6xl font-black mb-8 dark:text-white">{{ $t('home.price_free_value') }}</div>
+                            <div class="text-4xl sm:text-6xl font-black mb-2 dark:text-white">{{ formatCurrency(schedulePrice) }}</div>
+                            <div class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-8">
+                                {{ billingCycle === 'monthly' ? $t('home.per_month') : $t('home.per_year_incentive') }}
+                            </div>
                             <ul class="space-y-4 mb-20">
                                 <li v-for="feat in $tm('home.free_features')" :key="feat" class="flex items-center text-sm font-bold text-slate-600 dark:text-slate-400">
                                     <span class="w-1.5 h-1.5 rounded-full bg-zinc-300 dark:bg-zinc-700 mr-3"></span> {{ $rt(feat) }}
@@ -176,14 +187,15 @@
                                 <h3 class="text-xs font-black uppercase tracking-widest text-slate-500">{{ $t('home.plan_pro') }}</h3>
                                 <span class="bg-meetrix-orange text-zinc-950 text-[10px] px-3 py-1 font-black rounded-full uppercase shadow-lg shadow-meetrix-orange/20">{{ $t('home.plan_pro_tag') }}</span>
                             </div>
-                            <div class="text-4xl sm:text-6xl font-black mb-2 text-meetrix-orange">
-                                {{ billingCycle === 'monthly' ? $t('home.price_pro_value') : $t('home.price_pro_annual_value') }}
-                            </div>
-                            <div class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-8">
+                            <div class="text-4xl sm:text-6xl font-black mb-2 text-meetrix-orange">{{ formatCurrency(paymentsProPrice) }}</div>
+                            <div class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2">
                                 {{ billingCycle === 'monthly' ? $t('home.per_month') : $t('home.per_year_incentive') }}
                             </div>
+                            <div class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-8">
+                                Fee Pro: {{ formatPercent(regionPricing.payments.feePro) }} | Premium: {{ formatCurrency(paymentsPremiumPrice) }} / {{ formatPercent(regionPricing.payments.feePremium) }}
+                            </div>
                             <ul class="space-y-4 mb-20">
-                                <li v-for="feat in $tm('home.free_features')" :key="feat" class="flex items-center text-sm font-bold text-slate-600 dark:text-slate-400">
+                                <li v-for="feat in $tm('home.pro_features')" :key="feat" class="flex items-center text-sm font-bold text-slate-600 dark:text-slate-400">
                                     <span class="w-1.5 h-1.5 rounded-full bg-meetrix-orange mr-3"></span> {{ $rt(feat) }}
                                 </li>
                             </ul>
@@ -193,6 +205,9 @@
                         </router-link>
                     </div>
                 </div>
+            </div>
+            <div class="max-w-screen-2xl mx-auto mt-4 text-xs text-slate-500 dark:text-slate-300">
+                {{ pricingNotice }}
             </div>
         </section>
 
@@ -333,9 +348,91 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, computed, onMounted } from 'vue';
+import { useRoute } from 'vue-router';
 
 const billingCycle = ref('monthly');
+const route = useRoute();
+
+const geoPricing = {
+    BR: {
+        currency: 'BRL',
+        schedule: { starter: 29, pro: 49 },
+        payments: { pro: 39, premium: 79, feePro: 2.5, feePremium: 1.5 },
+    },
+    USD: {
+        currency: 'USD',
+        schedule: { starter: 7, pro: 9 },
+        payments: { pro: 9, premium: 19, feePro: 1.25, feePremium: 0.75 },
+    },
+    EUR: {
+        currency: 'EUR',
+        schedule: { starter: 7, pro: 9 },
+        payments: { pro: 9, premium: 19, feePro: 1.25, feePremium: 0.75 },
+    },
+};
+
+const activeLocale = computed(() => {
+    const rawLocale = Array.isArray(route.params.locale) ? route.params.locale[0] : route.params.locale;
+    return String(rawLocale || 'en').replace('_', '-');
+});
+
+const regionCode = computed(() => {
+    const queryRegion = String(route.query.region || '').toUpperCase();
+    if (queryRegion === 'BR') return 'BR';
+    if (queryRegion === 'US' || queryRegion === 'USD' || queryRegion === 'NA') return 'USD';
+    if (queryRegion === 'EU' || queryRegion === 'EUR') return 'EUR';
+
+    const locale = activeLocale.value.toLowerCase();
+    if (locale === 'pt-br') return 'BR';
+    if (locale.startsWith('en')) return 'USD';
+    return 'EUR';
+});
+
+const regionPricing = computed(() => geoPricing[regionCode.value]);
+
+const schedulePrice = computed(() => {
+    const base = regionPricing.value.schedule.starter;
+    return billingCycle.value === 'monthly' ? base : Math.round(base * 0.8);
+});
+
+const paymentsProPrice = computed(() => {
+    const base = regionPricing.value.payments.pro;
+    return billingCycle.value === 'monthly' ? base : Math.round(base * 0.8);
+});
+
+const paymentsPremiumPrice = computed(() => {
+    const base = regionPricing.value.payments.premium;
+    return billingCycle.value === 'monthly' ? base : Math.round(base * 0.8);
+});
+
+const regionLabel = computed(() => {
+    if (regionCode.value === 'BR') return 'Brasil';
+    if (regionCode.value === 'USD') return 'US/CA/AU';
+    return 'Europa e demais';
+});
+
+const pricingNotice = computed(() => {
+    if (regionCode.value === 'BR') {
+        return 'Tabela BRL ativa. Modo Agenda e Agenda + Cobranca exibidos para operacao no Brasil.';
+    }
+    if (regionCode.value === 'USD') {
+        return 'Tabela USD ativa para US/CA/AU com fee reduzida e competitividade internacional.';
+    }
+    return 'Tabela EUR ativa para Europa e demais regioes com precificacao local.';
+});
+
+const formatCurrency = (value) => new Intl.NumberFormat(activeLocale.value, {
+    style: 'currency',
+    currency: regionPricing.value.currency,
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+}).format(value);
+
+const formatPercent = (value) => `${new Intl.NumberFormat(activeLocale.value, {
+    minimumFractionDigits: value % 1 === 0 ? 0 : 2,
+    maximumFractionDigits: 2,
+}).format(value)}%`;
 
 onMounted(() => {
     // Basic Intersection Observer for scroll reveals

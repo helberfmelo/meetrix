@@ -67,6 +67,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/account/password', [AccountController::class, 'updatePassword']);
     Route::patch('/account/mode', [AccountController::class, 'updateMode']);
     Route::get('/account/billing-history', [AccountController::class, 'billingHistory']);
+    Route::post('/account/subscription/change', [AccountController::class, 'changeSubscription']);
+    Route::post('/account/subscription/cancel', [AccountController::class, 'cancelSubscription']);
 });
 
 Route::middleware(['auth:sanctum', 'superadmin'])->prefix('super-admin')->group(function () {
@@ -75,7 +77,9 @@ Route::middleware(['auth:sanctum', 'superadmin'])->prefix('super-admin')->group(
     Route::get('/customers/{user}', [SaasAdminController::class, 'showCustomer']);
     Route::post('/customers/{user}/actions', [SaasAdminController::class, 'performAction']);
     Route::get('/activity', [SaasAdminController::class, 'activity']);
+    Route::get('/payments/export', [SaasAdminController::class, 'exportPaymentsCsv']);
     Route::get('/payments', [SaasAdminController::class, 'payments']);
+    Route::post('/payments/{transaction}/actions', [SaasAdminController::class, 'paymentAction']);
     Route::get('/coupons', [SaasAdminController::class, 'coupons']);
     Route::get('/mail/diagnostics', [SaasAdminController::class, 'mailDiagnostics']);
     Route::post('/mail/test', [SaasAdminController::class, 'sendTestEmail']);

@@ -5,12 +5,20 @@
                 <h1 class="text-3xl sm:text-4xl font-black text-zinc-950 dark:text-white tracking-tight uppercase">{{ $t('admin.master_admin_title') }}</h1>
                 <p class="text-[10px] font-black text-slate-500 uppercase tracking-[0.25em] mt-2">Operacao SaaS: clientes, pagamentos, cupons e atividade</p>
             </div>
-            <button
-                class="rounded-xl px-4 py-3 bg-zinc-950 dark:bg-white text-white dark:text-zinc-950 text-[10px] font-black uppercase tracking-[0.2em]"
-                @click="refreshAll"
-            >
-                Recarregar Painel
-            </button>
+            <div class="flex flex-wrap gap-2">
+                <button
+                    class="rounded-xl px-4 py-3 border border-black/10 dark:border-white/10 text-zinc-900 dark:text-white text-[10px] font-black uppercase tracking-[0.2em]"
+                    @click="exportPaymentsCsv"
+                >
+                    Exportar CSV
+                </button>
+                <button
+                    class="rounded-xl px-4 py-3 bg-zinc-950 dark:bg-white text-white dark:text-zinc-950 text-[10px] font-black uppercase tracking-[0.2em]"
+                    @click="refreshAll"
+                >
+                    Recarregar Painel
+                </button>
+            </div>
         </header>
 
         <section v-if="overview" class="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-8 gap-3">
@@ -151,13 +159,23 @@
                 </article>
             </div>
 
-            <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
+            <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
                 <article class="rounded-2xl border border-black/5 dark:border-white/10 p-4">
                     <h3 class="text-sm font-black uppercase tracking-wider text-zinc-900 dark:text-zinc-100 mb-3">Pagamentos</h3>
                     <div v-if="selectedCustomer.billing_transactions?.length" class="space-y-2 max-h-64 overflow-auto pr-1">
                         <div v-for="item in selectedCustomer.billing_transactions" :key="item.id" class="text-xs border-b border-black/5 dark:border-white/10 pb-2">
                             <p class="font-bold">{{ item.status }} - {{ formatCurrency(item.amount, item.currency) }}</p>
                             <p class="text-slate-500">{{ item.description || '-' }}</p>
+                            <div class="pt-2">
+                                <button
+                                    v-if="canRetryPayment(item.status)"
+                                    @click="runPaymentAction(item, 'retry_payment')"
+                                    :disabled="paymentActionLoading[item.id]"
+                                    class="px-2 py-1 rounded border border-black/10 dark:border-white/10 text-[10px] font-black uppercase tracking-wider disabled:opacity-50"
+                                >
+                                    {{ paymentActionLoading[item.id] ? 'Enviando...' : 'Reprocessar' }}
+                                </button>
+                            </div>
                         </div>
                     </div>
                     <p v-else class="text-sm text-slate-500">Sem registros.</p>
@@ -172,6 +190,58 @@
                         </div>
                     </div>
                     <p v-else class="text-sm text-slate-500">Sem agendamentos.</p>
+                </article>
+
+                <article class="rounded-2xl border border-black/5 dark:border-white/10 p-4 space-y-3">
+                    <h3 class="text-sm font-black uppercase tracking-wider text-zinc-900 dark:text-zinc-100">Ajuste Manual</h3>
+                    <p class="text-xs text-slate-500">Selecione uma transacao de referencia para registrar credito/debito operacional.</p>
+
+                    <select
+                        v-model="manualAdjustment.referenceTransactionId"
+                        class="w-full rounded-xl px-3 py-2 bg-zinc-50 dark:bg-zinc-950 border border-black/10 dark:border-white/10 text-zinc-900 dark:text-white text-xs"
+                    >
+                        <option value="">Selecione a transacao</option>
+                        <option
+                            v-for="item in selectedCustomer.billing_transactions || []"
+                            :key="`manual-${item.id}`"
+                            :value="item.id"
+                        >
+                            #{{ item.id }} - {{ item.status }} - {{ formatCurrency(item.amount, item.currency) }}
+                        </option>
+                    </select>
+
+                    <select
+                        v-model="manualAdjustment.adjustmentType"
+                        class="w-full rounded-xl px-3 py-2 bg-zinc-50 dark:bg-zinc-950 border border-black/10 dark:border-white/10 text-zinc-900 dark:text-white text-xs"
+                    >
+                        <option value="credit">Credito</option>
+                        <option value="debit">Debito</option>
+                    </select>
+
+                    <input
+                        v-model.number="manualAdjustment.amount"
+                        type="number"
+                        step="0.01"
+                        min="0.01"
+                        placeholder="Valor do ajuste"
+                        class="w-full rounded-xl px-3 py-2 bg-zinc-50 dark:bg-zinc-950 border border-black/10 dark:border-white/10 text-zinc-900 dark:text-white text-xs"
+                    >
+
+                    <input
+                        v-model="manualAdjustment.reason"
+                        type="text"
+                        maxlength="500"
+                        placeholder="Motivo obrigatorio"
+                        class="w-full rounded-xl px-3 py-2 bg-zinc-50 dark:bg-zinc-950 border border-black/10 dark:border-white/10 text-zinc-900 dark:text-white text-xs"
+                    >
+
+                    <button
+                        @click="submitManualAdjustment"
+                        :disabled="manualAdjustmentLoading"
+                        class="w-full rounded-xl px-3 py-2 bg-zinc-950 dark:bg-white text-white dark:text-zinc-950 text-[10px] font-black uppercase tracking-wider disabled:opacity-50"
+                    >
+                        {{ manualAdjustmentLoading ? 'Aplicando...' : 'Aplicar Ajuste' }}
+                    </button>
                 </article>
             </div>
         </section>
@@ -192,11 +262,20 @@ const customers = ref([]);
 const selectedCustomer = ref(null);
 const feedback = ref('');
 const error = ref('');
+const paymentActionLoading = ref({});
+const manualAdjustmentLoading = ref(false);
 
 const filters = ref({
     search: '',
     status: 'all',
     subscription: 'all',
+});
+
+const manualAdjustment = ref({
+    referenceTransactionId: '',
+    adjustmentType: 'credit',
+    amount: null,
+    reason: '',
 });
 
 const kpiCards = computed(() => {
@@ -219,6 +298,12 @@ const resetMessages = () => {
     error.value = '';
 };
 
+const parseApiError = (fallbackMessage, e) => {
+    const payload = e?.response?.data || {};
+    const message = payload.message || fallbackMessage;
+    return payload.error_code ? `[${payload.error_code}] ${message}` : message;
+};
+
 const fetchOverview = async () => {
     const { data } = await axios.get('/api/super-admin/overview');
     overview.value = data;
@@ -239,6 +324,12 @@ const fetchCustomers = async () => {
 const openCustomer = async (customer) => {
     const { data } = await axios.get(`/api/super-admin/customers/${customer.id}`);
     selectedCustomer.value = data;
+    manualAdjustment.value = {
+        referenceTransactionId: '',
+        adjustmentType: 'credit',
+        amount: null,
+        reason: '',
+    };
 };
 
 const runAction = async (action) => {
@@ -255,7 +346,116 @@ const runAction = async (action) => {
         feedback.value = 'Acao aplicada com sucesso.';
         await Promise.all([fetchOverview(), fetchCustomers(), openCustomer(selectedCustomer.value.customer)]);
     } catch (e) {
-        error.value = e.response?.data?.message || 'Falha ao aplicar acao.';
+        error.value = parseApiError('Falha ao aplicar acao.', e);
+    }
+};
+
+const canRetryPayment = (status) => ['failed', 'cancelled'].includes(status);
+
+const runPaymentAction = async (transaction, action, payload = {}) => {
+    if (!transaction?.id) return;
+
+    resetMessages();
+    paymentActionLoading.value = {
+        ...paymentActionLoading.value,
+        [transaction.id]: true,
+    };
+
+    let success = false;
+
+    try {
+        await axios.post(`/api/super-admin/payments/${transaction.id}/actions`, {
+            action,
+            ...payload,
+        });
+
+        feedback.value = action === 'retry_payment'
+            ? 'Pagamento marcado para reprocessamento.'
+            : 'Acao financeira aplicada.';
+
+        if (selectedCustomer.value?.customer) {
+            await Promise.all([fetchOverview(), fetchCustomers(), openCustomer(selectedCustomer.value.customer)]);
+        }
+        success = true;
+    } catch (e) {
+        error.value = parseApiError('Falha ao executar acao financeira.', e);
+    } finally {
+        paymentActionLoading.value = {
+            ...paymentActionLoading.value,
+            [transaction.id]: false,
+        };
+    }
+
+    return success;
+};
+
+const submitManualAdjustment = async () => {
+    if (!selectedCustomer.value?.billing_transactions?.length) {
+        error.value = 'Nao ha transacoes para ajuste.';
+        return;
+    }
+
+    const reference = selectedCustomer.value.billing_transactions.find(
+        (item) => String(item.id) === String(manualAdjustment.value.referenceTransactionId),
+    );
+
+    if (!reference) {
+        error.value = 'Selecione uma transacao de referencia.';
+        return;
+    }
+
+    resetMessages();
+    manualAdjustmentLoading.value = true;
+
+    try {
+        const success = await runPaymentAction(reference, 'manual_adjustment', {
+            amount: manualAdjustment.value.amount,
+            adjustment_type: manualAdjustment.value.adjustmentType,
+            reason: manualAdjustment.value.reason,
+        });
+
+        if (success) {
+            manualAdjustment.value = {
+                referenceTransactionId: '',
+                adjustmentType: 'credit',
+                amount: null,
+                reason: '',
+            };
+            feedback.value = 'Ajuste manual aplicado.';
+        }
+    } finally {
+        manualAdjustmentLoading.value = false;
+    }
+};
+
+const exportPaymentsCsv = async () => {
+    resetMessages();
+
+    try {
+        const response = await axios.get('/api/super-admin/payments/export', {
+            params: {
+                status: 'all',
+                source: 'all',
+            },
+            responseType: 'blob',
+        });
+
+        const disposition = response.headers['content-disposition'] || '';
+        const fileNameMatch = disposition.match(/filename="?([^"]+)"?/i);
+        const fileName = fileNameMatch?.[1] || `meetrix-payments-${Date.now()}.csv`;
+        const blobUrl = window.URL.createObjectURL(response.data);
+        const link = document.createElement('a');
+
+        link.href = blobUrl;
+        link.download = fileName;
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        window.URL.revokeObjectURL(blobUrl);
+
+        feedback.value = 'CSV financeiro exportado.';
+    } catch (e) {
+        error.value = parseApiError('Falha ao exportar CSV.', e);
     }
 };
 
@@ -265,7 +465,7 @@ const refreshAll = async () => {
         await Promise.all([fetchOverview(), fetchCustomers()]);
         feedback.value = 'Painel atualizado.';
     } catch (e) {
-        error.value = 'Falha ao atualizar painel.';
+        error.value = parseApiError('Falha ao atualizar painel.', e);
     }
 };
 

@@ -10,6 +10,7 @@ use App\Models\Coupon;
 use App\Models\SchedulingPage;
 use App\Models\Team;
 use App\Models\User;
+use App\Support\ApiError;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
@@ -124,7 +125,13 @@ class SaasAdminController extends Controller
      */
     public function showCustomer(User $user)
     {
-        abort_if($user->is_super_admin, 404, 'Conta de sistema não disponível.');
+        if ($user->is_super_admin) {
+            return ApiError::response(
+                'Conta de sistema nao disponivel para operacao.',
+                'customer_system_account_not_available',
+                404
+            );
+        }
 
         $user->load([
             'tenant',
@@ -160,7 +167,13 @@ class SaasAdminController extends Controller
      */
     public function performAction(Request $request, User $user)
     {
-        abort_if($user->is_super_admin, 422, 'Ação indisponível para conta de sistema.');
+        if ($user->is_super_admin) {
+            return ApiError::response(
+                'Acao indisponivel para conta de sistema.',
+                'customer_system_action_blocked',
+                422
+            );
+        }
 
         $validated = $request->validate([
             'action' => ['required', Rule::in(['activate', 'deactivate', 'reset_onboarding'])],
@@ -168,9 +181,11 @@ class SaasAdminController extends Controller
         ]);
 
         if ($validated['action'] === 'deactivate' && $request->user()->id === $user->id) {
-            return response()->json([
-                'message' => 'Você não pode desativar sua própria conta administrativa.',
-            ], 422);
+            return ApiError::response(
+                'Voce nao pode desativar sua propria conta administrativa.',
+                'admin_self_deactivation_forbidden',
+                422
+            );
         }
 
         if ($validated['action'] === 'activate') {
@@ -235,6 +250,184 @@ class SaasAdminController extends Controller
         $perPage = $validated['per_page'] ?? 25;
 
         return response()->json($query->latest()->paginate($perPage));
+    }
+
+    /**
+     * Execute financial actions for operational billing handling.
+     */
+    public function paymentAction(Request $request, BillingTransaction $transaction)
+    {
+        $validated = $request->validate([
+            'action' => ['required', Rule::in(['retry_payment', 'manual_adjustment'])],
+            'reason' => ['nullable', 'string', 'max:500'],
+            'amount' => ['nullable', 'numeric', 'min:0.01', 'max:999999.99'],
+            'adjustment_type' => ['nullable', Rule::in(['credit', 'debit'])],
+        ]);
+
+        $action = (string) $validated['action'];
+
+        if ($action === 'retry_payment') {
+            if (!in_array($transaction->status, ['failed', 'cancelled'], true)) {
+                return ApiError::response(
+                    'Reprocessamento permitido apenas para pagamentos failed/cancelled.',
+                    'payment_retry_not_allowed',
+                    422,
+                    ['status' => $transaction->status]
+                );
+            }
+
+            $metadata = is_array($transaction->metadata) ? $transaction->metadata : [];
+            $retryCount = (int) data_get($metadata, 'retry.count', 0) + 1;
+            $metadata['retry'] = [
+                'count' => $retryCount,
+                'requested_by' => $request->user()->id,
+                'reason' => $validated['reason'] ?? null,
+                'requested_at' => now()->toIso8601String(),
+            ];
+
+            $transaction->update([
+                'status' => 'pending',
+                'metadata' => $metadata,
+                'paid_at' => null,
+            ]);
+
+            $this->logActivity($request, $transaction->user, 'payment_retry', [
+                'billing_transaction_id' => $transaction->id,
+                'reason' => $validated['reason'] ?? null,
+                'retry_count' => $retryCount,
+            ]);
+
+            return response()->json([
+                'message' => 'Pagamento marcado para reprocessamento.',
+                'transaction' => $transaction->fresh(),
+            ]);
+        }
+
+        if (empty($validated['amount']) || empty($validated['adjustment_type']) || empty($validated['reason'])) {
+            return ApiError::response(
+                'Ajuste manual exige valor, tipo e motivo.',
+                'manual_adjustment_missing_fields',
+                422
+            );
+        }
+
+        $amount = round((float) $validated['amount'], 2);
+        if ($amount <= 0) {
+            return ApiError::response(
+                'Valor de ajuste deve ser maior que zero.',
+                'manual_adjustment_invalid_amount',
+                422
+            );
+        }
+
+        $direction = (string) $validated['adjustment_type'];
+        $signedAmount = $direction === 'credit' ? -1 * $amount : $amount;
+
+        $adjustment = BillingTransaction::create([
+            'user_id' => $transaction->user_id,
+            'booking_id' => $transaction->booking_id,
+            'source' => 'manual',
+            'status' => 'paid',
+            'amount' => $signedAmount,
+            'currency' => $transaction->currency,
+            'description' => "Ajuste manual ({$direction}) para transacao #{$transaction->id}",
+            'metadata' => [
+                'event' => 'manual_adjustment',
+                'reference_transaction_id' => $transaction->id,
+                'adjustment_type' => $direction,
+                'reason' => $validated['reason'],
+                'requested_by' => $request->user()->id,
+            ],
+            'paid_at' => now(),
+        ]);
+
+        $this->logActivity($request, $transaction->user, 'manual_adjustment', [
+            'billing_transaction_id' => $transaction->id,
+            'manual_adjustment_id' => $adjustment->id,
+            'amount' => $signedAmount,
+            'reason' => $validated['reason'],
+        ]);
+
+        return response()->json([
+            'message' => 'Ajuste manual aplicado com sucesso.',
+            'manual_adjustment' => $adjustment,
+            'reference_transaction' => $transaction->fresh(),
+        ]);
+    }
+
+    /**
+     * Export billing transactions as CSV for financial operations.
+     */
+    public function exportPaymentsCsv(Request $request)
+    {
+        $validated = $request->validate([
+            'status' => ['nullable', Rule::in(['all', 'pending', 'paid', 'failed', 'cancelled', 'refunded'])],
+            'source' => ['nullable', Rule::in(['all', 'subscription', 'booking', 'manual'])],
+            'from' => ['nullable', 'date'],
+            'to' => ['nullable', 'date'],
+        ]);
+
+        $query = BillingTransaction::query()->with('user:id,name,email');
+
+        if (($validated['status'] ?? 'all') !== 'all') {
+            $query->where('status', $validated['status']);
+        }
+
+        if (($validated['source'] ?? 'all') !== 'all') {
+            $query->where('source', $validated['source']);
+        }
+
+        if (!empty($validated['from'])) {
+            $query->whereDate('created_at', '>=', $validated['from']);
+        }
+
+        if (!empty($validated['to'])) {
+            $query->whereDate('created_at', '<=', $validated['to']);
+        }
+
+        $filename = 'meetrix-payments-' . now()->format('Ymd-His') . '.csv';
+
+        return response()->streamDownload(function () use ($query) {
+            $handle = fopen('php://output', 'w');
+
+            fputcsv($handle, [
+                'transaction_id',
+                'user_id',
+                'user_name',
+                'user_email',
+                'source',
+                'status',
+                'amount',
+                'currency',
+                'description',
+                'created_at',
+                'paid_at',
+                'external_reference',
+            ]);
+
+            $query->orderBy('id')->chunk(500, function ($transactions) use ($handle) {
+                foreach ($transactions as $transaction) {
+                    fputcsv($handle, [
+                        $transaction->id,
+                        $transaction->user_id,
+                        $transaction->user?->name,
+                        $transaction->user?->email,
+                        $transaction->source,
+                        $transaction->status,
+                        $transaction->amount,
+                        $transaction->currency,
+                        $transaction->description,
+                        optional($transaction->created_at)?->toDateTimeString(),
+                        optional($transaction->paid_at)?->toDateTimeString(),
+                        $transaction->external_reference,
+                    ]);
+                }
+            });
+
+            fclose($handle);
+        }, $filename, [
+            'Content-Type' => 'text/csv; charset=UTF-8',
+        ]);
     }
 
     /**

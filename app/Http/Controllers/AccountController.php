@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Subscription;
+use App\Services\GeoPricingCatalogService;
+use App\Support\ApiError;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -9,12 +12,19 @@ use Illuminate\Validation\Rule;
 
 class AccountController extends Controller
 {
+    public function __construct(
+        private readonly GeoPricingCatalogService $geoPricingCatalogService
+    ) {
+    }
+
     /**
      * Return account summary for authenticated user.
      */
     public function summary(Request $request)
     {
         $user = $request->user()->loadCount(['schedulingPages', 'teams']);
+        $activeSubscription = $user->subscriptions()->latest()->first();
+        $subscriptionOptions = $this->resolveSubscriptionOptions($user);
 
         return response()->json([
             'user' => [
@@ -48,6 +58,8 @@ class AccountController extends Controller
                 ->latest()
                 ->limit(10)
                 ->get(),
+            'active_subscription' => $activeSubscription,
+            'subscription_options' => $subscriptionOptions,
         ]);
     }
 
@@ -131,6 +143,214 @@ class AccountController extends Controller
     }
 
     /**
+     * Allow users to upgrade/downgrade subscription tier from account area.
+     */
+    public function changeSubscription(Request $request)
+    {
+        $user = $request->user();
+
+        $validated = $request->validate([
+            'plan' => ['required', Rule::in(['free', 'pro', 'enterprise'])],
+            'interval' => ['required', Rule::in(['monthly', 'annual'])],
+            'reason' => ['nullable', 'string', 'max:500'],
+        ]);
+
+        $targetPlan = (string) $validated['plan'];
+        $targetInterval = (string) $validated['interval'];
+        $currentPlan = (string) ($user->subscription_tier ?? 'free');
+        $currentInterval = (string) ($user->billing_cycle ?? 'monthly');
+
+        if ($targetPlan === $currentPlan && $targetInterval === $currentInterval) {
+            return ApiError::response(
+                'A conta ja esta no plano e ciclo selecionados.',
+                'subscription_plan_noop',
+                422
+            );
+        }
+
+        $options = $this->resolveSubscriptionOptions($user);
+        $planConfig = $options['plans'][$targetPlan] ?? null;
+
+        if (!is_array($planConfig)) {
+            return ApiError::response(
+                'Plano indisponivel para a regiao atual.',
+                'subscription_plan_not_available',
+                422,
+                ['region' => $options['region']]
+            );
+        }
+
+        $amount = (float) ($planConfig['prices'][$targetInterval] ?? 0);
+        $nextAccountMode = (string) ($planConfig['account_mode'] ?? 'scheduling_only');
+        $nextFeePercent = (float) ($planConfig['platform_fee_percent'] ?? 0);
+        $nextCurrency = (string) ($planConfig['currency'] ?? ($user->currency ?? 'BRL'));
+        $periodEnd = $targetPlan === 'free'
+            ? now()
+            : ($targetInterval === 'annual' ? now()->addYear() : now()->addMonth());
+
+        DB::beginTransaction();
+
+        try {
+            $user->update([
+                'subscription_tier' => $targetPlan,
+                'billing_cycle' => $targetInterval,
+                'account_mode' => $nextAccountMode,
+                'currency' => $nextCurrency,
+                'platform_fee_percent' => $nextFeePercent,
+                'trial_ends_at' => null,
+                'subscription_ends_at' => $targetPlan === 'free' ? null : $periodEnd,
+            ]);
+
+            $tenant = $user->tenant;
+            if ($tenant) {
+                $tenant->update([
+                    'account_mode' => $nextAccountMode,
+                    'currency' => $nextCurrency,
+                    'platform_fee_percent' => $nextFeePercent,
+                ]);
+            }
+
+            $subscription = $user->subscriptions()->latest()->first();
+            if (!$subscription) {
+                $subscription = new Subscription([
+                    'user_id' => $user->id,
+                    'provider' => 'stripe',
+                ]);
+            }
+
+            $subscription->fill([
+                'plan_code' => $targetPlan,
+                'billing_cycle' => $targetInterval,
+                'account_mode' => $nextAccountMode,
+                'price' => $amount,
+                'currency' => $nextCurrency,
+                'status' => $targetPlan === 'free' ? 'cancelled' : 'active',
+                'started_at' => $subscription->started_at ?? now(),
+                'current_period_start' => $targetPlan === 'free' ? $subscription->current_period_start : now(),
+                'current_period_end' => $periodEnd,
+                'canceled_at' => $targetPlan === 'free' ? now() : null,
+                'metadata' => [
+                    'source' => 'account_self_service',
+                    'previous_plan' => $currentPlan,
+                    'previous_interval' => $currentInterval,
+                    'reason' => $validated['reason'] ?? null,
+                    'region' => $options['region'],
+                ],
+            ]);
+            $subscription->save();
+
+            $billingEvent = $user->billingTransactions()->create([
+                'source' => 'subscription',
+                'status' => $targetPlan === 'free' ? 'cancelled' : 'pending',
+                'amount' => $amount,
+                'currency' => $nextCurrency,
+                'description' => "Self-service: {$currentPlan} -> {$targetPlan} ({$targetInterval})",
+                'metadata' => [
+                    'event' => 'subscription_change',
+                    'previous_plan' => $currentPlan,
+                    'previous_interval' => $currentInterval,
+                    'target_plan' => $targetPlan,
+                    'target_interval' => $targetInterval,
+                    'reason' => $validated['reason'] ?? null,
+                ],
+            ]);
+
+            DB::commit();
+
+            return response()->json([
+                'message' => 'Plano atualizado com sucesso.',
+                'user' => $user->fresh(),
+                'subscription' => $subscription->fresh(),
+                'billing_event' => $billingEvent,
+            ]);
+        } catch (\Throwable $exception) {
+            DB::rollBack();
+
+            return ApiError::response(
+                'Falha ao atualizar a assinatura. Tente novamente.',
+                'subscription_change_failed',
+                500
+            );
+        }
+    }
+
+    /**
+     * Cancel active paid subscription and return account to scheduling-only mode.
+     */
+    public function cancelSubscription(Request $request)
+    {
+        $user = $request->user();
+
+        $validated = $request->validate([
+            'reason' => ['nullable', 'string', 'max:500'],
+        ]);
+
+        if (($user->subscription_tier ?? 'free') === 'free') {
+            return ApiError::response(
+                'Nao existe assinatura ativa para cancelar.',
+                'subscription_not_active',
+                422
+            );
+        }
+
+        DB::beginTransaction();
+
+        try {
+            $user->update([
+                'subscription_tier' => 'free',
+                'billing_cycle' => 'monthly',
+                'account_mode' => 'scheduling_only',
+                'platform_fee_percent' => 0,
+                'subscription_ends_at' => null,
+            ]);
+
+            $tenant = $user->tenant;
+            if ($tenant) {
+                $tenant->update([
+                    'account_mode' => 'scheduling_only',
+                    'platform_fee_percent' => 0,
+                ]);
+            }
+
+            $user->subscriptions()
+                ->whereIn('status', ['active', 'past_due', 'pending'])
+                ->update([
+                    'status' => 'cancelled',
+                    'canceled_at' => now(),
+                    'current_period_end' => now(),
+                ]);
+
+            $billingEvent = $user->billingTransactions()->create([
+                'source' => 'subscription',
+                'status' => 'cancelled',
+                'amount' => 0,
+                'currency' => $user->currency ?? 'BRL',
+                'description' => 'Cancelamento self-service de assinatura',
+                'metadata' => [
+                    'event' => 'subscription_cancelled',
+                    'reason' => $validated['reason'] ?? null,
+                ],
+            ]);
+
+            DB::commit();
+
+            return response()->json([
+                'message' => 'Assinatura cancelada com sucesso.',
+                'user' => $user->fresh(),
+                'billing_event' => $billingEvent,
+            ]);
+        } catch (\Throwable $exception) {
+            DB::rollBack();
+
+            return ApiError::response(
+                'Falha ao cancelar assinatura. Tente novamente.',
+                'subscription_cancel_failed',
+                500
+            );
+        }
+    }
+
+    /**
      * Update current authenticated user password.
      */
     public function updatePassword(Request $request)
@@ -163,5 +383,64 @@ class AccountController extends Controller
             ->paginate($perPage);
 
         return response()->json($transactions);
+    }
+
+    /**
+     * @return array{
+     *     region:string,
+     *     currency:string,
+     *     plans:array<string, array<string, mixed>>
+     * }
+     */
+    private function resolveSubscriptionOptions($user): array
+    {
+        $catalog = $this->geoPricingCatalogService->getCatalogForRegion((string) ($user->region ?? 'BR'));
+        $paymentsPlan = (array) ($catalog['plans']['scheduling_with_payments'] ?? []);
+
+        $currency = (string) ($paymentsPlan['currency'] ?? $catalog['currency'] ?? $user->currency ?? 'BRL');
+        $proMonthly = (float) ($paymentsPlan['monthly_price'] ?? 39);
+        $proAnnual = (float) ($paymentsPlan['annual_price'] ?? 31);
+        $proFee = (float) ($paymentsPlan['platform_fee_percent'] ?? 2.5);
+
+        $enterpriseMonthly = (float) ($paymentsPlan['premium_price'] ?? round($proMonthly * 2, 2));
+        $enterpriseAnnual = round($enterpriseMonthly * 0.8, 2);
+        $enterpriseFee = (float) ($paymentsPlan['premium_fee_percent'] ?? max(0, $proFee - 1));
+
+        return [
+            'region' => (string) ($catalog['region'] ?? 'BR'),
+            'currency' => $currency,
+            'plans' => [
+                'free' => [
+                    'label' => 'Agenda',
+                    'account_mode' => 'scheduling_only',
+                    'platform_fee_percent' => 0.0,
+                    'currency' => $currency,
+                    'prices' => [
+                        'monthly' => 0.0,
+                        'annual' => 0.0,
+                    ],
+                ],
+                'pro' => [
+                    'label' => 'Agenda + cobranca',
+                    'account_mode' => 'scheduling_with_payments',
+                    'platform_fee_percent' => $proFee,
+                    'currency' => $currency,
+                    'prices' => [
+                        'monthly' => $proMonthly,
+                        'annual' => $proAnnual,
+                    ],
+                ],
+                'enterprise' => [
+                    'label' => 'Enterprise',
+                    'account_mode' => 'scheduling_with_payments',
+                    'platform_fee_percent' => $enterpriseFee,
+                    'currency' => $currency,
+                    'prices' => [
+                        'monthly' => $enterpriseMonthly,
+                        'annual' => $enterpriseAnnual,
+                    ],
+                ],
+            ],
+        ];
     }
 }

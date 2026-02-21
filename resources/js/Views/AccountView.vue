@@ -43,33 +43,89 @@
                 </form>
             </article>
 
-            <article class="rounded-3xl border border-black/5 dark:border-white/10 bg-white dark:bg-zinc-900 p-6 space-y-4">
-                <h2 class="text-lg font-black text-zinc-950 dark:text-white uppercase tracking-wide">Resumo</h2>
-                <div v-if="summary?.user" class="space-y-2 text-sm">
-                    <p class="text-slate-600 dark:text-slate-300"><span class="font-bold">E-mail:</span> {{ summary.user.email }}</p>
-                    <p class="text-slate-600 dark:text-slate-300"><span class="font-bold">Modo:</span> {{ formatMode(summary.user.account_mode) }}</p>
-                    <p class="text-slate-600 dark:text-slate-300"><span class="font-bold">Regiao:</span> {{ summary.user.region || 'BR' }}</p>
-                    <p class="text-slate-600 dark:text-slate-300"><span class="font-bold">Moeda:</span> {{ summary.user.currency || 'BRL' }}</p>
-                    <p class="text-slate-600 dark:text-slate-300"><span class="font-bold">Idioma:</span> {{ summary.user.preferred_locale || 'auto' }}</p>
-                    <p class="text-slate-600 dark:text-slate-300"><span class="font-bold">Fuso horário:</span> {{ summary.user.timezone || 'UTC' }}</p>
-                    <p class="text-slate-600 dark:text-slate-300"><span class="font-bold">Paginas:</span> {{ summary.user.scheduling_pages_count }}</p>
-                    <p class="text-slate-600 dark:text-slate-300"><span class="font-bold">Times:</span> {{ summary.user.teams_count }}</p>
-                    <div class="pt-3 border-t border-black/5 dark:border-white/10">
-                        <button
-                            v-if="summary.user.account_mode === 'scheduling_only'"
-                            :disabled="upgradingMode"
-                            @click="upgradeToPayments"
-                            class="w-full rounded-xl px-4 py-3 bg-meetrix-orange text-zinc-950 text-[10px] font-black uppercase tracking-[0.2em] disabled:opacity-60"
-                        >
-                            {{ upgradingMode ? 'Ativando...' : 'Ativar Cobranca no Agendamento' }}
-                        </button>
-                        <p v-else class="text-[10px] font-black uppercase tracking-[0.15em] text-meetrix-green">
-                            Cobranca integrada ativa para esta conta.
-                        </p>
+            <div class="space-y-6">
+                <article class="rounded-3xl border border-black/5 dark:border-white/10 bg-white dark:bg-zinc-900 p-6 space-y-4">
+                    <h2 class="text-lg font-black text-zinc-950 dark:text-white uppercase tracking-wide">Resumo</h2>
+                    <div v-if="summary?.user" class="space-y-2 text-sm">
+                        <p class="text-slate-600 dark:text-slate-300"><span class="font-bold">E-mail:</span> {{ summary.user.email }}</p>
+                        <p class="text-slate-600 dark:text-slate-300"><span class="font-bold">Modo:</span> {{ formatMode(summary.user.account_mode) }}</p>
+                        <p class="text-slate-600 dark:text-slate-300"><span class="font-bold">Regiao:</span> {{ summary.user.region || 'BR' }}</p>
+                        <p class="text-slate-600 dark:text-slate-300"><span class="font-bold">Moeda:</span> {{ summary.user.currency || 'BRL' }}</p>
+                        <p class="text-slate-600 dark:text-slate-300"><span class="font-bold">Idioma:</span> {{ summary.user.preferred_locale || 'auto' }}</p>
+                        <p class="text-slate-600 dark:text-slate-300"><span class="font-bold">Fuso horário:</span> {{ summary.user.timezone || 'UTC' }}</p>
+                        <p class="text-slate-600 dark:text-slate-300"><span class="font-bold">Paginas:</span> {{ summary.user.scheduling_pages_count }}</p>
+                        <p class="text-slate-600 dark:text-slate-300"><span class="font-bold">Times:</span> {{ summary.user.teams_count }}</p>
+                        <div class="pt-3 border-t border-black/5 dark:border-white/10">
+                            <button
+                                v-if="summary.user.account_mode === 'scheduling_only'"
+                                :disabled="upgradingMode"
+                                @click="upgradeToPayments"
+                                class="w-full rounded-xl px-4 py-3 bg-meetrix-orange text-zinc-950 text-[10px] font-black uppercase tracking-[0.2em] disabled:opacity-60"
+                            >
+                                {{ upgradingMode ? 'Ativando...' : 'Ativar Cobranca no Agendamento' }}
+                            </button>
+                            <p v-else class="text-[10px] font-black uppercase tracking-[0.15em] text-meetrix-green">
+                                Cobranca integrada ativa para esta conta.
+                            </p>
+                        </div>
                     </div>
-                </div>
-                <p v-else class="text-sm text-slate-500">Carregando...</p>
-            </article>
+                    <p v-else class="text-sm text-slate-500">Carregando...</p>
+                </article>
+
+                <article class="rounded-3xl border border-black/5 dark:border-white/10 bg-white dark:bg-zinc-900 p-6 space-y-4">
+                    <h2 class="text-lg font-black text-zinc-950 dark:text-white uppercase tracking-wide">Assinatura</h2>
+                    <form @submit.prevent="changeSubscription" class="space-y-3">
+                        <select
+                            v-model="subscription.plan"
+                            class="w-full rounded-xl px-4 py-3 bg-zinc-50 dark:bg-zinc-950 border border-black/10 dark:border-white/10 text-zinc-900 dark:text-white"
+                        >
+                            <option value="free">Agenda</option>
+                            <option value="pro">Pro</option>
+                            <option value="enterprise">Enterprise</option>
+                        </select>
+
+                        <select
+                            v-model="subscription.interval"
+                            :disabled="subscription.plan === 'free'"
+                            class="w-full rounded-xl px-4 py-3 bg-zinc-50 dark:bg-zinc-950 border border-black/10 dark:border-white/10 text-zinc-900 dark:text-white disabled:opacity-50"
+                        >
+                            <option value="monthly">Mensal</option>
+                            <option value="annual">Anual</option>
+                        </select>
+
+                        <input
+                            v-model="subscription.reason"
+                            type="text"
+                            maxlength="500"
+                            placeholder="Motivo (opcional)"
+                            class="w-full rounded-xl px-4 py-3 bg-zinc-50 dark:bg-zinc-950 border border-black/10 dark:border-white/10 text-zinc-900 dark:text-white"
+                        >
+
+                        <p class="text-xs text-slate-500">
+                            Valor estimado:
+                            <span class="font-bold text-zinc-900 dark:text-zinc-100">
+                                {{ formatCurrency(selectedSubscriptionPrice, subscriptionCurrency) }}
+                            </span>
+                        </p>
+
+                        <button
+                            type="submit"
+                            :disabled="updatingSubscription"
+                            class="w-full rounded-xl px-4 py-3 bg-zinc-950 dark:bg-white text-white dark:text-zinc-950 text-[10px] font-black uppercase tracking-[0.2em] disabled:opacity-60"
+                        >
+                            {{ updatingSubscription ? 'Atualizando...' : 'Atualizar Plano' }}
+                        </button>
+                    </form>
+
+                    <button
+                        @click="cancelCurrentSubscription"
+                        :disabled="cancelingSubscription || !canCancelSubscription"
+                        class="w-full rounded-xl px-4 py-3 border border-red-300 text-red-600 text-[10px] font-black uppercase tracking-[0.2em] disabled:opacity-50"
+                    >
+                        {{ cancelingSubscription ? 'Cancelando...' : 'Cancelar Assinatura' }}
+                    </button>
+                </article>
+            </div>
         </section>
 
         <section class="grid grid-cols-1 xl:grid-cols-2 gap-6">
@@ -177,7 +233,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import axios from '../axios';
 
@@ -202,16 +258,46 @@ const password = ref({
     password_confirmation: '',
 });
 
+const subscription = ref({
+    plan: 'free',
+    interval: 'monthly',
+    reason: '',
+});
+
 const savingProfile = ref(false);
 const savingPreferences = ref(false);
 const savingPassword = ref(false);
 const upgradingMode = ref(false);
+const updatingSubscription = ref(false);
+const cancelingSubscription = ref(false);
 const feedback = ref('');
 const error = ref('');
+
+const subscriptionOptions = computed(() => summary.value?.subscription_options?.plans || {});
+const subscriptionCurrency = computed(() => summary.value?.subscription_options?.currency || summary.value?.user?.currency || 'BRL');
+
+const selectedSubscriptionPrice = computed(() => {
+    const currentPlan = subscriptionOptions.value?.[subscription.value.plan];
+    if (!currentPlan) return 0;
+
+    if (subscription.value.plan === 'free') {
+        return Number(currentPlan.prices?.monthly || 0);
+    }
+
+    return Number(currentPlan.prices?.[subscription.value.interval] || 0);
+});
+
+const canCancelSubscription = computed(() => (summary.value?.user?.subscription_tier || 'free') !== 'free');
 
 const resetMessages = () => {
     feedback.value = '';
     error.value = '';
+};
+
+const parseApiError = (fallbackMessage, e) => {
+    const payload = e?.response?.data || {};
+    const message = payload.message || fallbackMessage;
+    return payload.error_code ? `[${payload.error_code}] ${message}` : message;
 };
 
 const loadSummary = async () => {
@@ -228,6 +314,9 @@ const loadSummary = async () => {
         preferred_locale: data.user?.preferred_locale || '',
         timezone: data.user?.timezone || 'UTC',
     };
+
+    subscription.value.plan = data.user?.subscription_tier || 'free';
+    subscription.value.interval = data.user?.billing_cycle || 'monthly';
 };
 
 const loadBillingHistory = async () => {
@@ -243,7 +332,7 @@ const saveProfile = async () => {
         await loadSummary();
         feedback.value = 'Perfil atualizado.';
     } catch (e) {
-        error.value = e.response?.data?.message || 'Falha ao atualizar perfil.';
+        error.value = parseApiError('Falha ao atualizar perfil.', e);
     } finally {
         savingProfile.value = false;
     }
@@ -257,7 +346,7 @@ const savePreferences = async () => {
         await loadSummary();
         feedback.value = 'Preferencias atualizadas.';
     } catch (e) {
-        error.value = e.response?.data?.message || 'Falha ao atualizar preferencias.';
+        error.value = parseApiError('Falha ao atualizar preferencias.', e);
     } finally {
         savingPreferences.value = false;
     }
@@ -275,7 +364,7 @@ const savePassword = async () => {
         };
         feedback.value = 'Senha atualizada.';
     } catch (e) {
-        error.value = e.response?.data?.message || 'Falha ao atualizar senha.';
+        error.value = parseApiError('Falha ao atualizar senha.', e);
     } finally {
         savingPassword.value = false;
     }
@@ -316,9 +405,53 @@ const upgradeToPayments = async () => {
         feedback.value = 'Modo atualizado para agenda + cobranca.';
         router.push('/checkout');
     } catch (e) {
-        error.value = e.response?.data?.message || 'Falha ao atualizar modo de conta.';
+        error.value = parseApiError('Falha ao atualizar modo de conta.', e);
     } finally {
         upgradingMode.value = false;
+    }
+};
+
+const changeSubscription = async () => {
+    resetMessages();
+    updatingSubscription.value = true;
+
+    try {
+        await axios.post('/api/account/subscription/change', {
+            plan: subscription.value.plan,
+            interval: subscription.value.plan === 'free' ? 'monthly' : subscription.value.interval,
+            reason: subscription.value.reason || null,
+        });
+
+        subscription.value.reason = '';
+        await Promise.all([loadSummary(), loadBillingHistory()]);
+        feedback.value = 'Assinatura atualizada com sucesso.';
+    } catch (e) {
+        error.value = parseApiError('Falha ao atualizar assinatura.', e);
+    } finally {
+        updatingSubscription.value = false;
+    }
+};
+
+const cancelCurrentSubscription = async () => {
+    if (!canCancelSubscription.value) return;
+
+    const confirmed = window.confirm('Confirmar cancelamento da assinatura atual?');
+    if (!confirmed) return;
+
+    resetMessages();
+    cancelingSubscription.value = true;
+
+    try {
+        await axios.post('/api/account/subscription/cancel', {
+            reason: 'self_service_cancel',
+        });
+
+        await Promise.all([loadSummary(), loadBillingHistory()]);
+        feedback.value = 'Assinatura cancelada com sucesso.';
+    } catch (e) {
+        error.value = parseApiError('Falha ao cancelar assinatura.', e);
+    } finally {
+        cancelingSubscription.value = false;
     }
 };
 

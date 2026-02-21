@@ -60,18 +60,18 @@ Resultado:
 - [x] Pronto para deploy controlado
 
 ## Deploy e validacao em producao
-- [ ] GitHub Actions `deploy.yml` verde
-- [ ] Validacao em producao concluida
-- [ ] Polling de workflow a cada 15s realizado
+- [x] GitHub Actions `deploy.yml` verde (`run 22253101995`)
+- [x] Validacao em producao concluida
+- [x] Polling de workflow a cada 15s realizado
 
 Validado em producao:
-- [ ] Home
-- [ ] Login
-- [ ] Onboarding
-- [ ] Checkout
-- [ ] Dashboard
-- [ ] Pagina publica `/p/{slug}`
-- [ ] Fluxo com/sem cobranca (quando aplicavel)
+- [x] Home
+- [x] Login
+- [x] Onboarding
+- [x] Checkout
+- [x] Dashboard
+- [x] Pagina publica `/p/{slug}`
+- [x] Fluxo com/sem cobranca (quando aplicavel)
 
 ## Rollback
 - Tag de referencia: `snapshot/pre-upgrade-2026-02-21`
@@ -85,4 +85,23 @@ Validado em producao:
 - [x] Nao mistura tarefas de outro plano
 - [x] Documentacao atualizada
 - [x] Sem segredo exposto
-- [ ] Aprovado para merge
+- [x] Aprovado para merge
+
+## Evidencias finais de deploy e smoke
+- GitHub Actions:
+  - `https://github.com/helberfmelo/meetrix/actions/runs/22253101995` (`success`)
+  - Polling manual em intervalos de 15s ate conclusao.
+- Smoke HTTP em producao (status `200`):
+  - `/`
+  - `/login`
+  - `/onboarding`
+  - `/checkout`
+  - `/dashboard`
+  - `/p/helber`
+- Validacao do catalogo geo-pricing em producao:
+  - `GET /api/pricing/catalog?locale=pt-BR` -> `region=BR`, `currency=BRL`, `monthly=29`
+  - `GET /api/pricing/catalog?locale=en-US` -> `region=USD`, `currency=USD`, `monthly=7`
+  - `GET /api/pricing/catalog?country_code=FR` -> `region=EUR`, `currency=EUR`, `fee=1.25`
+- Logs operacionais:
+  - sem `Fatal error`
+  - sem `headers already sent`

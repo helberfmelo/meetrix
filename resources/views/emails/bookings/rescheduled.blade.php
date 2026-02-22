@@ -1,15 +1,8 @@
-@component('mail::message')
-# {{ __('emails.booking.rescheduled.title') }}
+<h1>{{ __('emails.booking.rescheduled.title') }}</h1>
+<p>{{ __('emails.booking.rescheduled.intro', ['name' => $booking->customer_name]) }}</p>
 
-{{ __('emails.booking.rescheduled.intro', ['name' => $booking->customer_name]) }}
+<p><strong>{{ __('emails.booking.rescheduled.service') }}:</strong> {{ $booking->appointmentType->name ?? 'Session' }}</p>
+<p><strong>{{ __('emails.booking.rescheduled.datetime') }}:</strong> {{ optional($booking->start_at)->format('d/m/Y H:i') }}</p>
+<p><strong>{{ __('emails.booking.rescheduled.status') }}:</strong> {{ strtoupper($booking->status) }}</p>
 
-@component('mail::panel')
-{{ __('emails.booking.rescheduled.service') }}: {{ $booking->appointmentType->name ?? 'Session' }}
-
-{{ __('emails.booking.rescheduled.datetime') }}: {{ optional($booking->start_at)->format('d/m/Y H:i') }}
-
-{{ __('emails.booking.rescheduled.status') }}: {{ strtoupper($booking->status) }}
-@endcomponent
-
-{{ __('emails.booking.rescheduled.signoff', ['app' => config('app.name')]) }}
-@endcomponent
+<p>{{ __('emails.booking.rescheduled.signoff', ['app' => config('app.name')]) }}</p>

@@ -1,19 +1,12 @@
-@component('mail::message')
-# {{ __('emails.booking.confirmed.title') }}
+<h1>{{ __('emails.booking.confirmed.title') }}</h1>
+<p>{{ __('emails.booking.confirmed.intro', ['name' => $booking->customer_name]) }}</p>
 
-{{ __('emails.booking.confirmed.intro', ['name' => $booking->customer_name]) }}
-
-@component('mail::panel')
-{{ __('emails.booking.confirmed.service') }}: {{ $booking->appointmentType->name ?? 'Session' }}
-
-{{ __('emails.booking.confirmed.datetime') }}: {{ optional($booking->start_at)->format('d/m/Y H:i') }}
-
-{{ __('emails.booking.confirmed.status') }}: {{ strtoupper($booking->status) }}
-@endcomponent
+<p><strong>{{ __('emails.booking.confirmed.service') }}:</strong> {{ $booking->appointmentType->name ?? 'Session' }}</p>
+<p><strong>{{ __('emails.booking.confirmed.datetime') }}:</strong> {{ optional($booking->start_at)->format('d/m/Y H:i') }}</p>
+<p><strong>{{ __('emails.booking.confirmed.status') }}:</strong> {{ strtoupper($booking->status) }}</p>
 
 @if (!empty($manageUrl))
-{{ __('emails.booking.confirmed.manage') }}: {{ $manageUrl }}
+<p><strong>{{ __('emails.booking.confirmed.manage') }}:</strong> {{ $manageUrl }}</p>
 @endif
 
-{{ __('emails.booking.confirmed.signoff', ['app' => config('app.name')]) }}
-@endcomponent
+<p>{{ __('emails.booking.confirmed.signoff', ['app' => config('app.name')]) }}</p>

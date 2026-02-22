@@ -13,12 +13,17 @@ Este guia define os procedimentos operacionais padrão para a IA no projeto Meet
    - URL: [https://github.com/helberfmelo/meetrix/actions/workflows/deploy.yml](https://github.com/helberfmelo/meetrix/actions/workflows/deploy.yml)
    - Polling obrigatório a cada 15 segundos (refresh manual).
    - Só seguir após o job "🎉 Deploy" ficar verde.
-3. **Validação em produção**:
-   - Logs: `https://opentshost.com/meetrix/read_logs.php`
-   - Migração/seed (quando necessário): `https://opentshost.com/meetrix/migrate_sovereign.php`
-   - Fluxos: Home, Login, Onboarding, Checkout, Dashboard e recursos alterados no release.
+3. **Pós-deploy automático em produção**:
+   - O workflow executa via SSH:
+     - `php artisan optimize:clear`
+     - `php artisan migrate --force`
+     - `php artisan db:seed --class=GeoPricingSeeder --force`
+4. **Validação em produção**:
+    - Logs: `https://opentshost.com/meetrix/read_logs.php`
+    - Migração/seed (quando necessário): `https://opentshost.com/meetrix/migrate_sovereign.php`
+    - Fluxos: Home, Login, Onboarding, Checkout, Dashboard e recursos alterados no release.
 
-## Estado Atual em Produção (2026-02-21)
+## Estado Atual em Produção (2026-02-22)
 
 - `deploy.yml` operacional e último deploy validado com sucesso.
 - PHP 8.2 funcional na HostGator.
@@ -30,6 +35,12 @@ Este guia define os procedimentos operacionais padrão para a IA no projeto Meet
 - Migração soberana (`migrate_sovereign.php`) executada no ciclo de PR-02 para restaurar paridade de schema em produção.
 - YCBM P1-2 (self-service de reagendamento/cancelamento com token público) implementado e migrado.
 - E-mail transacional em **modo `log`** temporariamente (Postmark em validação manual).
+- Pricing dinâmico via admin master validado em produção:
+  - matriz BR/USD/EUR operacional;
+  - vínculo idioma -> moeda operacional;
+  - front refletindo catálogo dinâmico sem fallback fixo indevido.
+- Smoke final de produção concluído com **GO**:
+  - evidência em `docs/SMOKE_TEST_FINAL_PRODUCAO_2026-02-22.md`.
 
 ## Estado da Implementação Atual (2026-02-21)
 
@@ -77,6 +88,8 @@ Este guia define os procedimentos operacionais padrão para a IA no projeto Meet
    - `docs/PLANO_STANDBY_PENTE_FINO_IDIOMAS.md`
 5. Evoluir cobertura E2E visual automatizada para landing rebrand, onboarding por modo e módulos SaaS já entregues.
 6. Avançar roadmap de lacunas mapeadas no benchmark YCBM (`docs/YCBM_BENCHMARK_GAPS_2026-02-20.md`).
+7. Executar backlog de checkout/split/comissões/taxas:
+   - `docs/BACKLOG_CHECKOUT_SPLIT_E_TAXAS.md`.
 
 ## E-mail Transacional (temporário)
 
@@ -113,26 +126,9 @@ Este guia define os procedimentos operacionais padrão para a IA no projeto Meet
 
 - **Credenciais devem permanecer fora do repositório.**
 - Consultar o vault/gestor de senhas autorizado.
-
-### Cpanel
-Acesso ao cpanel: https://opentshost.com/cpanel
-
-Usuário: opents62
-Senha: SAFsdfasdfEWREgFDS435#@ad
-
-### FTP
-Acesso ao FTP: ftp.opentshost.com
-
-Usuário: opents62
-Senha: SAFsdfasdfEWREgFDS435#@ad
-
-### Acesso GitHub
-https://github.com/helberfmelo/meetrix/
-Usuário: helber@bigbangdigital.com.br
-Senha: #%pt2JgtwrQB@5Awj994
-
-Cadastro de segredos do github
-https://github.com/helberfmelo/meetrix/settings/secrets/actions
+- Links de gestão (sem credenciais):
+  - cPanel: `https://opentshost.com/cpanel`
+  - GitHub Actions Secrets: `https://github.com/helberfmelo/meetrix/settings/secrets/actions`
 
 ---
 

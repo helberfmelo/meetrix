@@ -60,3 +60,6 @@ update_locales_v2.py
 /server_laravel.log
 /server_laravel_py.log
 /laravel_prod.log
+
+# Local-only external homologation test
+/tests/Feature/G5HomologationExecutionTest.php

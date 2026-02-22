@@ -159,6 +159,9 @@
                         <span class="px-3 py-1 rounded-full border border-black/10 dark:border-white/20 text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 dark:text-slate-300">
                             {{ regionPricing.currency }}
                         </span>
+                        <span class="px-3 py-1 rounded-full border border-black/10 dark:border-white/20 text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 dark:text-slate-300">
+                            {{ resolutionLabel }}
+                        </span>
                     </div>
                 </div>
                 <div class="w-full lg:w-1/2 grid grid-cols-1 sm:grid-cols-2 gap-px bg-zinc-200 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-800 overflow-hidden rounded-5xl shadow-2xl">
@@ -349,7 +352,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import axios from '../axios';
 
@@ -357,27 +360,97 @@ const billingCycle = ref('monthly');
 const route = useRoute();
 const catalog = ref(null);
 
-const fallbackGeoPricing = {
+const emptyGeoPricing = {
     BR: {
         currency: 'BRL',
-        schedule: { starter: 29, annualStarter: 23 },
-        payments: { pro: 39, annualPro: 31, premium: 79, annualPremium: 63, feePro: 2.5, feePremium: 1.5 },
+        schedule: { starter: 0, annualStarter: 0 },
+        payments: { pro: 0, annualPro: 0, premium: 0, annualPremium: 0, feePro: 0, feePremium: 0 },
     },
     USD: {
         currency: 'USD',
-        schedule: { starter: 7, annualStarter: 6 },
-        payments: { pro: 9, annualPro: 7, premium: 19, annualPremium: 15, feePro: 1.25, feePremium: 0.75 },
+        schedule: { starter: 0, annualStarter: 0 },
+        payments: { pro: 0, annualPro: 0, premium: 0, annualPremium: 0, feePro: 0, feePremium: 0 },
     },
     EUR: {
         currency: 'EUR',
-        schedule: { starter: 7, annualStarter: 6 },
-        payments: { pro: 9, annualPro: 7, premium: 19, annualPremium: 15, feePro: 1.25, feePremium: 0.75 },
+        schedule: { starter: 0, annualStarter: 0 },
+        payments: { pro: 0, annualPro: 0, premium: 0, annualPremium: 0, feePro: 0, feePremium: 0 },
     },
+};
+
+const normalizeLocale = (value) => {
+    if (!value) return null;
+    return String(value).trim().replace('_', '-').toLowerCase();
+};
+
+const extractCountryFromLocale = (locale) => {
+    const normalized = normalizeLocale(locale);
+    if (!normalized || !normalized.includes('-')) return null;
+
+    const parts = normalized.split('-');
+    const country = parts[parts.length - 1];
+    return /^[a-z]{2}$/i.test(country) ? country.toUpperCase() : null;
+};
+
+const countryToRegion = (countryCode) => {
+    const upperCountry = String(countryCode || '').toUpperCase();
+    if (upperCountry === 'BR') return 'BR';
+    if (['US', 'CA', 'AU'].includes(upperCountry)) return 'USD';
+    if (upperCountry) return 'EUR';
+    return null;
+};
+
+const localeToFallbackRegion = (locale) => {
+    const normalized = normalizeLocale(locale);
+    if (!normalized) return 'EUR';
+    if (normalized === 'pt-br') return 'BR';
+    if (normalized.startsWith('en')) return 'USD';
+    return 'EUR';
+};
+
+const getNavigatorLocales = () => {
+    if (typeof window === 'undefined') return [];
+
+    const localeCandidates = [];
+    if (Array.isArray(window.navigator?.languages)) {
+        localeCandidates.push(...window.navigator.languages);
+    }
+
+    if (window.navigator?.language) {
+        localeCandidates.push(window.navigator.language);
+    }
+
+    const intlLocale = Intl.DateTimeFormat().resolvedOptions().locale;
+    if (intlLocale) {
+        localeCandidates.push(intlLocale);
+    }
+
+    return localeCandidates
+        .map(normalizeLocale)
+        .filter((value, index, list) => value && list.indexOf(value) === index);
 };
 
 const activeLocale = computed(() => {
     const rawLocale = Array.isArray(route.params.locale) ? route.params.locale[0] : route.params.locale;
     return String(rawLocale || 'en').replace('_', '-');
+});
+
+const browserLocale = computed(() => {
+    const candidates = getNavigatorLocales();
+    return candidates[0] || normalizeLocale(activeLocale.value) || 'en';
+});
+
+const browserCountryCode = computed(() => {
+    const explicitCountry = String(route.query.country_code || route.query.country || '').toUpperCase();
+    if (/^[A-Z]{2}$/.test(explicitCountry)) return explicitCountry;
+
+    const localeCandidates = getNavigatorLocales();
+    for (const localeCandidate of localeCandidates) {
+        const parsedCountry = extractCountryFromLocale(localeCandidate);
+        if (parsedCountry) return parsedCountry;
+    }
+
+    return extractCountryFromLocale(activeLocale.value);
 });
 
 const inferredRegionCode = computed(() => {
@@ -386,22 +459,23 @@ const inferredRegionCode = computed(() => {
     if (queryRegion === 'US' || queryRegion === 'USD' || queryRegion === 'NA') return 'USD';
     if (queryRegion === 'EU' || queryRegion === 'EUR') return 'EUR';
 
-    const locale = activeLocale.value.toLowerCase();
-    if (locale === 'pt-br') return 'BR';
-    if (locale.startsWith('en')) return 'USD';
-    return 'EUR';
+    const regionFromCountry = countryToRegion(browserCountryCode.value);
+    if (regionFromCountry) return regionFromCountry;
+
+    return localeToFallbackRegion(activeLocale.value);
 });
 
 const regionCode = computed(() => String(catalog.value?.region || inferredRegionCode.value).toUpperCase());
 
 const regionPricing = computed(() => {
+    const fallback = emptyGeoPricing[regionCode.value] || emptyGeoPricing.EUR;
     if (!catalog.value?.plans) {
-        return fallbackGeoPricing[regionCode.value] || fallbackGeoPricing.EUR;
+        return fallback;
     }
 
     const schedule = catalog.value.plans.scheduling_only || {};
     const payments = catalog.value.plans.scheduling_with_payments || {};
-    const fallback = fallbackGeoPricing[regionCode.value] || fallbackGeoPricing.EUR;
+    const premiumPrice = Number(payments.premium_price ?? fallback.payments.premium);
 
     return {
         currency: catalog.value.currency || fallback.currency,
@@ -412,14 +486,26 @@ const regionPricing = computed(() => {
         payments: {
             pro: Number(payments.monthly_price ?? fallback.payments.pro),
             annualPro: Number(payments.annual_price ?? fallback.payments.annualPro),
-            premium: Number(payments.premium_price ?? fallback.payments.premium),
+            premium: premiumPrice,
             annualPremium: Number(
-                payments.premium_price ? Math.round(Number(payments.premium_price) * 0.8) : fallback.payments.annualPremium
+                payments.premium_price
+                    ? Math.round(Number(payments.premium_price) * 0.8)
+                    : (premiumPrice ? Math.round(premiumPrice * 0.8) : fallback.payments.annualPremium)
             ),
             feePro: Number(payments.platform_fee_percent ?? fallback.payments.feePro),
             feePremium: Number(payments.premium_fee_percent ?? fallback.payments.feePremium),
         },
     };
+});
+
+const resolutionLabel = computed(() => {
+    const source = String(catalog.value?.resolution?.source || '');
+
+    if (source === 'country_code') return 'Pais informado';
+    if (source === 'geoip') return 'Regiao detectada (IP)';
+    if (source === 'locale_mapping_exact' || source === 'locale_mapping_language') return 'Idioma do navegador/SO';
+    if (source === 'locale_fallback') return 'Fallback por idioma';
+    return 'Fallback padrao';
 });
 
 const schedulePrice = computed(() => {
@@ -447,21 +533,27 @@ const regionLabel = computed(() => {
 });
 
 const pricingNotice = computed(() => {
-    if (regionCode.value === 'BR') {
-        return 'Tabela BRL ativa. Modo Agenda e Agenda + Cobranca exibidos para operacao no Brasil.';
+    if (!catalog.value?.plans) {
+        return 'Catalogo de planos indisponivel temporariamente. Tente recarregar para sincronizar com o admin master.';
     }
-    if (regionCode.value === 'USD') {
-        return 'Tabela USD ativa para US/CA/AU com fee reduzida e competitividade internacional.';
-    }
-    return 'Tabela EUR ativa para Europa e demais regioes com precificacao local.';
+
+    const resolvedCountry = catalog.value?.resolution?.country_code || catalog.value?.resolution?.detected_country_code || browserCountryCode.value;
+    const countryLabel = resolvedCountry ? ` ${resolvedCountry}` : '';
+
+    return `Tabela ${regionPricing.value.currency} ativa via ${resolutionLabel.value}${countryLabel}. Idioma detectado: ${browserLocale.value}.`;
 });
 
-const formatCurrency = (value) => new Intl.NumberFormat(activeLocale.value, {
-    style: 'currency',
-    currency: regionPricing.value.currency,
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-}).format(value);
+const formatCurrency = (value) => {
+    const parsedValue = Number(value || 0);
+    const useDecimals = parsedValue % 1 !== 0;
+
+    return new Intl.NumberFormat(activeLocale.value, {
+        style: 'currency',
+        currency: regionPricing.value.currency,
+        minimumFractionDigits: useDecimals ? 2 : 0,
+        maximumFractionDigits: 2,
+    }).format(parsedValue);
+};
 
 const formatPercent = (value) => `${new Intl.NumberFormat(activeLocale.value, {
     minimumFractionDigits: value % 1 === 0 ? 0 : 2,
@@ -488,20 +580,32 @@ const trackFunnel = (event, payload = {}) => {
 
 const fetchPricingCatalog = async () => {
     try {
-        const countryCode = String(route.query.country_code || route.query.country || '').toUpperCase();
+        const explicitCountryCode = String(route.query.country_code || route.query.country || '').toUpperCase();
+        const countryCode = /^[A-Z]{2}$/.test(explicitCountryCode)
+            ? explicitCountryCode
+            : browserCountryCode.value || undefined;
+
         const { data } = await axios.get('/api/pricing/catalog', {
             params: {
-                country_code: countryCode || undefined,
+                country_code: countryCode,
                 locale: activeLocale.value,
+                browser_locale: browserLocale.value,
             },
         });
 
         catalog.value = data;
     } catch (error) {
-        console.warn('Pricing catalog fallback enabled:', error?.message || error);
+        console.warn('Pricing catalog sync failed:', error?.message || error);
         catalog.value = null;
     }
 };
+
+watch(
+    () => [route.params.locale, route.query.region, route.query.country_code, route.query.country],
+    () => {
+        fetchPricingCatalog();
+    }
+);
 
 onMounted(() => {
     fetchPricingCatalog();

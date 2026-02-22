@@ -75,6 +75,190 @@
             </article>
         </section>
 
+        <section class="rounded-3xl border border-black/5 dark:border-white/10 bg-white dark:bg-zinc-900 p-6 space-y-6">
+            <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3">
+                <div>
+                    <h2 class="text-lg font-black text-zinc-950 dark:text-white uppercase tracking-wide">Gestao de Planos e Moedas</h2>
+                    <p class="text-xs text-slate-500 mt-1">
+                        Fonte de verdade do site, tenant e checkout. Alteracoes aqui refletem no front automaticamente.
+                    </p>
+                </div>
+                <button
+                    class="rounded-xl px-4 py-3 bg-zinc-950 dark:bg-white text-white dark:text-zinc-950 text-[10px] font-black uppercase tracking-[0.2em] disabled:opacity-50"
+                    :disabled="savingPricingSettings || pricingSettingsLoading"
+                    @click="savePricingSettings"
+                >
+                    {{ savingPricingSettings ? 'Salvando...' : 'Salvar Configuracoes' }}
+                </button>
+            </div>
+
+            <p v-if="pricingSettingsLoading" class="text-sm text-slate-500">Carregando configuracoes de planos...</p>
+
+            <div v-else class="space-y-6">
+                <div class="grid grid-cols-1 xl:grid-cols-3 gap-4">
+                    <article
+                        v-for="region in pricingSettings.regions"
+                        :key="`pricing-region-${region.region_code}`"
+                        class="rounded-2xl border border-black/5 dark:border-white/10 p-4 space-y-4"
+                    >
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-sm font-black uppercase tracking-wider text-zinc-900 dark:text-zinc-100">
+                                {{ region.region_code }}
+                            </h3>
+                            <span class="text-xs font-bold text-slate-500">{{ region.currency }}</span>
+                        </div>
+
+                        <div
+                            v-for="plan in orderedPlans(region.plans)"
+                            :key="`pricing-plan-${region.region_code}-${plan.account_mode}`"
+                            class="rounded-xl border border-black/5 dark:border-white/10 p-3 space-y-3"
+                        >
+                            <p class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">
+                                {{ formatMode(plan.account_mode) }}
+                            </p>
+
+                            <div class="grid grid-cols-2 gap-2">
+                                <label class="text-[10px] text-slate-500">
+                                    Mensal
+                                    <input
+                                        v-model.number="plan.monthly_price"
+                                        type="number"
+                                        min="0"
+                                        step="0.01"
+                                        class="mt-1 w-full rounded-lg px-2 py-1 bg-zinc-50 dark:bg-zinc-950 border border-black/10 dark:border-white/10 text-zinc-900 dark:text-white text-xs"
+                                    >
+                                </label>
+                                <label class="text-[10px] text-slate-500">
+                                    Anual
+                                    <input
+                                        v-model.number="plan.annual_price"
+                                        type="number"
+                                        min="0"
+                                        step="0.01"
+                                        class="mt-1 w-full rounded-lg px-2 py-1 bg-zinc-50 dark:bg-zinc-950 border border-black/10 dark:border-white/10 text-zinc-900 dark:text-white text-xs"
+                                    >
+                                </label>
+                                <label class="text-[10px] text-slate-500">
+                                    Fee Plataforma (%)
+                                    <input
+                                        v-model.number="plan.platform_fee_percent"
+                                        type="number"
+                                        min="0"
+                                        max="100"
+                                        step="0.01"
+                                        class="mt-1 w-full rounded-lg px-2 py-1 bg-zinc-50 dark:bg-zinc-950 border border-black/10 dark:border-white/10 text-zinc-900 dark:text-white text-xs"
+                                    >
+                                </label>
+                                <label class="text-[10px] text-slate-500">
+                                    Ativo
+                                    <div class="mt-2">
+                                        <input v-model="plan.is_active" type="checkbox">
+                                    </div>
+                                </label>
+                            </div>
+
+                            <div v-if="plan.account_mode === 'scheduling_with_payments'" class="grid grid-cols-2 gap-2">
+                                <label class="text-[10px] text-slate-500">
+                                    Premium
+                                    <input
+                                        v-model.number="plan.premium_price"
+                                        type="number"
+                                        min="0"
+                                        step="0.01"
+                                        class="mt-1 w-full rounded-lg px-2 py-1 bg-zinc-50 dark:bg-zinc-950 border border-black/10 dark:border-white/10 text-zinc-900 dark:text-white text-xs"
+                                    >
+                                </label>
+                                <label class="text-[10px] text-slate-500">
+                                    Fee Premium (%)
+                                    <input
+                                        v-model.number="plan.premium_fee_percent"
+                                        type="number"
+                                        min="0"
+                                        max="100"
+                                        step="0.01"
+                                        class="mt-1 w-full rounded-lg px-2 py-1 bg-zinc-50 dark:bg-zinc-950 border border-black/10 dark:border-white/10 text-zinc-900 dark:text-white text-xs"
+                                    >
+                                </label>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+
+                <article class="rounded-2xl border border-black/5 dark:border-white/10 p-4 space-y-3">
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                        <h3 class="text-sm font-black uppercase tracking-wider text-zinc-900 dark:text-zinc-100">
+                            Vinculo Idioma -> Moeda
+                        </h3>
+                        <button
+                            @click="addLocaleCurrencyMapping"
+                            class="px-3 py-2 rounded-lg border border-black/10 dark:border-white/10 text-[10px] font-black uppercase tracking-wider"
+                        >
+                            Adicionar Idioma
+                        </button>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full text-sm">
+                            <thead>
+                                <tr class="text-left text-[10px] uppercase tracking-wider text-slate-500">
+                                    <th class="py-2">Idioma</th>
+                                    <th class="py-2">Moeda</th>
+                                    <th class="py-2">Regiao</th>
+                                    <th class="py-2">Ativo</th>
+                                    <th class="py-2">Acoes</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr
+                                    v-for="(mapping, index) in pricingSettings.locale_currency_map"
+                                    :key="`locale-currency-${index}`"
+                                    class="border-t border-black/5 dark:border-white/10"
+                                >
+                                    <td class="py-2 pr-2">
+                                        <input
+                                            v-model="mapping.locale_code"
+                                            type="text"
+                                            maxlength="16"
+                                            placeholder="ex: pt-BR, en, fr"
+                                            class="w-full rounded-lg px-2 py-1 bg-zinc-50 dark:bg-zinc-950 border border-black/10 dark:border-white/10 text-zinc-900 dark:text-white text-xs"
+                                        >
+                                    </td>
+                                    <td class="py-2 pr-2">
+                                        <select
+                                            v-model="mapping.currency"
+                                            class="w-full rounded-lg px-2 py-1 bg-zinc-50 dark:bg-zinc-950 border border-black/10 dark:border-white/10 text-zinc-900 dark:text-white text-xs"
+                                        >
+                                            <option
+                                                v-for="currency in pricingSettings.supported?.currencies || ['BRL', 'USD', 'EUR']"
+                                                :key="`currency-${currency}`"
+                                                :value="currency"
+                                            >
+                                                {{ currency }}
+                                            </option>
+                                        </select>
+                                    </td>
+                                    <td class="py-2 pr-2 text-xs text-slate-500">
+                                        {{ currencyToRegion(mapping.currency) }}
+                                    </td>
+                                    <td class="py-2 pr-2">
+                                        <input v-model="mapping.is_active" type="checkbox">
+                                    </td>
+                                    <td class="py-2">
+                                        <button
+                                            @click="removeLocaleCurrencyMapping(index)"
+                                            class="px-2 py-1 rounded border border-red-200 text-red-600 text-[10px] font-black uppercase tracking-wider"
+                                        >
+                                            Remover
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </article>
+            </div>
+        </section>
+
         <section class="grid grid-cols-1 xl:grid-cols-3 gap-6">
             <article class="xl:col-span-2 rounded-3xl border border-black/5 dark:border-white/10 bg-white dark:bg-zinc-900 p-6 space-y-4">
                 <div class="flex flex-col md:flex-row gap-3">
@@ -311,6 +495,23 @@ const feedback = ref('');
 const error = ref('');
 const paymentActionLoading = ref({});
 const manualAdjustmentLoading = ref(false);
+const pricingSettingsLoading = ref(false);
+const savingPricingSettings = ref(false);
+
+const defaultPricingSettings = {
+    regions: [],
+    locale_currency_map: [],
+    supported: {
+        regions: ['BR', 'USD', 'EUR'],
+        currencies: ['BRL', 'USD', 'EUR'],
+        account_modes: ['scheduling_only', 'scheduling_with_payments'],
+    },
+};
+
+const pricingSettings = ref({
+    ...defaultPricingSettings,
+    supported: { ...defaultPricingSettings.supported },
+});
 
 const filters = ref({
     search: '',
@@ -357,6 +558,61 @@ const parseApiError = (fallbackMessage, e) => {
     return payload.error_code ? `[${payload.error_code}] ${message}` : message;
 };
 
+const normalizeLocaleCode = (value) => {
+    if (!value) return '';
+    return String(value).trim().replace('_', '-').toLowerCase().replace(/[^a-z0-9-]/g, '');
+};
+
+const currencyToRegion = (currency) => {
+    const upperCurrency = String(currency || '').toUpperCase();
+    if (upperCurrency === 'BRL') return 'BR';
+    if (upperCurrency === 'USD') return 'USD';
+    return 'EUR';
+};
+
+const formatMode = (mode) => {
+    if (mode === 'scheduling_only') return 'Agenda';
+    if (mode === 'scheduling_with_payments') return 'Agenda + Cobranca';
+    return mode || '-';
+};
+
+const orderedPlans = (plans = {}) => {
+    const modeOrder = ['scheduling_only', 'scheduling_with_payments'];
+    return modeOrder
+        .map((mode) => plans?.[mode])
+        .filter(Boolean);
+};
+
+const hydratePricingSettings = (payload = {}) => {
+    const supported = {
+        ...defaultPricingSettings.supported,
+        ...(payload.supported || {}),
+    };
+
+    const regions = Array.isArray(payload.regions)
+        ? payload.regions.map((region) => ({
+            ...region,
+            region_code: String(region.region_code || '').toUpperCase(),
+            currency: String(region.currency || 'EUR').toUpperCase(),
+            plans: region.plans || {},
+        }))
+        : [];
+
+    const localeCurrencyMap = Array.isArray(payload.locale_currency_map)
+        ? payload.locale_currency_map.map((mapping) => ({
+            locale_code: normalizeLocaleCode(mapping.locale_code),
+            currency: String(mapping.currency || 'EUR').toUpperCase(),
+            is_active: Boolean(mapping.is_active ?? true),
+        }))
+        : [];
+
+    pricingSettings.value = {
+        regions,
+        locale_currency_map: localeCurrencyMap,
+        supported,
+    };
+};
+
 const fetchOverview = async () => {
     const { data } = await axios.get('/api/super-admin/overview');
     overview.value = data;
@@ -372,6 +628,17 @@ const fetchCustomers = async () => {
     });
 
     customers.value = data.data || [];
+};
+
+const fetchPricingSettings = async () => {
+    pricingSettingsLoading.value = true;
+
+    try {
+        const { data } = await axios.get('/api/super-admin/pricing/settings');
+        hydratePricingSettings(data);
+    } finally {
+        pricingSettingsLoading.value = false;
+    }
 };
 
 const openCustomer = async (customer) => {
@@ -481,6 +748,81 @@ const submitManualAdjustment = async () => {
     }
 };
 
+const addLocaleCurrencyMapping = () => {
+    const firstCurrency = pricingSettings.value.supported?.currencies?.[0] || 'BRL';
+    pricingSettings.value.locale_currency_map.push({
+        locale_code: '',
+        currency: firstCurrency,
+        is_active: true,
+    });
+};
+
+const removeLocaleCurrencyMapping = (index) => {
+    pricingSettings.value.locale_currency_map.splice(index, 1);
+};
+
+const savePricingSettings = async () => {
+    resetMessages();
+
+    const plansPayload = [];
+    for (const region of pricingSettings.value.regions || []) {
+        for (const plan of orderedPlans(region.plans)) {
+            plansPayload.push({
+                region_code: String(region.region_code || '').toUpperCase(),
+                currency: String(region.currency || '').toUpperCase(),
+                account_mode: plan.account_mode,
+                monthly_price: Number(plan.monthly_price || 0),
+                annual_price: Number(plan.annual_price || 0),
+                platform_fee_percent: Number(plan.platform_fee_percent || 0),
+                premium_price: plan.account_mode === 'scheduling_with_payments'
+                    ? Number(plan.premium_price || 0)
+                    : null,
+                premium_fee_percent: plan.account_mode === 'scheduling_with_payments'
+                    ? Number(plan.premium_fee_percent || 0)
+                    : null,
+                label: plan.label || null,
+                plan_code: plan.plan_code || null,
+                is_active: Boolean(plan.is_active),
+            });
+        }
+    }
+
+    const localeCurrencyMapPayload = (pricingSettings.value.locale_currency_map || [])
+        .map((mapping) => ({
+            locale_code: normalizeLocaleCode(mapping.locale_code),
+            currency: String(mapping.currency || '').toUpperCase(),
+            is_active: Boolean(mapping.is_active),
+        }))
+        .filter((mapping) => mapping.locale_code);
+
+    if (!plansPayload.length) {
+        error.value = 'Sem planos para salvar.';
+        return;
+    }
+
+    if (!localeCurrencyMapPayload.length) {
+        error.value = 'Adicione ao menos um idioma valido para mapeamento de moeda.';
+        return;
+    }
+
+    savingPricingSettings.value = true;
+
+    try {
+        const { data } = await axios.put('/api/super-admin/pricing/settings', {
+            plans: plansPayload,
+            locale_currency_map: localeCurrencyMapPayload,
+        });
+
+        hydratePricingSettings(data);
+        feedback.value = 'Configuracoes de planos e moedas atualizadas.';
+        await Promise.all([fetchOverview(), fetchCustomers()]);
+    } catch (e) {
+        error.value = parseApiError('Falha ao salvar configuracoes de planos.', e);
+    } finally {
+        savingPricingSettings.value = false;
+    }
+};
+
 const exportPaymentsCsv = async () => {
     resetMessages();
 
@@ -515,7 +857,7 @@ const exportPaymentsCsv = async () => {
 const refreshAll = async () => {
     resetMessages();
     try {
-        await Promise.all([fetchOverview(), fetchCustomers()]);
+        await Promise.all([fetchOverview(), fetchCustomers(), fetchPricingSettings()]);
         feedback.value = 'Painel atualizado.';
     } catch (e) {
         error.value = parseApiError('Falha ao atualizar painel.', e);

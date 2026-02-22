@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\GeoPricingCatalogService;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -9,6 +10,11 @@ use Illuminate\Validation\Rule;
 
 class OnboardingController extends Controller
 {
+    public function __construct(
+        private readonly GeoPricingCatalogService $geoPricingCatalogService
+    ) {
+    }
+
     /**
      * Mark onboarding as completed for the authenticated user.
      */
@@ -21,7 +27,13 @@ class OnboardingController extends Controller
         ]);
 
         $mode = $validated['account_mode'];
-        $region = $user->region ?? 'BR';
+        $pricingContext = $this->geoPricingCatalogService->resolvePricingContext(
+            $user->country_code,
+            $user->preferred_locale ?: $request->header('Accept-Language'),
+            $request->ip()
+        );
+        $region = $pricingContext['region'] ?? ($user->region ?? 'BR');
+        $currency = $pricingContext['currency'] ?? ($user->currency ?? 'BRL');
         $fee = DB::table('geo_pricing')
             ->where('region_code', $region)
             ->where('account_mode', $mode)
@@ -33,6 +45,8 @@ class OnboardingController extends Controller
         $user->update([
             'onboarding_completed_at' => Carbon::now(),
             'account_mode' => $mode,
+            'region' => $region,
+            'currency' => $currency,
             'platform_fee_percent' => $resolvedFee,
         ]);
 
@@ -40,6 +54,8 @@ class OnboardingController extends Controller
         if ($tenant) {
             $tenant->update([
                 'account_mode' => $mode,
+                'region' => $region,
+                'currency' => $currency,
                 'platform_fee_percent' => $resolvedFee,
             ]);
         }

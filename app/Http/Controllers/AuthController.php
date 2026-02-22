@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\GeoPricingCatalogService;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -10,6 +11,11 @@ use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
+    public function __construct(
+        private readonly GeoPricingCatalogService $geoPricingCatalogService
+    ) {
+    }
+
     public function register(Request $request)
     {
         $request->validate([
@@ -23,15 +29,25 @@ class AuthController extends Controller
             'preferred_locale' => 'nullable|string|max:10',
         ]);
 
-        $countryCode = strtoupper($request->country_code ?? 'BR');
+        $providedCountryCode = $request->filled('country_code')
+            ? strtoupper((string) $request->country_code)
+            : null;
+        $preferredLocale = $request->preferred_locale ?: $request->header('Accept-Language');
+        $pricingContext = $this->geoPricingCatalogService->resolvePricingContext(
+            $providedCountryCode,
+            $preferredLocale,
+            $request->ip()
+        );
+
+        $countryCode = $providedCountryCode ?? $pricingContext['detected_country_code'];
         $accountMode = $request->account_mode ?? 'scheduling_only';
-        $region = $this->resolveRegion($countryCode);
-        $currency = strtoupper($request->currency ?? $this->resolveCurrency($region));
+        $region = $pricingContext['region'];
+        $currency = strtoupper($request->currency ?? $pricingContext['currency']);
 
         // Geo-Fence Logic (Sovereign Shield) - Only if enabled in config
-        if (config('pricing.geoip_enabled')) {
+        if (config('pricing.geoip_enabled') && $providedCountryCode !== null) {
             $geoService = new \App\Services\GeoIPService();
-            if (!$geoService->validateRegion($request->ip(), $countryCode)) {
+            if (!$geoService->validateRegion($request->ip(), $providedCountryCode)) {
                 throw ValidationException::withMessages([
                     'country_code' => ['Regional mismatch detected. Sovereign Geo-Fence protection activated.'],
                 ]);
@@ -68,24 +84,6 @@ class AuthController extends Controller
             'access_token' => $token,
             'token_type' => 'Bearer',
         ]);
-    }
-
-    private function resolveRegion(string $countryCode): string
-    {
-        return match ($countryCode) {
-            'BR' => 'BR',
-            'US', 'CA', 'AU' => 'USD',
-            default => 'EUR',
-        };
-    }
-
-    private function resolveCurrency(string $region): string
-    {
-        return match ($region) {
-            'BR' => 'BRL',
-            'USD' => 'USD',
-            default => 'EUR',
-        };
     }
 
     public function login(Request $request)

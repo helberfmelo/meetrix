@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Subscription;
+use App\Models\User;
 use App\Services\GeoPricingCatalogService;
 use App\Support\ApiError;
 use App\Support\FinancialObservability;
@@ -25,7 +26,11 @@ class AccountController extends Controller
     {
         $user = $request->user()->loadCount(['schedulingPages', 'teams']);
         $activeSubscription = $user->subscriptions()->latest()->first();
-        $subscriptionOptions = $this->resolveSubscriptionOptions($user);
+        $subscriptionOptions = $this->resolveSubscriptionOptions(
+            $user,
+            $request->header('Accept-Language'),
+            $request->ip()
+        );
 
         return response()->json([
             'user' => [
@@ -77,7 +82,25 @@ class AccountController extends Controller
             'country_code' => ['nullable', 'string', 'size:2'],
         ]);
 
-        $user->update($validated);
+        $pricingContext = $this->geoPricingCatalogService->resolvePricingContext(
+            $validated['country_code'] ?? null,
+            $user->preferred_locale ?: $request->header('Accept-Language'),
+            $request->ip()
+        );
+
+        $user->update([
+            ...$validated,
+            'region' => $pricingContext['region'],
+            'currency' => $pricingContext['currency'],
+        ]);
+
+        $tenant = $user->tenant;
+        if ($tenant) {
+            $tenant->update([
+                'region' => $pricingContext['region'],
+                'currency' => $pricingContext['currency'],
+            ]);
+        }
 
         return response()->json([
             'message' => 'Perfil atualizado com sucesso.',
@@ -95,11 +118,32 @@ class AccountController extends Controller
             'timezone' => ['required', 'timezone'],
         ]);
 
-        $request->user()->update($validated);
+        /** @var User $user */
+        $user = $request->user();
+
+        $pricingContext = $this->geoPricingCatalogService->resolvePricingContext(
+            $user->country_code,
+            $validated['preferred_locale'] ?? null,
+            $request->ip()
+        );
+
+        $user->update([
+            ...$validated,
+            'region' => $pricingContext['region'],
+            'currency' => $pricingContext['currency'],
+        ]);
+
+        $tenant = $user->tenant;
+        if ($tenant) {
+            $tenant->update([
+                'region' => $pricingContext['region'],
+                'currency' => $pricingContext['currency'],
+            ]);
+        }
 
         return response()->json([
             'message' => 'Preferências atualizadas com sucesso.',
-            'user' => $request->user()->fresh(),
+            'user' => $user->fresh(),
         ]);
     }
 
@@ -115,7 +159,14 @@ class AccountController extends Controller
         ]);
 
         $mode = $validated['account_mode'];
-        $region = $user->region ?? 'BR';
+        $pricingContext = $this->geoPricingCatalogService->resolvePricingContext(
+            $user->country_code,
+            $user->preferred_locale ?: $request->header('Accept-Language'),
+            $request->ip()
+        );
+        $region = $pricingContext['region'] ?? ($user->region ?? 'BR');
+        $currency = $pricingContext['currency'] ?? ($user->currency ?? 'BRL');
+
         $fee = DB::table('geo_pricing')
             ->where('region_code', $region)
             ->where('account_mode', $mode)
@@ -126,6 +177,8 @@ class AccountController extends Controller
 
         $user->update([
             'account_mode' => $mode,
+            'region' => $region,
+            'currency' => $currency,
             'platform_fee_percent' => $resolvedFee,
         ]);
 
@@ -133,6 +186,8 @@ class AccountController extends Controller
         if ($tenant) {
             $tenant->update([
                 'account_mode' => $mode,
+                'region' => $region,
+                'currency' => $currency,
                 'platform_fee_percent' => $resolvedFee,
             ]);
         }
@@ -180,7 +235,11 @@ class AccountController extends Controller
             );
         }
 
-        $options = $this->resolveSubscriptionOptions($user);
+        $options = $this->resolveSubscriptionOptions(
+            $user,
+            $request->header('Accept-Language'),
+            $request->ip()
+        );
         $planConfig = $options['plans'][$targetPlan] ?? null;
 
         if (!is_array($planConfig)) {
@@ -218,6 +277,7 @@ class AccountController extends Controller
                 'subscription_tier' => $targetPlan,
                 'billing_cycle' => $targetInterval,
                 'account_mode' => $nextAccountMode,
+                'region' => $options['region'],
                 'currency' => $nextCurrency,
                 'platform_fee_percent' => $nextFeePercent,
                 'trial_ends_at' => null,
@@ -228,6 +288,7 @@ class AccountController extends Controller
             if ($tenant) {
                 $tenant->update([
                     'account_mode' => $nextAccountMode,
+                    'region' => $options['region'],
                     'currency' => $nextCurrency,
                     'platform_fee_percent' => $nextFeePercent,
                 ]);
@@ -442,15 +503,26 @@ class AccountController extends Controller
      * @return array{
      *     region:string,
      *     currency:string,
-     *     plans:array<string, array<string, mixed>>
+     *     plans:array<string, array<string, mixed>>,
+     *     resolution:array<string,mixed>
      * }
      */
-    private function resolveSubscriptionOptions($user): array
+    private function resolveSubscriptionOptions(
+        User $user,
+        ?string $localeHint = null,
+        ?string $ipAddress = null
+    ): array
     {
-        $catalog = $this->geoPricingCatalogService->getCatalogForRegion((string) ($user->region ?? 'BR'));
+        $pricingContext = $this->geoPricingCatalogService->resolvePricingContext(
+            $user->country_code,
+            $user->preferred_locale ?: $localeHint,
+            $ipAddress
+        );
+
+        $catalog = $this->geoPricingCatalogService->getCatalogForRegion((string) ($pricingContext['region'] ?? $user->region ?? 'BR'));
         $paymentsPlan = (array) ($catalog['plans']['scheduling_with_payments'] ?? []);
 
-        $currency = (string) ($paymentsPlan['currency'] ?? $catalog['currency'] ?? $user->currency ?? 'BRL');
+        $currency = (string) ($catalog['currency'] ?? $pricingContext['currency'] ?? $user->currency ?? 'BRL');
         $proMonthly = (float) ($paymentsPlan['monthly_price'] ?? 39);
         $proAnnual = (float) ($paymentsPlan['annual_price'] ?? 31);
         $proFee = (float) ($paymentsPlan['platform_fee_percent'] ?? 2.5);
@@ -462,6 +534,7 @@ class AccountController extends Controller
         return [
             'region' => (string) ($catalog['region'] ?? 'BR'),
             'currency' => $currency,
+            'resolution' => $pricingContext,
             'plans' => [
                 'free' => [
                     'label' => 'Agenda',

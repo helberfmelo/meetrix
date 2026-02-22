@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use Database\Seeders\GeoPricingSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
 class PricingCatalogTest extends TestCase
@@ -51,5 +52,26 @@ class PricingCatalogTest extends TestCase
         $fallbackResponse->assertOk()
             ->assertJsonPath('region', 'EUR')
             ->assertJsonPath('currency', 'EUR');
+    }
+
+    public function test_catalog_respects_locale_currency_mapping_configured_by_admin(): void
+    {
+        DB::table('pricing_locale_currency_maps')->updateOrInsert(
+            ['locale_code' => 'fr'],
+            [
+                'region_code' => 'USD',
+                'currency' => 'USD',
+                'is_active' => true,
+                'updated_at' => now(),
+                'created_at' => now(),
+            ]
+        );
+
+        $response = $this->getJson('/api/pricing/catalog?locale=fr');
+
+        $response->assertOk()
+            ->assertJsonPath('region', 'USD')
+            ->assertJsonPath('currency', 'USD')
+            ->assertJsonPath('resolution.source', 'locale_mapping_exact');
     }
 }

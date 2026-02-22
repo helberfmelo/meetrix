@@ -80,6 +80,8 @@ Route::middleware(['auth:sanctum', 'superadmin'])->prefix('super-admin')->group(
     Route::get('/payments/export', [SaasAdminController::class, 'exportPaymentsCsv']);
     Route::get('/payments', [SaasAdminController::class, 'payments']);
     Route::post('/payments/{transaction}/actions', [SaasAdminController::class, 'paymentAction']);
+    Route::get('/pricing/settings', [SaasAdminController::class, 'pricingSettings']);
+    Route::put('/pricing/settings', [SaasAdminController::class, 'updatePricingSettings']);
     Route::get('/coupons', [SaasAdminController::class, 'coupons']);
     Route::get('/mail/diagnostics', [SaasAdminController::class, 'mailDiagnostics']);
     Route::post('/mail/test', [SaasAdminController::class, 'sendTestEmail']);

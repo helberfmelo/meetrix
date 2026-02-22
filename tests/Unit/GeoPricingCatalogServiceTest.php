@@ -5,6 +5,7 @@ namespace Tests\Unit;
 use App\Services\GeoPricingCatalogService;
 use Database\Seeders\GeoPricingSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
 class GeoPricingCatalogServiceTest extends TestCase
@@ -46,5 +47,24 @@ class GeoPricingCatalogServiceTest extends TestCase
         $catalogFallback = $service->getCatalogForRegion('UNKNOWN');
         $this->assertSame('EUR', $catalogFallback['region']);
         $this->assertSame('EUR', $catalogFallback['currency']);
+    }
+
+    public function test_resolve_region_honors_locale_currency_mapping_table(): void
+    {
+        DB::table('pricing_locale_currency_maps')->insert([
+            'locale_code' => 'fr',
+            'region_code' => 'USD',
+            'currency' => 'USD',
+            'is_active' => true,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        $service = new GeoPricingCatalogService();
+        $context = $service->resolvePricingContext(null, 'fr-FR');
+
+        $this->assertSame('USD', $context['region']);
+        $this->assertSame('USD', $context['currency']);
+        $this->assertSame('locale_mapping_language', $context['source']);
     }
 }

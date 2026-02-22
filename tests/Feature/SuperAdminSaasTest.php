@@ -6,6 +6,7 @@ use App\Models\BillingTransaction;
 use App\Models\Booking;
 use App\Models\SchedulingPage;
 use App\Models\User;
+use Database\Seeders\GeoPricingSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
@@ -166,6 +167,69 @@ class SuperAdminSaasTest extends TestCase
             ->assertJsonFragment(['currency' => 'USD'])
             ->assertJsonFragment(['country_code' => 'BR'])
             ->assertJsonFragment(['country_code' => 'US']);
+    }
+
+    public function test_super_admin_can_update_pricing_matrix_and_locale_currency_map(): void
+    {
+        $this->seed(GeoPricingSeeder::class);
+
+        $admin = User::factory()->create([
+            'is_super_admin' => true,
+            'is_active' => true,
+        ]);
+
+        Sanctum::actingAs($admin);
+
+        $settingsResponse = $this->getJson('/api/super-admin/pricing/settings');
+        $settingsResponse->assertOk()
+            ->assertJsonFragment(['region_code' => 'BR'])
+            ->assertJsonFragment(['currency' => 'BRL']);
+
+        $plansPayload = [];
+        foreach ($settingsResponse->json('regions', []) as $region) {
+            foreach ($region['plans'] as $plan) {
+                $plansPayload[] = [
+                    'region_code' => $region['region_code'],
+                    'currency' => $region['currency'],
+                    'account_mode' => $plan['account_mode'],
+                    'monthly_price' => $region['region_code'] === 'BR' && $plan['account_mode'] === 'scheduling_only'
+                        ? 35
+                        : $plan['monthly_price'],
+                    'annual_price' => $plan['annual_price'],
+                    'platform_fee_percent' => $plan['platform_fee_percent'],
+                    'premium_price' => $plan['premium_price'],
+                    'premium_fee_percent' => $plan['premium_fee_percent'],
+                    'label' => $plan['label'],
+                    'plan_code' => $plan['plan_code'],
+                    'is_active' => true,
+                ];
+            }
+        }
+
+        $updateResponse = $this->putJson('/api/super-admin/pricing/settings', [
+            'plans' => $plansPayload,
+            'locale_currency_map' => [
+                ['locale_code' => 'pt-BR', 'currency' => 'BRL', 'is_active' => true],
+                ['locale_code' => 'en', 'currency' => 'USD', 'is_active' => true],
+                ['locale_code' => 'fr', 'currency' => 'EUR', 'is_active' => true],
+            ],
+        ]);
+
+        $updateResponse->assertOk()
+            ->assertJsonPath('regions.0.region_code', 'BR');
+
+        $this->assertDatabaseHas('geo_pricing', [
+            'region_code' => 'BR',
+            'account_mode' => 'scheduling_only',
+            'monthly_price' => 35,
+        ]);
+
+        $this->assertDatabaseHas('pricing_locale_currency_maps', [
+            'locale_code' => 'fr',
+            'currency' => 'EUR',
+            'region_code' => 'EUR',
+            'is_active' => true,
+        ]);
     }
 
     public function test_super_admin_can_check_mail_diagnostics_and_send_test_mail(): void

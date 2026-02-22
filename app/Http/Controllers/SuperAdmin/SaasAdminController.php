@@ -13,15 +13,19 @@ use App\Models\User;
 use App\Support\ApiError;
 use App\Support\FinancialObservability;
 use App\Services\FinancialKpiService;
+use App\Services\GeoPricingCatalogService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 
 class SaasAdminController extends Controller
 {
     public function __construct(
-        private readonly FinancialKpiService $financialKpiService
+        private readonly FinancialKpiService $financialKpiService,
+        private readonly GeoPricingCatalogService $geoPricingCatalogService
     ) {
     }
 
@@ -513,6 +517,158 @@ class SaasAdminController extends Controller
     }
 
     /**
+     * Current pricing matrix and locale-currency bindings for master admin.
+     */
+    public function pricingSettings()
+    {
+        return response()->json($this->buildPricingSettingsPayload());
+    }
+
+    /**
+     * Persist pricing matrix + locale-currency bindings from master admin.
+     */
+    public function updatePricingSettings(Request $request)
+    {
+        $supportedRegions = $this->geoPricingCatalogService->supportedRegions();
+        $supportedCurrencies = $this->geoPricingCatalogService->supportedCurrencies();
+        $supportedAccountModes = $this->geoPricingCatalogService->supportedAccountModes();
+
+        $validated = $request->validate([
+            'plans' => ['required', 'array', 'min:1'],
+            'plans.*.region_code' => ['required', Rule::in($supportedRegions)],
+            'plans.*.currency' => ['required', Rule::in($supportedCurrencies)],
+            'plans.*.account_mode' => ['required', Rule::in($supportedAccountModes)],
+            'plans.*.monthly_price' => ['required', 'numeric', 'min:0'],
+            'plans.*.annual_price' => ['required', 'numeric', 'min:0'],
+            'plans.*.platform_fee_percent' => ['required', 'numeric', 'min:0', 'max:100'],
+            'plans.*.premium_price' => ['nullable', 'numeric', 'min:0'],
+            'plans.*.premium_fee_percent' => ['nullable', 'numeric', 'min:0', 'max:100'],
+            'plans.*.label' => ['nullable', 'string', 'max:120'],
+            'plans.*.plan_code' => ['nullable', 'string', 'max:64'],
+            'plans.*.is_active' => ['nullable', 'boolean'],
+            'locale_currency_map' => ['required', 'array', 'min:1'],
+            'locale_currency_map.*.locale_code' => ['required', 'string', 'max:16'],
+            'locale_currency_map.*.currency' => ['required', Rule::in($supportedCurrencies)],
+            'locale_currency_map.*.is_active' => ['nullable', 'boolean'],
+        ]);
+
+        foreach ($validated['plans'] as $plan) {
+            $regionCode = strtoupper((string) $plan['region_code']);
+            $currency = strtoupper((string) $plan['currency']);
+            $expectedCurrency = $this->geoPricingCatalogService->currencyForRegion($regionCode);
+
+            if ($currency !== $expectedCurrency) {
+                return ApiError::response(
+                    "Moeda invalida para regiao {$regionCode}. Use {$expectedCurrency}.",
+                    'pricing_region_currency_mismatch',
+                    422,
+                    [
+                        'region_code' => $regionCode,
+                        'currency' => $currency,
+                        'expected_currency' => $expectedCurrency,
+                    ]
+                );
+            }
+        }
+
+        $localeRows = [];
+        foreach ($validated['locale_currency_map'] as $mapping) {
+            $localeCode = $this->geoPricingCatalogService->normalizeLocaleCode((string) $mapping['locale_code']);
+            if ($localeCode === null) {
+                continue;
+            }
+
+            $currency = strtoupper((string) $mapping['currency']);
+            $localeRows[$localeCode] = [
+                'locale_code' => $localeCode,
+                'region_code' => $this->geoPricingCatalogService->regionForCurrency($currency),
+                'currency' => $currency,
+                'is_active' => (bool) ($mapping['is_active'] ?? true),
+            ];
+        }
+
+        if ($localeRows === []) {
+            throw ValidationException::withMessages([
+                'locale_currency_map' => ['Informe ao menos um idioma valido para mapeamento de moeda.'],
+            ]);
+        }
+
+        DB::transaction(function () use ($validated, $localeRows, $request) {
+            foreach ($validated['plans'] as $plan) {
+                $regionCode = strtoupper((string) $plan['region_code']);
+                $accountMode = (string) $plan['account_mode'];
+                $currency = strtoupper((string) $plan['currency']);
+
+                $existingMetadataRaw = DB::table('geo_pricing')
+                    ->where('region_code', $regionCode)
+                    ->where('account_mode', $accountMode)
+                    ->value('metadata');
+
+                $existingMetadata = is_array($existingMetadataRaw)
+                    ? $existingMetadataRaw
+                    : json_decode((string) $existingMetadataRaw, true);
+                $metadata = is_array($existingMetadata) ? $existingMetadata : [];
+
+                $metadata['label'] = $plan['label'] ?? ($metadata['label'] ?? null);
+                $metadata['plan_code'] = $plan['plan_code']
+                    ?? ($metadata['plan_code'] ?? ($accountMode === 'scheduling_only' ? 'schedule_starter' : 'payments_pro'));
+
+                if ($accountMode === 'scheduling_with_payments') {
+                    $metadata['premium_price'] = $plan['premium_price'] ?? null;
+                    $metadata['premium_fee_percent'] = $plan['premium_fee_percent'] ?? null;
+                } else {
+                    unset($metadata['premium_price'], $metadata['premium_fee_percent']);
+                }
+
+                DB::table('geo_pricing')->updateOrInsert(
+                    [
+                        'region_code' => $regionCode,
+                        'account_mode' => $accountMode,
+                    ],
+                    [
+                        'currency' => $currency,
+                        'monthly_price' => round((float) $plan['monthly_price'], 2),
+                        'annual_price' => round((float) $plan['annual_price'], 2),
+                        'platform_fee_percent' => round((float) $plan['platform_fee_percent'], 2),
+                        'is_active' => (bool) ($plan['is_active'] ?? true),
+                        'metadata' => json_encode($metadata),
+                        'updated_at' => now(),
+                        'created_at' => now(),
+                    ]
+                );
+            }
+
+            DB::table('pricing_locale_currency_maps')
+                ->whereNotIn('locale_code', array_keys($localeRows))
+                ->delete();
+
+            foreach ($localeRows as $localeRow) {
+                DB::table('pricing_locale_currency_maps')->updateOrInsert(
+                    ['locale_code' => $localeRow['locale_code']],
+                    [
+                        'region_code' => $localeRow['region_code'],
+                        'currency' => $localeRow['currency'],
+                        'is_active' => $localeRow['is_active'],
+                        'updated_at' => now(),
+                        'created_at' => now(),
+                    ]
+                );
+            }
+
+            Log::info('Super admin pricing settings updated.', [
+                'actor_user_id' => $request->user()->id,
+                'plans_count' => count($validated['plans']),
+                'locale_map_count' => count($localeRows),
+            ]);
+        });
+
+        return response()->json([
+            'message' => 'Configuracoes de planos atualizadas com sucesso.',
+            ...$this->buildPricingSettingsPayload(),
+        ]);
+    }
+
+    /**
      * Coupon visibility for super admin operations.
      */
     public function coupons()
@@ -611,6 +767,28 @@ class SaasAdminController extends Controller
             'recipient' => $validated['email'],
             'message_id' => $messageId ?? null,
         ]);
+    }
+
+    /**
+     * Shared payload used by pricing settings endpoints.
+     *
+     * @return array{
+     *     regions:array<int, array<string,mixed>>,
+     *     locale_currency_map:array<int, array<string,mixed>>,
+     *     supported:array<string, array<int,string>>
+     * }
+     */
+    private function buildPricingSettingsPayload(): array
+    {
+        return [
+            'regions' => $this->geoPricingCatalogService->getGeoPricingMatrix(),
+            'locale_currency_map' => $this->geoPricingCatalogService->getLocaleCurrencyMappings(),
+            'supported' => [
+                'regions' => $this->geoPricingCatalogService->supportedRegions(),
+                'currencies' => $this->geoPricingCatalogService->supportedCurrencies(),
+                'account_modes' => $this->geoPricingCatalogService->supportedAccountModes(),
+            ],
+        ];
     }
 
     private function logActivity(Request $request, User $target, string $action, array $details = []): void

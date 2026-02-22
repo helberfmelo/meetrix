@@ -38,6 +38,7 @@ jobs:
             **/node_modules/**
             **/vendor/**
             **/tests/**
+            docs/**
             .editorconfig
             .env
             .env.example

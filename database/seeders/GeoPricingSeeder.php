@@ -147,5 +147,83 @@ class GeoPricingSeeder extends Seeder
                 );
             }
         }
+
+        if (Schema::hasTable('pricing_operational_fees')) {
+            $operationalFees = [
+                ['currency' => 'BRL', 'payment_method' => 'card', 'fee_percent' => 3.49],
+                ['currency' => 'BRL', 'payment_method' => 'pix', 'fee_percent' => 0.99],
+                ['currency' => 'USD', 'payment_method' => 'card', 'fee_percent' => 2.90],
+                ['currency' => 'EUR', 'payment_method' => 'card', 'fee_percent' => 2.90],
+            ];
+
+            foreach ($operationalFees as $feeRow) {
+                DB::table('pricing_operational_fees')->updateOrInsert(
+                    [
+                        'currency' => strtoupper((string) $feeRow['currency']),
+                        'payment_method' => strtolower((string) $feeRow['payment_method']),
+                    ],
+                    [
+                        'fee_percent' => round((float) $feeRow['fee_percent'], 2),
+                        'is_active' => true,
+                        'updated_at' => $now,
+                        'created_at' => $now,
+                    ]
+                );
+            }
+        }
+
+        if (Schema::hasTable('pricing_platform_commissions')) {
+            $commissionRows = [];
+
+            foreach ($rows as $row) {
+                $currency = strtoupper((string) $row['currency']);
+                $metadata = json_decode((string) ($row['metadata'] ?? ''), true);
+                $metadata = is_array($metadata) ? $metadata : [];
+                $planCode = strtolower((string) ($metadata['plan_code'] ?? ''));
+
+                if ($planCode !== '') {
+                    $methods = $currency === 'BRL' ? ['card', 'pix'] : ['card'];
+                    foreach ($methods as $method) {
+                        $commissionRows[] = [
+                            'plan_code' => $planCode,
+                            'currency' => $currency,
+                            'payment_method' => $method,
+                            'commission_percent' => round((float) ($row['platform_fee_percent'] ?? 0), 2),
+                        ];
+                    }
+                }
+
+                if (
+                    (string) ($row['account_mode'] ?? '') === 'scheduling_with_payments'
+                    && isset($metadata['premium_fee_percent'])
+                ) {
+                    $methods = $currency === 'BRL' ? ['card', 'pix'] : ['card'];
+                    foreach ($methods as $method) {
+                        $commissionRows[] = [
+                            'plan_code' => 'payments_premium',
+                            'currency' => $currency,
+                            'payment_method' => $method,
+                            'commission_percent' => round((float) $metadata['premium_fee_percent'], 2),
+                        ];
+                    }
+                }
+            }
+
+            foreach ($commissionRows as $commissionRow) {
+                DB::table('pricing_platform_commissions')->updateOrInsert(
+                    [
+                        'plan_code' => strtolower((string) $commissionRow['plan_code']),
+                        'currency' => strtoupper((string) $commissionRow['currency']),
+                        'payment_method' => strtolower((string) $commissionRow['payment_method']),
+                    ],
+                    [
+                        'commission_percent' => round((float) ($commissionRow['commission_percent'] ?? 0), 2),
+                        'is_active' => true,
+                        'updated_at' => $now,
+                        'created_at' => $now,
+                    ]
+                );
+            }
+        }
     }
 }

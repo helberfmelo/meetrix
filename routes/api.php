@@ -91,6 +91,9 @@ Route::middleware(['auth:sanctum', 'superadmin'])->prefix('super-admin')->group(
     Route::post('/payments/{transaction}/actions', [SaasAdminController::class, 'paymentAction']);
     Route::get('/pricing/settings', [SaasAdminController::class, 'pricingSettings']);
     Route::put('/pricing/settings', [SaasAdminController::class, 'updatePricingSettings']);
+    Route::get('/pricing/fees', [SaasAdminController::class, 'pricingFeeSettings']);
+    Route::put('/pricing/fees', [SaasAdminController::class, 'updatePricingFeeSettings']);
+    Route::post('/pricing/fees/calculate', [SaasAdminController::class, 'calculatePricingFeeComposition']);
     Route::get('/coupons', [SaasAdminController::class, 'coupons']);
     Route::get('/mail/diagnostics', [SaasAdminController::class, 'mailDiagnostics']);
     Route::post('/mail/test', [SaasAdminController::class, 'sendTestEmail']);
@@ -98,6 +101,7 @@ Route::middleware(['auth:sanctum', 'superadmin'])->prefix('super-admin')->group(
 
 // Public Routes
 Route::get('/pricing/catalog', [\App\Http\Controllers\PricingCatalogController::class, 'index']);
+Route::get('/payments/methods', [\App\Http\Controllers\PaymentMethodCatalogController::class, 'index']);
 Route::get('/p/{slug}', [\App\Http\Controllers\PageController::class, 'show']); // Public Page View
 Route::post('/p/{slug}/click', [\App\Http\Controllers\PageController::class, 'recordClick']); // Track Click
 Route::get('/p/{slug}/slots', [\App\Http\Controllers\BookingSlotController::class, 'index']); // Get Slots

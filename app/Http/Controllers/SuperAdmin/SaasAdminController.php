@@ -7,6 +7,8 @@ use App\Models\AdminActivityLog;
 use App\Models\BillingTransaction;
 use App\Models\Booking;
 use App\Models\Coupon;
+use App\Models\PricingOperationalFee;
+use App\Models\PricingPlatformCommission;
 use App\Models\SchedulingPage;
 use App\Models\Team;
 use App\Models\User;
@@ -14,10 +16,12 @@ use App\Support\ApiError;
 use App\Support\FinancialObservability;
 use App\Services\FinancialKpiService;
 use App\Services\GeoPricingCatalogService;
+use App\Services\PricingFeeEngineService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 
@@ -25,7 +29,8 @@ class SaasAdminController extends Controller
 {
     public function __construct(
         private readonly FinancialKpiService $financialKpiService,
-        private readonly GeoPricingCatalogService $geoPricingCatalogService
+        private readonly GeoPricingCatalogService $geoPricingCatalogService,
+        private readonly PricingFeeEngineService $pricingFeeEngineService
     ) {
     }
 
@@ -669,6 +674,195 @@ class SaasAdminController extends Controller
     }
 
     /**
+     * Current platform commission and operational fee matrix for master admin.
+     */
+    public function pricingFeeSettings()
+    {
+        return response()->json($this->buildPricingFeeSettingsPayload());
+    }
+
+    /**
+     * Persist platform commission + operational fee settings in bulk.
+     */
+    public function updatePricingFeeSettings(Request $request)
+    {
+        $supportedCurrencies = $this->pricingFeeEngineService->supportedCurrencies();
+        $supportedPaymentMethods = $this->pricingFeeEngineService->supportedPaymentMethods();
+        $supportedPlanCodes = $this->pricingFeeEngineService->supportedPlanCodes();
+
+        $validated = $request->validate([
+            'commissions' => ['required', 'array'],
+            'commissions.*.plan_code' => ['required', 'string', Rule::in($supportedPlanCodes)],
+            'commissions.*.currency' => ['required', Rule::in($supportedCurrencies)],
+            'commissions.*.payment_method' => ['required', Rule::in($supportedPaymentMethods)],
+            'commissions.*.commission_percent' => ['required', 'numeric', 'min:0', 'max:100'],
+            'commissions.*.is_active' => ['nullable', 'boolean'],
+            'operational_fees' => ['required', 'array'],
+            'operational_fees.*.currency' => ['required', Rule::in($supportedCurrencies)],
+            'operational_fees.*.payment_method' => ['required', Rule::in($supportedPaymentMethods)],
+            'operational_fees.*.fee_percent' => ['required', 'numeric', 'min:0', 'max:100'],
+            'operational_fees.*.is_active' => ['nullable', 'boolean'],
+        ]);
+
+        $commissionRows = [];
+        foreach ($validated['commissions'] as $row) {
+            $planCode = strtolower(trim((string) $row['plan_code']));
+            $currency = strtoupper(trim((string) $row['currency']));
+            $paymentMethod = strtolower(trim((string) $row['payment_method']));
+
+            if (!$this->isPaymentMethodAllowedForCurrency($currency, $paymentMethod)) {
+                return ApiError::response(
+                    "Forma de pagamento {$paymentMethod} nao permitida para moeda {$currency}.",
+                    'pricing_fee_payment_method_currency_mismatch',
+                    422,
+                    [
+                        'currency' => $currency,
+                        'payment_method' => $paymentMethod,
+                    ]
+                );
+            }
+
+            $key = "{$planCode}|{$currency}|{$paymentMethod}";
+            $commissionRows[$key] = [
+                'plan_code' => $planCode,
+                'currency' => $currency,
+                'payment_method' => $paymentMethod,
+                'commission_percent' => round((float) $row['commission_percent'], 2),
+                'is_active' => (bool) ($row['is_active'] ?? true),
+            ];
+        }
+
+        $operationalRows = [];
+        foreach ($validated['operational_fees'] as $row) {
+            $currency = strtoupper(trim((string) $row['currency']));
+            $paymentMethod = strtolower(trim((string) $row['payment_method']));
+
+            if (!$this->isPaymentMethodAllowedForCurrency($currency, $paymentMethod)) {
+                return ApiError::response(
+                    "Forma de pagamento {$paymentMethod} nao permitida para moeda {$currency}.",
+                    'pricing_fee_payment_method_currency_mismatch',
+                    422,
+                    [
+                        'currency' => $currency,
+                        'payment_method' => $paymentMethod,
+                    ]
+                );
+            }
+
+            $key = "{$currency}|{$paymentMethod}";
+            $operationalRows[$key] = [
+                'currency' => $currency,
+                'payment_method' => $paymentMethod,
+                'fee_percent' => round((float) $row['fee_percent'], 2),
+                'is_active' => (bool) ($row['is_active'] ?? true),
+            ];
+        }
+
+        DB::transaction(function () use ($commissionRows, $operationalRows, $request) {
+            $keptCommissionIds = [];
+            foreach ($commissionRows as $row) {
+                $record = PricingPlatformCommission::query()->updateOrCreate(
+                    [
+                        'plan_code' => $row['plan_code'],
+                        'currency' => $row['currency'],
+                        'payment_method' => $row['payment_method'],
+                    ],
+                    [
+                        'commission_percent' => $row['commission_percent'],
+                        'is_active' => $row['is_active'],
+                    ]
+                );
+                $keptCommissionIds[] = $record->id;
+            }
+
+            if ($keptCommissionIds === []) {
+                PricingPlatformCommission::query()->delete();
+            } else {
+                PricingPlatformCommission::query()
+                    ->whereNotIn('id', $keptCommissionIds)
+                    ->delete();
+            }
+
+            $keptOperationalFeeIds = [];
+            foreach ($operationalRows as $row) {
+                $record = PricingOperationalFee::query()->updateOrCreate(
+                    [
+                        'currency' => $row['currency'],
+                        'payment_method' => $row['payment_method'],
+                    ],
+                    [
+                        'fee_percent' => $row['fee_percent'],
+                        'is_active' => $row['is_active'],
+                    ]
+                );
+                $keptOperationalFeeIds[] = $record->id;
+            }
+
+            if ($keptOperationalFeeIds === []) {
+                PricingOperationalFee::query()->delete();
+            } else {
+                PricingOperationalFee::query()
+                    ->whereNotIn('id', $keptOperationalFeeIds)
+                    ->delete();
+            }
+
+            Log::info('Super admin pricing fee settings updated.', [
+                'actor_user_id' => $request->user()->id,
+                'commissions_count' => count($commissionRows),
+                'operational_fees_count' => count($operationalRows),
+            ]);
+        });
+
+        return response()->json([
+            'message' => 'Configuracoes de taxas atualizadas com sucesso.',
+            ...$this->buildPricingFeeSettingsPayload(),
+        ]);
+    }
+
+    /**
+     * Calculate fee composition for a plan/currency/payment method combination.
+     */
+    public function calculatePricingFeeComposition(Request $request)
+    {
+        $supportedCurrencies = $this->pricingFeeEngineService->supportedCurrencies();
+        $supportedPaymentMethods = $this->pricingFeeEngineService->supportedPaymentMethods();
+        $supportedPlanCodes = $this->pricingFeeEngineService->supportedPlanCodes();
+
+        $validated = $request->validate([
+            'plan_code' => ['required', 'string', Rule::in($supportedPlanCodes)],
+            'currency' => ['required', Rule::in($supportedCurrencies)],
+            'payment_method' => ['required', Rule::in($supportedPaymentMethods)],
+            'gross_amount' => ['nullable', 'numeric', 'min:0'],
+        ]);
+
+        $currency = strtoupper(trim((string) $validated['currency']));
+        $paymentMethod = strtolower(trim((string) $validated['payment_method']));
+
+        if (!$this->isPaymentMethodAllowedForCurrency($currency, $paymentMethod)) {
+            return ApiError::response(
+                "Forma de pagamento {$paymentMethod} nao permitida para moeda {$currency}.",
+                'pricing_fee_payment_method_currency_mismatch',
+                422,
+                [
+                    'currency' => $currency,
+                    'payment_method' => $paymentMethod,
+                ]
+            );
+        }
+
+        $composition = $this->pricingFeeEngineService->calculate(
+            (string) $validated['plan_code'],
+            $currency,
+            $paymentMethod,
+            isset($validated['gross_amount']) ? (float) $validated['gross_amount'] : null
+        );
+
+        return response()->json([
+            'composition' => $composition,
+        ]);
+    }
+
+    /**
      * Coupon visibility for super admin operations.
      */
     public function coupons()
@@ -789,6 +983,55 @@ class SaasAdminController extends Controller
                 'account_modes' => $this->geoPricingCatalogService->supportedAccountModes(),
             ],
         ];
+    }
+
+    /**
+     * @return array{
+     *     commissions:array<int, array<string,mixed>>,
+     *     operational_fees:array<int, array<string,mixed>>,
+     *     supported:array<string, mixed>
+     * }
+     */
+    private function buildPricingFeeSettingsPayload(): array
+    {
+        $operationalFees = Schema::hasTable('pricing_operational_fees')
+            ? PricingOperationalFee::query()
+                ->orderBy('currency')
+                ->orderBy('payment_method')
+                ->get()
+                ->map(function (PricingOperationalFee $row) {
+                    return [
+                        'id' => $row->id,
+                        'currency' => strtoupper((string) $row->currency),
+                        'payment_method' => strtolower((string) $row->payment_method),
+                        'fee_percent' => (float) $row->fee_percent,
+                        'is_active' => (bool) $row->is_active,
+                        'updated_at' => optional($row->updated_at)?->toIso8601String(),
+                    ];
+                })
+                ->values()
+                ->all()
+            : [];
+
+        return [
+            'commissions' => $this->pricingFeeEngineService->commissionsWithComposition(),
+            'operational_fees' => $operationalFees,
+            'supported' => [
+                'currencies' => $this->pricingFeeEngineService->supportedCurrencies(),
+                'payment_methods' => $this->pricingFeeEngineService->supportedPaymentMethods(),
+                'payment_method_labels' => $this->pricingFeeEngineService->paymentMethodLabels(),
+                'payment_methods_by_currency' => $this->pricingFeeEngineService->supportedPaymentMethodsByCurrency(),
+                'plan_codes' => $this->pricingFeeEngineService->supportedPlanCodes(),
+            ],
+        ];
+    }
+
+    private function isPaymentMethodAllowedForCurrency(string $currency, string $paymentMethod): bool
+    {
+        $methodsByCurrency = $this->pricingFeeEngineService->supportedPaymentMethodsByCurrency();
+        $allowedMethods = $methodsByCurrency[strtoupper($currency)] ?? [];
+
+        return in_array(strtolower($paymentMethod), $allowedMethods, true);
     }
 
     private function logActivity(Request $request, User $target, string $action, array $details = []): void

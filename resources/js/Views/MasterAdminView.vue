@@ -139,7 +139,7 @@
                                     >
                                 </label>
                                 <label class="text-[10px] text-slate-500">
-                                    Fee Plataforma (%)
+                                    Taxa da Plataforma (%)
                                     <input
                                         v-model.number="plan.platform_fee_percent"
                                         type="number"
@@ -169,7 +169,7 @@
                                     >
                                 </label>
                                 <label class="text-[10px] text-slate-500">
-                                    Fee Premium (%)
+                                    Taxa Premium (%)
                                     <input
                                         v-model.number="plan.premium_fee_percent"
                                         type="number"
@@ -254,6 +254,225 @@
                                 </tr>
                             </tbody>
                         </table>
+                    </div>
+                </article>
+
+                <article class="rounded-2xl border border-black/5 dark:border-white/10 p-4 space-y-4">
+                    <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3">
+                        <div>
+                            <h3 class="text-sm font-black uppercase tracking-wider text-zinc-900 dark:text-zinc-100">
+                                Comissoes e Taxas por Forma de Pagamento
+                            </h3>
+                            <p class="text-xs text-slate-500 mt-1">
+                                Configure a comissao Meetrix por plano/moeda/forma e acompanhe o total de taxas.
+                            </p>
+                        </div>
+                        <button
+                            class="rounded-xl px-4 py-3 bg-zinc-950 dark:bg-white text-white dark:text-zinc-950 text-[10px] font-black uppercase tracking-[0.2em] disabled:opacity-50"
+                            :disabled="savingPricingFeeSettings || pricingFeeSettingsLoading"
+                            @click="savePricingFeeSettings"
+                        >
+                            {{ savingPricingFeeSettings ? 'Salvando...' : 'Salvar Taxas' }}
+                        </button>
+                    </div>
+
+                    <p v-if="pricingFeeSettingsLoading" class="text-sm text-slate-500">Carregando configuracoes de taxas...</p>
+
+                    <div v-else class="space-y-6">
+                        <div class="rounded-xl border border-black/5 dark:border-white/10 p-4 space-y-3">
+                            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                                <h4 class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">
+                                    Taxa Operacional por Moeda/Forma
+                                </h4>
+                                <button
+                                    @click="addOperationalFeeRow"
+                                    class="px-3 py-2 rounded-lg border border-black/10 dark:border-white/10 text-[10px] font-black uppercase tracking-wider"
+                                >
+                                    Adicionar Taxa
+                                </button>
+                            </div>
+
+                            <div class="overflow-x-auto">
+                                <table class="min-w-full text-sm">
+                                    <thead>
+                                        <tr class="text-left text-[10px] uppercase tracking-wider text-slate-500">
+                                            <th class="py-2">Moeda</th>
+                                            <th class="py-2">Forma</th>
+                                            <th class="py-2">Taxa Operacional (%)</th>
+                                            <th class="py-2">Ativo</th>
+                                            <th class="py-2">Acoes</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr
+                                            v-for="(row, index) in pricingFeeSettings.operational_fees"
+                                            :key="`operational-fee-${row.id || index}`"
+                                            class="border-t border-black/5 dark:border-white/10"
+                                        >
+                                            <td class="py-2 pr-2">
+                                                <select
+                                                    v-model="row.currency"
+                                                    @change="syncOperationalFeePaymentMethod(row)"
+                                                    class="w-full rounded-lg px-2 py-1 bg-zinc-50 dark:bg-zinc-950 border border-black/10 dark:border-white/10 text-zinc-900 dark:text-white text-xs"
+                                                >
+                                                    <option
+                                                        v-for="currency in pricingFeeSettings.supported?.currencies || ['BRL', 'USD', 'EUR']"
+                                                        :key="`operational-currency-${currency}`"
+                                                        :value="currency"
+                                                    >
+                                                        {{ currency }}
+                                                    </option>
+                                                </select>
+                                            </td>
+                                            <td class="py-2 pr-2">
+                                                <select
+                                                    v-model="row.payment_method"
+                                                    class="w-full rounded-lg px-2 py-1 bg-zinc-50 dark:bg-zinc-950 border border-black/10 dark:border-white/10 text-zinc-900 dark:text-white text-xs"
+                                                >
+                                                    <option
+                                                        v-for="method in paymentMethodOptionsForCurrency(row.currency)"
+                                                        :key="`operational-method-${row.currency}-${method}`"
+                                                        :value="method"
+                                                    >
+                                                        {{ paymentMethodLabel(method) }}
+                                                    </option>
+                                                </select>
+                                            </td>
+                                            <td class="py-2 pr-2">
+                                                <input
+                                                    v-model.number="row.fee_percent"
+                                                    type="number"
+                                                    min="0"
+                                                    max="100"
+                                                    step="0.01"
+                                                    class="w-full rounded-lg px-2 py-1 bg-zinc-50 dark:bg-zinc-950 border border-black/10 dark:border-white/10 text-zinc-900 dark:text-white text-xs"
+                                                >
+                                            </td>
+                                            <td class="py-2 pr-2">
+                                                <input v-model="row.is_active" type="checkbox">
+                                            </td>
+                                            <td class="py-2">
+                                                <button
+                                                    @click="removeOperationalFeeRow(index)"
+                                                    class="px-2 py-1 rounded border border-red-200 text-red-600 text-[10px] font-black uppercase tracking-wider"
+                                                >
+                                                    Remover
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="rounded-xl border border-black/5 dark:border-white/10 p-4 space-y-3">
+                            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                                <h4 class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">
+                                    Comissao Meetrix por Plano/Moeda/Forma
+                                </h4>
+                                <button
+                                    @click="addCommissionRow"
+                                    class="px-3 py-2 rounded-lg border border-black/10 dark:border-white/10 text-[10px] font-black uppercase tracking-wider"
+                                >
+                                    Adicionar Comissao
+                                </button>
+                            </div>
+
+                            <div class="overflow-x-auto">
+                                <table class="min-w-full text-sm">
+                                    <thead>
+                                        <tr class="text-left text-[10px] uppercase tracking-wider text-slate-500">
+                                            <th class="py-2">Plano</th>
+                                            <th class="py-2">Moeda</th>
+                                            <th class="py-2">Forma</th>
+                                            <th class="py-2">Comissao Meetrix (%)</th>
+                                            <th class="py-2">Taxa Operacional (%)</th>
+                                            <th class="py-2">Total de Taxas (%)</th>
+                                            <th class="py-2">Ativo</th>
+                                            <th class="py-2">Acoes</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr
+                                            v-for="(row, index) in pricingFeeSettings.commissions"
+                                            :key="`pricing-commission-${row.id || index}`"
+                                            class="border-t border-black/5 dark:border-white/10"
+                                        >
+                                            <td class="py-2 pr-2">
+                                                <select
+                                                    v-model="row.plan_code"
+                                                    class="w-full rounded-lg px-2 py-1 bg-zinc-50 dark:bg-zinc-950 border border-black/10 dark:border-white/10 text-zinc-900 dark:text-white text-xs"
+                                                >
+                                                    <option
+                                                        v-for="planCode in pricingFeeSettings.supported?.plan_codes || []"
+                                                        :key="`commission-plan-${planCode}`"
+                                                        :value="planCode"
+                                                    >
+                                                        {{ planCode }}
+                                                    </option>
+                                                </select>
+                                            </td>
+                                            <td class="py-2 pr-2">
+                                                <select
+                                                    v-model="row.currency"
+                                                    @change="syncCommissionPaymentMethod(row)"
+                                                    class="w-full rounded-lg px-2 py-1 bg-zinc-50 dark:bg-zinc-950 border border-black/10 dark:border-white/10 text-zinc-900 dark:text-white text-xs"
+                                                >
+                                                    <option
+                                                        v-for="currency in pricingFeeSettings.supported?.currencies || ['BRL', 'USD', 'EUR']"
+                                                        :key="`commission-currency-${currency}`"
+                                                        :value="currency"
+                                                    >
+                                                        {{ currency }}
+                                                    </option>
+                                                </select>
+                                            </td>
+                                            <td class="py-2 pr-2">
+                                                <select
+                                                    v-model="row.payment_method"
+                                                    class="w-full rounded-lg px-2 py-1 bg-zinc-50 dark:bg-zinc-950 border border-black/10 dark:border-white/10 text-zinc-900 dark:text-white text-xs"
+                                                >
+                                                    <option
+                                                        v-for="method in paymentMethodOptionsForCurrency(row.currency)"
+                                                        :key="`commission-method-${row.currency}-${method}`"
+                                                        :value="method"
+                                                    >
+                                                        {{ paymentMethodLabel(method) }}
+                                                    </option>
+                                                </select>
+                                            </td>
+                                            <td class="py-2 pr-2">
+                                                <input
+                                                    v-model.number="row.commission_percent"
+                                                    type="number"
+                                                    min="0"
+                                                    max="100"
+                                                    step="0.01"
+                                                    class="w-full rounded-lg px-2 py-1 bg-zinc-50 dark:bg-zinc-950 border border-black/10 dark:border-white/10 text-zinc-900 dark:text-white text-xs"
+                                                >
+                                            </td>
+                                            <td class="py-2 pr-2 text-xs font-bold text-zinc-900 dark:text-zinc-100">
+                                                {{ formatPercent(resolveOperationalFeePercent(row.currency, row.payment_method)) }}
+                                            </td>
+                                            <td class="py-2 pr-2 text-xs font-bold text-zinc-900 dark:text-zinc-100">
+                                                {{ formatPercent(resolveTotalFeePercent(row)) }}
+                                            </td>
+                                            <td class="py-2 pr-2">
+                                                <input v-model="row.is_active" type="checkbox">
+                                            </td>
+                                            <td class="py-2">
+                                                <button
+                                                    @click="removeCommissionRow(index)"
+                                                    class="px-2 py-1 rounded border border-red-200 text-red-600 text-[10px] font-black uppercase tracking-wider"
+                                                >
+                                                    Remover
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 </article>
             </div>
@@ -497,6 +716,8 @@ const paymentActionLoading = ref({});
 const manualAdjustmentLoading = ref(false);
 const pricingSettingsLoading = ref(false);
 const savingPricingSettings = ref(false);
+const pricingFeeSettingsLoading = ref(false);
+const savingPricingFeeSettings = ref(false);
 
 const defaultPricingSettings = {
     regions: [],
@@ -511,6 +732,34 @@ const defaultPricingSettings = {
 const pricingSettings = ref({
     ...defaultPricingSettings,
     supported: { ...defaultPricingSettings.supported },
+});
+
+const defaultPricingFeeSettings = {
+    commissions: [],
+    operational_fees: [],
+    supported: {
+        currencies: ['BRL', 'USD', 'EUR'],
+        payment_methods: ['card', 'pix'],
+        payment_method_labels: {
+            card: 'Cartao',
+            pix: 'PIX',
+        },
+        payment_methods_by_currency: {
+            BRL: ['card', 'pix'],
+            USD: ['card'],
+            EUR: ['card'],
+        },
+        plan_codes: ['schedule_starter', 'payments_pro', 'payments_premium'],
+    },
+};
+
+const pricingFeeSettings = ref({
+    ...defaultPricingFeeSettings,
+    supported: {
+        ...defaultPricingFeeSettings.supported,
+        payment_method_labels: { ...defaultPricingFeeSettings.supported.payment_method_labels },
+        payment_methods_by_currency: { ...defaultPricingFeeSettings.supported.payment_methods_by_currency },
+    },
 });
 
 const filters = ref({
@@ -563,6 +812,16 @@ const normalizeLocaleCode = (value) => {
     return String(value).trim().replace('_', '-').toLowerCase().replace(/[^a-z0-9-]/g, '');
 };
 
+const normalizePlanCode = (value) => {
+    if (!value) return '';
+    return String(value).trim().toLowerCase().replace(/[^a-z0-9_-]/g, '');
+};
+
+const normalizePaymentMethod = (value) => {
+    if (!value) return '';
+    return String(value).trim().toLowerCase().replace(/[^a-z0-9_-]/g, '');
+};
+
 const currencyToRegion = (currency) => {
     const upperCurrency = String(currency || '').toUpperCase();
     if (upperCurrency === 'BRL') return 'BR';
@@ -613,6 +872,82 @@ const hydratePricingSettings = (payload = {}) => {
     };
 };
 
+const hydratePricingFeeSettings = (payload = {}) => {
+    const supported = {
+        ...defaultPricingFeeSettings.supported,
+        ...(payload.supported || {}),
+        payment_method_labels: {
+            ...defaultPricingFeeSettings.supported.payment_method_labels,
+            ...((payload.supported || {}).payment_method_labels || {}),
+        },
+        payment_methods_by_currency: {
+            ...defaultPricingFeeSettings.supported.payment_methods_by_currency,
+            ...((payload.supported || {}).payment_methods_by_currency || {}),
+        },
+    };
+
+    const commissions = Array.isArray(payload.commissions)
+        ? payload.commissions.map((row) => ({
+            id: row.id || null,
+            plan_code: normalizePlanCode(row.plan_code),
+            currency: String(row.currency || 'BRL').toUpperCase(),
+            payment_method: normalizePaymentMethod(row.payment_method),
+            commission_percent: Number(row.commission_percent || 0),
+            is_active: Boolean(row.is_active ?? true),
+            composition: row.composition || null,
+        }))
+        : [];
+
+    const operationalFees = Array.isArray(payload.operational_fees)
+        ? payload.operational_fees.map((row) => ({
+            id: row.id || null,
+            currency: String(row.currency || 'BRL').toUpperCase(),
+            payment_method: normalizePaymentMethod(row.payment_method),
+            fee_percent: Number(row.fee_percent || 0),
+            is_active: Boolean(row.is_active ?? true),
+        }))
+        : [];
+
+    pricingFeeSettings.value = {
+        commissions,
+        operational_fees: operationalFees,
+        supported,
+    };
+};
+
+const paymentMethodOptionsForCurrency = (currency) => {
+    const upperCurrency = String(currency || '').toUpperCase();
+    const map = pricingFeeSettings.value.supported?.payment_methods_by_currency || {};
+    return map[upperCurrency] || pricingFeeSettings.value.supported?.payment_methods || ['card'];
+};
+
+const paymentMethodLabel = (method) => {
+    const code = normalizePaymentMethod(method);
+    return pricingFeeSettings.value.supported?.payment_method_labels?.[code] || code.toUpperCase();
+};
+
+const resolveOperationalFeePercent = (currency, paymentMethod) => {
+    const upperCurrency = String(currency || '').toUpperCase();
+    const normalizedPaymentMethod = normalizePaymentMethod(paymentMethod);
+
+    const row = (pricingFeeSettings.value.operational_fees || []).find((item) => (
+        String(item.currency || '').toUpperCase() === upperCurrency
+        && normalizePaymentMethod(item.payment_method) === normalizedPaymentMethod
+    ));
+
+    return Number(row?.fee_percent || 0);
+};
+
+const resolveTotalFeePercent = (commissionRow) => {
+    const commissionPercent = Number(commissionRow?.commission_percent || 0);
+    const operationalFeePercent = resolveOperationalFeePercent(
+        commissionRow?.currency,
+        commissionRow?.payment_method,
+    );
+
+    return commissionPercent + operationalFeePercent;
+};
+
 const fetchOverview = async () => {
     const { data } = await axios.get('/api/super-admin/overview');
     overview.value = data;
@@ -638,6 +973,17 @@ const fetchPricingSettings = async () => {
         hydratePricingSettings(data);
     } finally {
         pricingSettingsLoading.value = false;
+    }
+};
+
+const fetchPricingFeeSettings = async () => {
+    pricingFeeSettingsLoading.value = true;
+
+    try {
+        const { data } = await axios.get('/api/super-admin/pricing/fees');
+        hydratePricingFeeSettings(data);
+    } finally {
+        pricingFeeSettingsLoading.value = false;
     }
 };
 
@@ -761,6 +1107,57 @@ const removeLocaleCurrencyMapping = (index) => {
     pricingSettings.value.locale_currency_map.splice(index, 1);
 };
 
+const addOperationalFeeRow = () => {
+    const firstCurrency = pricingFeeSettings.value.supported?.currencies?.[0] || 'BRL';
+    const firstMethod = paymentMethodOptionsForCurrency(firstCurrency)?.[0] || 'card';
+
+    pricingFeeSettings.value.operational_fees.push({
+        id: null,
+        currency: firstCurrency,
+        payment_method: firstMethod,
+        fee_percent: 0,
+        is_active: true,
+    });
+};
+
+const removeOperationalFeeRow = (index) => {
+    pricingFeeSettings.value.operational_fees.splice(index, 1);
+};
+
+const addCommissionRow = () => {
+    const firstCurrency = pricingFeeSettings.value.supported?.currencies?.[0] || 'BRL';
+    const firstPlanCode = pricingFeeSettings.value.supported?.plan_codes?.[0] || 'payments_pro';
+    const firstMethod = paymentMethodOptionsForCurrency(firstCurrency)?.[0] || 'card';
+
+    pricingFeeSettings.value.commissions.push({
+        id: null,
+        plan_code: firstPlanCode,
+        currency: firstCurrency,
+        payment_method: firstMethod,
+        commission_percent: 0,
+        is_active: true,
+        composition: null,
+    });
+};
+
+const removeCommissionRow = (index) => {
+    pricingFeeSettings.value.commissions.splice(index, 1);
+};
+
+const syncOperationalFeePaymentMethod = (row) => {
+    const options = paymentMethodOptionsForCurrency(row.currency);
+    if (!options.includes(row.payment_method)) {
+        row.payment_method = options[0] || 'card';
+    }
+};
+
+const syncCommissionPaymentMethod = (row) => {
+    const options = paymentMethodOptionsForCurrency(row.currency);
+    if (!options.includes(row.payment_method)) {
+        row.payment_method = options[0] || 'card';
+    }
+};
+
 const savePricingSettings = async () => {
     resetMessages();
 
@@ -823,6 +1220,55 @@ const savePricingSettings = async () => {
     }
 };
 
+const savePricingFeeSettings = async () => {
+    resetMessages();
+
+    const commissionsPayload = (pricingFeeSettings.value.commissions || [])
+        .map((row) => ({
+            plan_code: normalizePlanCode(row.plan_code),
+            currency: String(row.currency || '').toUpperCase(),
+            payment_method: normalizePaymentMethod(row.payment_method),
+            commission_percent: Number(row.commission_percent || 0),
+            is_active: Boolean(row.is_active),
+        }))
+        .filter((row) => row.plan_code && row.currency && row.payment_method);
+
+    const operationalFeesPayload = (pricingFeeSettings.value.operational_fees || [])
+        .map((row) => ({
+            currency: String(row.currency || '').toUpperCase(),
+            payment_method: normalizePaymentMethod(row.payment_method),
+            fee_percent: Number(row.fee_percent || 0),
+            is_active: Boolean(row.is_active),
+        }))
+        .filter((row) => row.currency && row.payment_method);
+
+    if (!commissionsPayload.length) {
+        error.value = 'Adicione ao menos uma configuracao de comissao da plataforma.';
+        return;
+    }
+
+    if (!operationalFeesPayload.length) {
+        error.value = 'Adicione ao menos uma taxa operacional.';
+        return;
+    }
+
+    savingPricingFeeSettings.value = true;
+
+    try {
+        const { data } = await axios.put('/api/super-admin/pricing/fees', {
+            commissions: commissionsPayload,
+            operational_fees: operationalFeesPayload,
+        });
+
+        hydratePricingFeeSettings(data);
+        feedback.value = 'Configuracoes de comissoes e taxas operacionais atualizadas.';
+    } catch (e) {
+        error.value = parseApiError('Falha ao salvar configuracoes de taxas.', e);
+    } finally {
+        savingPricingFeeSettings.value = false;
+    }
+};
+
 const exportPaymentsCsv = async () => {
     resetMessages();
 
@@ -857,7 +1303,12 @@ const exportPaymentsCsv = async () => {
 const refreshAll = async () => {
     resetMessages();
     try {
-        await Promise.all([fetchOverview(), fetchCustomers(), fetchPricingSettings()]);
+        await Promise.all([
+            fetchOverview(),
+            fetchCustomers(),
+            fetchPricingSettings(),
+            fetchPricingFeeSettings(),
+        ]);
         feedback.value = 'Painel atualizado.';
     } catch (e) {
         error.value = parseApiError('Falha ao atualizar painel.', e);

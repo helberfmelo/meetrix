@@ -5,14 +5,17 @@ namespace App\Http\Controllers;
 use App\Models\BillingTransaction;
 use App\Models\Coupon;
 use App\Models\Subscription;
+use App\Services\Payments\CheckoutPaymentMethodService;
 use App\Services\Payments\PaymentFeature;
 use Illuminate\Http\Request;
 use Stripe\StripeClient;
 
 class SubscriptionController extends Controller
 {
-    public function __construct(private readonly PaymentFeature $paymentFeature)
-    {
+    public function __construct(
+        private readonly PaymentFeature $paymentFeature,
+        private readonly CheckoutPaymentMethodService $checkoutPaymentMethodService
+    ) {
     }
 
     /**
@@ -28,6 +31,8 @@ class SubscriptionController extends Controller
 
         $user = $request->user();
         $isAnnual = $validated['interval'] === 'annual';
+        $currency = strtoupper((string) ($user->currency ?? 'BRL'));
+        $paymentMethodTypes = $this->checkoutPaymentMethodService->resolveForSubscriptionCheckout($currency);
 
         // Define Price IDs (Should be in .env)
         $priceId = $isAnnual 
@@ -35,7 +40,7 @@ class SubscriptionController extends Controller
             : env('STRIPE_PRO_MONTHLY_PRICE_ID');
 
         $sessionOptions = [
-            'payment_method_types' => ['card'],
+            'payment_method_types' => $paymentMethodTypes,
             'line_items' => [[
                 'price' => $priceId,
                 'quantity' => 1,
@@ -50,6 +55,8 @@ class SubscriptionController extends Controller
                 'plan' => $validated['plan'],
                 'interval' => $validated['interval'],
                 'account_mode' => $user->account_mode ?? 'scheduling_only',
+                'currency' => $currency,
+                'payment_method_types' => implode(',', $paymentMethodTypes),
             ],
         ];
 
@@ -97,13 +104,14 @@ class SubscriptionController extends Controller
                     'source' => 'subscription',
                     'status' => 'paid',
                     'amount' => 0,
-                    'currency' => 'BRL',
+                    'currency' => $currency,
                     'coupon_code' => $coupon->code,
                     'description' => "Assinatura {$validated['plan']} ({$validated['interval']}) via cupom 100%",
                     'metadata' => [
                         'plan' => $validated['plan'],
                         'interval' => $validated['interval'],
                         'coupon_code' => $coupon->code,
+                        'payment_method_types' => $paymentMethodTypes,
                     ],
                     'paid_at' => now(),
                 ]);
@@ -135,13 +143,14 @@ class SubscriptionController extends Controller
             'source' => 'subscription',
             'status' => 'pending',
             'amount' => null,
-            'currency' => 'BRL',
+            'currency' => $currency,
             'coupon_code' => $coupon?->code,
             'description' => "Checkout assinatura {$validated['plan']} ({$validated['interval']})",
             'metadata' => [
                 'plan' => $validated['plan'],
                 'interval' => $validated['interval'],
                 'coupon_code' => $coupon?->code,
+                'payment_method_types' => $paymentMethodTypes,
             ],
         ]);
 

@@ -29,3 +29,34 @@ migration_error.txt
 status_report.md
 update_locales_v2.py
 /.agent/
+
+# Local-only documentation and evidence (keep on disk, do not version)
+/docs/
+/artifacts/
+
+# Local operational/debug scripts and outputs
+/check_files.php
+/check_files_v2.php
+/clear_caches.php
+/debug_urls.php
+/find_manage_link.php
+/get_links.php
+/getenv_mailer.php
+/migrate_p1_3.php
+/read_config.php
+/read_env.php
+/read_log_end.php
+/read_logs_precise.php
+/read_logs_py.php
+/read_mail_code.php
+/read_mailer.php
+/temp_token.php
+/test_pricing.php
+/upload_script.py
+/run_tests.sh
+/resultado.json
+/server.log
+/server_err.log
+/server_laravel.log
+/server_laravel_py.log
+/laravel_prod.log

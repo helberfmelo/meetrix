@@ -51,6 +51,33 @@
                                     <p class="font-bold text-sm">{{ selectedSlot }}</p>
                                 </div>
                             </div>
+
+                            <div v-if="selectedType && Number(selectedType.price || 0) > 0" class="space-y-2">
+                                <p class="text-[9px] uppercase font-black tracking-[0.2em] text-slate-500">Formas de Pagamento</p>
+                                <div v-if="paymentMethodsLoading" class="text-xs text-slate-400">Carregando...</div>
+                                <div v-else class="flex flex-wrap gap-2">
+                                    <template v-for="method in checkoutPaymentMethods" :key="`checkout-method-${method.code}`">
+                                        <div
+                                            v-if="method.code === 'card'"
+                                            class="inline-flex items-center gap-2 rounded-lg border border-white/10 bg-white/5 px-2 py-1 text-slate-200"
+                                        >
+                                            <i
+                                                v-for="brand in method.brand_icons || []"
+                                                :key="`card-brand-${brand}`"
+                                                :class="cardBrandIconClass(brand)"
+                                                class="text-sm"
+                                            ></i>
+                                        </div>
+                                        <div
+                                            v-else-if="method.code === 'pix'"
+                                            class="inline-flex items-center gap-2 rounded-lg border border-white/10 bg-white/5 px-2 py-1 text-slate-200"
+                                        >
+                                            <i class="fas fa-qrcode text-sm"></i>
+                                            <span class="text-[10px] font-black uppercase tracking-[0.2em]">PIX</span>
+                                        </div>
+                                    </template>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -234,6 +261,8 @@ const selectedDate = ref(null);
 const selectedSlot = ref(null);
 const slots = ref([]);
 const fetchingSlots = ref(false);
+const paymentMethodsLoading = ref(false);
+const checkoutPaymentMethods = ref([]);
 
 const primaryColor = computed(() => page.value?.config?.primary_color || '#4f46e5');
 const brandFontStyle = computed(() => ({ 
@@ -284,6 +313,44 @@ const formFields = computed(() => {
 const customerData = ref({});
 const submitting = ref(false);
 
+const cardBrandIconClass = (brand) => {
+    const normalized = String(brand || '').toLowerCase();
+
+    return ({
+        visa: 'fab fa-cc-visa',
+        mastercard: 'fab fa-cc-mastercard',
+        amex: 'fab fa-cc-amex',
+        elo: 'far fa-credit-card',
+    })[normalized] || 'far fa-credit-card';
+};
+
+const fetchCheckoutPaymentMethods = async (currency) => {
+    if (!currency) {
+        checkoutPaymentMethods.value = [];
+        return;
+    }
+
+    paymentMethodsLoading.value = true;
+
+    try {
+        const response = await axios.get('/api/payments/methods', {
+            params: {
+                currency: String(currency).toUpperCase(),
+                scheduling_page_id: page.value?.id,
+            },
+        });
+
+        checkoutPaymentMethods.value = Array.isArray(response?.data?.methods)
+            ? response.data.methods
+            : [];
+    } catch (error) {
+        console.error('Error fetching checkout payment methods', error);
+        checkoutPaymentMethods.value = [];
+    } finally {
+        paymentMethodsLoading.value = false;
+    }
+};
+
 onMounted(async () => {
     try {
         const response = await axios.get(`/api/p/${route.params.slug}`);
@@ -301,6 +368,7 @@ onMounted(async () => {
 
 const selectType = (type) => {
     selectedType.value = type;
+    fetchCheckoutPaymentMethods(type?.currency || page.value?.config?.currency || 'BRL');
     step.value = 'date';
 };
 

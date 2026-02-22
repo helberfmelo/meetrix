@@ -4,6 +4,7 @@ namespace App\Services\Payments;
 
 use App\Models\ConnectedAccount;
 use App\Models\User;
+use Illuminate\Support\Facades\Log;
 use RuntimeException;
 use Stripe\Exception\ApiErrorException;
 use Stripe\StripeClient;
@@ -123,7 +124,7 @@ class StripeConnectService
      */
     public function resolveSplitPayload(User $user, int $amountInCents, string $currency): ?array
     {
-        $connectedAccount = $this->getActiveConnectedAccount($user);
+        $connectedAccount = $this->resolveUsableConnectedAccount($user);
         if (!$connectedAccount || !$connectedAccount->provider_account_id) {
             return null;
         }
@@ -156,6 +157,52 @@ class StripeConnectService
             'platform_fee_amount_cents' => $platformFeeAmount,
             'net_amount_cents' => $netAmount,
         ];
+    }
+
+    private function resolveUsableConnectedAccount(User $user): ?ConnectedAccount
+    {
+        $connectedAccount = $this->getActiveConnectedAccount($user);
+        if (!$connectedAccount || !$connectedAccount->provider_account_id) {
+            return null;
+        }
+
+        try {
+            $syncedAccount = $this->syncConnectedAccount($connectedAccount);
+
+            if (
+                $syncedAccount->status !== 'active'
+                || !$syncedAccount->charges_enabled
+                || !$syncedAccount->provider_account_id
+            ) {
+                return null;
+            }
+
+            return $syncedAccount;
+        } catch (ApiErrorException $exception) {
+            $this->markConnectedAccountUnavailable($connectedAccount, $exception->getMessage());
+
+            Log::warning('Stripe Connect split fallback applied: connected account unavailable.', [
+                'user_id' => $user->id,
+                'connected_account_id' => $connectedAccount->id,
+                'provider_account_id' => $connectedAccount->provider_account_id,
+                'error' => $exception->getMessage(),
+            ]);
+
+            return null;
+        }
+    }
+
+    private function markConnectedAccountUnavailable(ConnectedAccount $connectedAccount, string $reason): void
+    {
+        $metadata = is_array($connectedAccount->metadata) ? $connectedAccount->metadata : [];
+        $metadata['split_fallback_last_error'] = $reason;
+        $metadata['split_fallback_last_at'] = now()->toIso8601String();
+
+        $connectedAccount->update([
+            'status' => 'pending',
+            'charges_enabled' => false,
+            'metadata' => $metadata,
+        ]);
     }
 
     private function stripe(): StripeClient

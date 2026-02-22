@@ -9,6 +9,7 @@ use App\Models\Booking;
 use App\Models\Coupon;
 use App\Models\SchedulingPage;
 use App\Models\Team;
+use App\Services\Payments\CheckoutPaymentMethodService;
 use App\Services\Payments\PaymentFeature;
 use App\Services\Payments\StripeConnectService;
 use Carbon\Carbon;
@@ -23,7 +24,8 @@ class BookingController extends Controller
 {
     public function __construct(
         private readonly PaymentFeature $paymentFeature,
-        private readonly StripeConnectService $stripeConnectService
+        private readonly StripeConnectService $stripeConnectService,
+        private readonly CheckoutPaymentMethodService $checkoutPaymentMethodService
     ) {
     }
 
@@ -203,6 +205,12 @@ class BookingController extends Controller
                 $amountCents = (int) round($chargeAmount * 100, 0, PHP_ROUND_HALF_UP);
 
                 $splitPayload = $this->stripeConnectService->resolveSplitPayload($merchant, $amountCents, $currency);
+                $paymentMethodTypes = $this->checkoutPaymentMethodService->resolveForBooking(
+                    $merchant,
+                    $currency,
+                    $splitPayload !== null,
+                    $paymentFlow === 'preauth'
+                );
 
                 $transaction = BillingTransaction::create([
                     'user_id' => $page->user_id,
@@ -220,6 +228,7 @@ class BookingController extends Controller
                         'payment_flow' => $paymentFlow,
                         'full_amount' => $finalPrice,
                         'deposit_percent' => $paymentFlow === 'deposit' ? $depositPercent : null,
+                        'payment_method_types' => $paymentMethodTypes,
                         'feature_gate' => true,
                     ],
                 ]);
@@ -233,6 +242,7 @@ class BookingController extends Controller
                     'payment_flow' => $paymentFlow,
                     'full_amount' => (string) $finalPrice,
                     'deposit_percent' => (string) ($paymentFlow === 'deposit' ? $depositPercent : 0),
+                    'payment_method_types' => implode(',', $paymentMethodTypes),
                 ];
 
                 if ($splitPayload) {
@@ -248,7 +258,7 @@ class BookingController extends Controller
                 }
 
                 $sessionData = [
-                    'payment_method_types' => ['card'],
+                    'payment_method_types' => $paymentMethodTypes,
                     'line_items' => [[
                         'price_data' => [
                             'currency' => strtolower($currency),

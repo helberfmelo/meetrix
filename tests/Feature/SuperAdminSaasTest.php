@@ -232,6 +232,112 @@ class SuperAdminSaasTest extends TestCase
         ]);
     }
 
+    public function test_super_admin_can_update_pricing_fee_settings_and_calculate_total(): void
+    {
+        $this->seed(GeoPricingSeeder::class);
+
+        $admin = User::factory()->create([
+            'is_super_admin' => true,
+            'is_active' => true,
+        ]);
+
+        Sanctum::actingAs($admin);
+
+        $settingsResponse = $this->getJson('/api/super-admin/pricing/fees');
+        $settingsResponse->assertOk()
+            ->assertJsonStructure([
+                'commissions',
+                'operational_fees',
+                'supported' => [
+                    'currencies',
+                    'payment_methods',
+                    'payment_method_labels',
+                    'payment_methods_by_currency',
+                    'plan_codes',
+                ],
+            ])
+            ->assertJsonFragment([
+                'plan_code' => 'payments_pro',
+                'currency' => 'BRL',
+                'payment_method' => 'card',
+            ]);
+
+        $updateResponse = $this->putJson('/api/super-admin/pricing/fees', [
+            'commissions' => [
+                [
+                    'plan_code' => 'payments_pro',
+                    'currency' => 'BRL',
+                    'payment_method' => 'card',
+                    'commission_percent' => 4.20,
+                    'is_active' => true,
+                ],
+                [
+                    'plan_code' => 'payments_premium',
+                    'currency' => 'BRL',
+                    'payment_method' => 'pix',
+                    'commission_percent' => 1.10,
+                    'is_active' => true,
+                ],
+            ],
+            'operational_fees' => [
+                [
+                    'currency' => 'BRL',
+                    'payment_method' => 'card',
+                    'fee_percent' => 1.80,
+                    'is_active' => true,
+                ],
+                [
+                    'currency' => 'BRL',
+                    'payment_method' => 'pix',
+                    'fee_percent' => 0.90,
+                    'is_active' => true,
+                ],
+            ],
+        ]);
+
+        $updateResponse->assertOk()
+            ->assertJsonFragment([
+                'plan_code' => 'payments_pro',
+                'currency' => 'BRL',
+                'payment_method' => 'card',
+                'commission_percent' => 4.2,
+            ]);
+
+        $this->assertDatabaseHas('pricing_platform_commissions', [
+            'plan_code' => 'payments_pro',
+            'currency' => 'BRL',
+            'payment_method' => 'card',
+            'commission_percent' => 4.20,
+            'is_active' => true,
+        ]);
+
+        $this->assertDatabaseHas('pricing_operational_fees', [
+            'currency' => 'BRL',
+            'payment_method' => 'card',
+            'fee_percent' => 1.80,
+            'is_active' => true,
+        ]);
+
+        $this->assertDatabaseMissing('pricing_operational_fees', [
+            'currency' => 'USD',
+            'payment_method' => 'card',
+        ]);
+
+        $compositionResponse = $this->postJson('/api/super-admin/pricing/fees/calculate', [
+            'plan_code' => 'payments_pro',
+            'currency' => 'BRL',
+            'payment_method' => 'card',
+            'gross_amount' => 100,
+        ]);
+
+        $compositionResponse->assertOk()
+            ->assertJsonPath('composition.commission_percent', 4.2)
+            ->assertJsonPath('composition.operational_fee_percent', 1.8)
+            ->assertJsonPath('composition.total_fee_percent', 6)
+            ->assertJsonPath('composition.total_fee_amount', 6)
+            ->assertJsonPath('composition.net_amount', 94);
+    }
+
     public function test_super_admin_can_check_mail_diagnostics_and_send_test_mail(): void
     {
         $admin = User::factory()->create([

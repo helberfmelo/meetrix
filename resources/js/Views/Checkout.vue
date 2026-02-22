@@ -77,13 +77,40 @@
 
                     <!-- Payment Button -->
                     <div class="space-y-6">
+                        <div class="space-y-2">
+                            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Formas de pagamento</p>
+                            <div v-if="paymentMethodsLoading" class="text-xs text-slate-500">Carregando metodos...</div>
+                            <div v-else class="flex flex-wrap items-center gap-2">
+                                <template v-for="method in checkoutPaymentMethods" :key="`subscription-method-${method.code}`">
+                                    <div
+                                        v-if="method.code === 'card'"
+                                        class="inline-flex items-center gap-2 rounded-lg border border-black/10 dark:border-white/20 bg-white dark:bg-zinc-950 px-3 py-2 text-zinc-700 dark:text-zinc-200"
+                                    >
+                                        <i
+                                            v-for="brand in method.brand_icons || []"
+                                            :key="`subscription-brand-${brand}`"
+                                            :class="cardBrandIconClass(brand)"
+                                            class="text-base"
+                                        ></i>
+                                    </div>
+                                    <div
+                                        v-else-if="method.code === 'pix'"
+                                        class="inline-flex items-center gap-2 rounded-lg border border-black/10 dark:border-white/20 bg-white dark:bg-zinc-950 px-3 py-2 text-zinc-700 dark:text-zinc-200"
+                                    >
+                                        <i class="fas fa-qrcode text-base"></i>
+                                        <span class="text-[10px] font-black uppercase tracking-[0.2em]">PIX</span>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+
                         <button 
                             @click="handleCheckout"
                             :disabled="loading"
                             class="w-full py-6 sm:py-8 bg-meetrix-orange text-zinc-950 rounded-[2rem] sm:rounded-[2.5rem] font-black text-xs uppercase tracking-[0.25em] sm:tracking-[0.4em] hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl shadow-meetrix-orange/30 group"
                         >
                             <span v-if="!loading" class="flex items-center justify-center gap-4">
-                                {{ finalPrice === 0 ? 'Ativar Agora Grátis' : 'Finalizar com Stripe' }}
+                                {{ finalPrice === 0 ? 'Ativar Agora Grátis' : 'Finalizar Pagamento' }}
                                 <i class="fas fa-arrow-right group-hover:translate-x-2 transition-transform"></i>
                             </span>
                             <i v-else class="fas fa-circle-notch fa-spin text-xl"></i>
@@ -116,6 +143,8 @@ const couponCode = ref('');
 const appliedCoupon = ref(null);
 const loadingCoupon = ref(false);
 const loading = ref(false);
+const paymentMethodsLoading = ref(false);
+const checkoutPaymentMethods = ref([]);
 const basePrice = 49.90;
 
 const discountValue = computed(() => {
@@ -127,6 +156,40 @@ const discountValue = computed(() => {
 });
 
 const finalPrice = computed(() => Math.max(0, basePrice - discountValue.value));
+
+const cardBrandIconClass = (brand) => {
+    const normalized = String(brand || '').toLowerCase();
+
+    return ({
+        visa: 'fab fa-cc-visa',
+        mastercard: 'fab fa-cc-mastercard',
+        amex: 'fab fa-cc-amex',
+        elo: 'far fa-credit-card',
+    })[normalized] || 'far fa-credit-card';
+};
+
+const fetchSubscriptionPaymentMethods = async () => {
+    paymentMethodsLoading.value = true;
+
+    try {
+        const currency = String(authStore.user?.currency || 'BRL').toUpperCase();
+        const response = await axios.get('/api/payments/methods', {
+            params: {
+                currency,
+                context: 'subscription',
+            },
+        });
+
+        checkoutPaymentMethods.value = Array.isArray(response?.data?.methods)
+            ? response.data.methods
+            : [];
+    } catch (error) {
+        console.error('Erro ao carregar metodos de pagamento de assinatura', error);
+        checkoutPaymentMethods.value = [];
+    } finally {
+        paymentMethodsLoading.value = false;
+    }
+};
 
 const applyCoupon = async () => {
     loadingCoupon.value = true;
@@ -178,7 +241,10 @@ onMounted(async () => {
 
     if (authStore.user && authStore.user.account_mode !== 'scheduling_with_payments') {
         router.replace('/dashboard');
+        return;
     }
+
+    await fetchSubscriptionPaymentMethods();
 
     // If we're testing and know the user wants cupom100, we could pre-fill
     // couponCode.value = 'cupom100';

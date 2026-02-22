@@ -42,6 +42,7 @@ Este guia define os procedimentos operacionais padrão para a IA no projeto Meet
   - eventos de funil instrumentados (`cta_main_click`, `path_selected`, `signup_start`, `onboarding_completed`).
 - Evidências consolidadas:
   - `docs/ENCERRAMENTO_REBRANDING_2026-02-22.md`
+  - `docs/ENCERRAMENTO_ITENS_2026-02-22.md`
 - Deploys recentes validados em verde (GitHub Actions):
   - `22252110956`, `22252181470`, `22252258268`, `22252327044`, `22252383969`, `22252402577`, `22252508806`.
 - **Plano A (Upgrade) concluído**:
@@ -55,6 +56,7 @@ Este guia define os procedimentos operacionais padrão para a IA no projeto Meet
   - `PR-05` concluído (self-service de assinatura, ações financeiras Master Admin e CSV + UX de erro com `error_code`).
   - Evidências consolidadas:
     - `docs/ENCERRAMENTO_UPGRADE_2026-02-22.md`
+    - `docs/ENCERRAMENTO_ITENS_2026-02-22.md`
   - Runs de deploy do upgrade validados em `success`:
     - `22252825769`, `22252951456`, `22253101995`, `22260660732`, `22261656916`
   - Runs de documentação/evidência também validados em `success`:
@@ -125,4 +127,4 @@ Usuário: opents62
 Senha: SAFsdfasdfEWREgFDS435#@ad
 
 ---
-*Última atualização: 2026-02-21 (YCBM P1-2 implementado; evidência: `docs/PR_YCBM_2026-02-21_P1-2.md`)*
+*Última atualização: 2026-02-22 (encerramentos consolidados; evidência: `docs/ENCERRAMENTO_ITENS_2026-02-22.md`)*

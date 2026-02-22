@@ -32,7 +32,7 @@
                     <section class="rounded-2xl border border-slate-100 p-5 space-y-4">
                         <h2 class="text-xs font-black uppercase tracking-widest text-slate-400">{{ $t('booking.manage_new_time') }}</h2>
 
-                        <div v-if="mode === 'view'" class="flex flex-col gap-3">
+                        <div v-if="mode === 'view' && !confirmingCancel" class="flex flex-col gap-3">
                             <button
                                 class="w-full py-3 rounded-2xl bg-zinc-950 text-white text-[10px] font-black uppercase tracking-[0.2em]"
                                 @click="mode = 'reschedule'"
@@ -45,6 +45,27 @@
                             >
                                 {{ $t('booking.manage_cancel') }}
                             </button>
+                        </div>
+
+                        <div v-else-if="mode === 'view' && confirmingCancel" class="space-y-4">
+                            <p class="text-sm text-slate-500 font-semibold">
+                                {{ $t('booking.manage_cancel_confirm') }}
+                            </p>
+                            <div class="flex gap-3">
+                                <button
+                                    class="flex-1 py-3 rounded-2xl border border-slate-200 text-slate-500 text-[10px] font-black uppercase tracking-[0.2em]"
+                                    @click="confirmingCancel = false"
+                                >
+                                    {{ $t('common.back') }}
+                                </button>
+                                <button
+                                    class="flex-1 py-3 rounded-2xl border border-red-200 text-red-600 text-[10px] font-black uppercase tracking-[0.2em] disabled:opacity-50"
+                                    :disabled="submitting"
+                                    @click="cancelBooking"
+                                >
+                                    {{ submitting ? $t('common.loading') : $t('booking.manage_cancel') }}
+                                </button>
+                            </div>
                         </div>
 
                         <div v-else class="space-y-4">
@@ -122,6 +143,7 @@ const booking = ref(null);
 const appointmentType = ref(null);
 const page = ref(null);
 const mode = ref('view');
+const confirmingCancel = ref(false);
 
 const selectedDate = ref(null);
 const selectedSlot = ref(null);
@@ -218,8 +240,14 @@ const selectDate = async (date) => {
 };
 
 const cancelBooking = async () => {
-    if (!confirm(t('booking.manage_cancel_confirm'))) return;
+    if (!confirmingCancel.value) {
+        confirmingCancel.value = true;
+        return;
+    }
+
+    confirmingCancel.value = false;
     submitting.value = true;
+    error.value = '';
     try {
         const response = await axios.post(`/api/public/p/${route.params.slug}/booking/${token.value}/cancel`);
         booking.value.status = response.data.booking?.status || 'cancelled';
@@ -234,6 +262,7 @@ const cancelBooking = async () => {
 const submitReschedule = async () => {
     if (!selectedDate.value || !selectedSlot.value) return;
     submitting.value = true;
+    error.value = '';
     try {
         const response = await axios.post(`/api/public/p/${route.params.slug}/booking/${token.value}/reschedule`, {
             start_at: `${selectedDate.value} ${selectedSlot.value}`,

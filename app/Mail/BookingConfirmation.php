@@ -35,7 +35,9 @@ class BookingConfirmation extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Agendamento Confirmado: ' . $this->booking->appointmentType->name,
+            subject: __('emails.booking.confirmed.subject', [
+                'service' => $this->booking->appointmentType->name,
+            ]),
         );
     }
 
@@ -45,6 +47,7 @@ class BookingConfirmation extends Mailable
     public function content(): Content
     {
         return new Content(
+            view: 'emails.bookings.confirmation',
             text: 'emails.bookings.confirmation_plain',
         );
     }

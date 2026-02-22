@@ -353,7 +353,8 @@ const submitBooking = async () => {
             appointment_type_id: selectedType.value.id,
             start_at: selectedDate.value + ' ' + selectedSlot.value,
             ...customerData.value,
-            timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
+            timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+            customer_locale: locale.value
         });
 
         if (response.data.requires_payment && response.data.checkout_url) {

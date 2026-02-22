@@ -1,22 +1,19 @@
 @component('mail::message')
-# Agendamento confirmado
+# {{ __('emails.booking.confirmed.title') }}
 
-Ola **{{ $booking->customer_name }}**,
-
-Seu agendamento foi confirmado com sucesso.
+{{ __('emails.booking.confirmed.intro', ['name' => $booking->customer_name]) }}
 
 @component('mail::panel')
-Servico: {{ $booking->appointmentType->name ?? 'Sessao' }}
+{{ __('emails.booking.confirmed.service') }}: {{ $booking->appointmentType->name ?? 'Session' }}
 
-Data/Hora: {{ optional($booking->start_at)->format('d/m/Y H:i') }}
+{{ __('emails.booking.confirmed.datetime') }}: {{ optional($booking->start_at)->format('d/m/Y H:i') }}
 
-Status: {{ strtoupper($booking->status) }}
+{{ __('emails.booking.confirmed.status') }}: {{ strtoupper($booking->status) }}
 @endcomponent
 
 @if (!empty($manageUrl))
-Gerenciar agendamento: {{ $manageUrl }}
+{{ __('emails.booking.confirmed.manage') }}: {{ $manageUrl }}
 @endif
 
-Obrigado,<br>
-{{ config('app.name') }}
+{{ __('emails.booking.confirmed.signoff', ['app' => config('app.name')]) }}
 @endcomponent

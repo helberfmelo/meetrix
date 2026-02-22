@@ -36,6 +36,7 @@ class BookingController extends Controller
             'appointment_type_id' => 'required|exists:appointment_types,id',
             'start_at' => 'required|date',
             'timezone' => 'nullable|string',
+            'customer_locale' => 'nullable|string|max:10',
             'coupon_code' => 'nullable|string',
             'payment_flow' => 'nullable|in:full,deposit,preauth',
             'deposit_percent' => 'nullable|numeric|min:1|max:99.99',
@@ -174,6 +175,7 @@ class BookingController extends Controller
                 'customer_email' => $customerEmail,
                 'customer_phone' => $customerPhone,
                 'customer_timezone' => $customerTimezone,
+                'customer_locale' => $baseValidation['customer_locale'] ?? null,
                 'customer_data' => $customerData,
                 'start_at' => $startTime,
                 'end_at' => $endTime,
@@ -314,9 +316,13 @@ class BookingController extends Controller
             DB::commit();
 
             $mailer = $this->resolveTransactionalMailer();
+            $locale = $booking->resolveNotificationLocale();
 
             try {
-                $sentMessage = Mail::mailer($mailer)->to($booking->customer_email)->send(new BookingConfirmation($booking));
+                $sentMessage = Mail::mailer($mailer)
+                    ->to($booking->customer_email)
+                    ->locale($locale)
+                    ->send(new BookingConfirmation($booking));
                 $messageId = $sentMessage?->getMessageId();
 
                 Log::info('Booking confirmation mail sent.', [

@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\BookingCancelled;
+use App\Mail\BookingRescheduled;
 use App\Models\Booking;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class PublicBookingController extends Controller
 {
@@ -76,6 +79,18 @@ class PublicBookingController extends Controller
             'page_id' => $booking->schedulingPage?->id,
         ]);
 
+        $mailer = $this->resolveTransactionalMailer();
+        $locale = $booking->resolveNotificationLocale();
+
+        try {
+            Mail::mailer($mailer)
+                ->to($booking->customer_email)
+                ->locale($locale)
+                ->send(new BookingCancelled($booking));
+        } catch (\Throwable $mailException) {
+            Log::error("Booking cancellation mail failed [mailer={$mailer}]: " . $mailException->getMessage());
+        }
+
         return response()->json([
             'message' => 'Booking cancelled.',
             'booking' => [
@@ -144,6 +159,18 @@ class PublicBookingController extends Controller
             'start_at' => $startTime->toIso8601String(),
         ]);
 
+        $mailer = $this->resolveTransactionalMailer();
+        $locale = $booking->resolveNotificationLocale();
+
+        try {
+            Mail::mailer($mailer)
+                ->to($booking->customer_email)
+                ->locale($locale)
+                ->send(new BookingRescheduled($booking));
+        } catch (\Throwable $mailException) {
+            Log::error("Booking reschedule mail failed [mailer={$mailer}]: " . $mailException->getMessage());
+        }
+
         return response()->json([
             'message' => 'Booking rescheduled.',
             'booking' => [
@@ -153,5 +180,24 @@ class PublicBookingController extends Controller
                 'end_at' => $booking->end_at?->toIso8601String(),
             ],
         ]);
+    }
+
+    private function resolveTransactionalMailer(): string
+    {
+        $smtpConfig = (array) config('mail.mailers.smtp', []);
+        $smtpHost = (string) ($smtpConfig['host'] ?? '');
+        $smtpUser = (string) ($smtpConfig['username'] ?? '');
+        $smtpPassword = (string) ($smtpConfig['password'] ?? '');
+
+        if (
+            $smtpHost !== ''
+            && !in_array($smtpHost, ['127.0.0.1', 'localhost'], true)
+            && $smtpUser !== ''
+            && $smtpPassword !== ''
+        ) {
+            return 'smtp';
+        }
+
+        return (string) config('mail.default', 'log');
     }
 }

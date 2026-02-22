@@ -21,6 +21,7 @@ class Booking extends Model
         'customer_email',
         'customer_phone',
         'customer_timezone',
+        'customer_locale',
         'customer_data',
         'status',
         'stripe_session_id',
@@ -66,5 +67,20 @@ class Booking extends Model
     public function billingTransactions()
     {
         return $this->hasMany(BillingTransaction::class);
+    }
+
+    public function resolveNotificationLocale(): string
+    {
+        $locale = $this->customer_locale
+            ?? ($this->schedulingPage?->config['locale'] ?? null)
+            ?? config('app.locale', 'en');
+
+        $normalized = strtolower(str_replace('_', '-', (string) $locale));
+
+        return match ($normalized) {
+            'pt-br' => 'pt_BR',
+            'zh-cn' => 'zh_CN',
+            default => str_replace('-', '_', $normalized),
+        };
     }
 }

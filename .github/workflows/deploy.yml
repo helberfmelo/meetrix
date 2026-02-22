@@ -55,9 +55,18 @@ jobs:
 
       - name: 🛠️ Run production migrations and seeders (SSH)
         run: |
-          sudo apt-get update && sudo apt-get install -y sshpass
           mkdir -p ~/.ssh
-          echo "${{ secrets.DEPLOY_SSH_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
+          echo "${{ secrets.DEPLOY_SSH_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
           ssh-keyscan -H ftp.opentshost.com >> ~/.ssh/known_hosts
-          sshpass -p "${{ secrets.DEPLOY_SSH_PASSPHRASE }}" ssh -i ~/.ssh/id_rsa -T -o StrictHostKeyChecking=no -o IdentitiesOnly=yes -o KexAlgorithms=+diffie-hellman-group-exchange-sha256 -p 22 ${{ secrets.DEPLOY_SSH_USER }}@ftp.opentshost.com "cd /home1/opents62/public_html/meetrix && php artisan optimize:clear && php artisan migrate --force && php artisan db:seed --class=GeoPricingSeeder --force"
+          
+          cat << 'EOF' > ~/.ssh/askpass.sh
+          #!/bin/bash
+          echo "${{ secrets.DEPLOY_SSH_PASSPHRASE }}"
+          EOF
+          chmod +x ~/.ssh/askpass.sh
+          
+          eval $(ssh-agent -s)
+          DISPLAY=1 SSH_ASKPASS=~/.ssh/askpass.sh ssh-add ~/.ssh/id_ed25519 < /dev/null
+          
+          ssh -T -o StrictHostKeyChecking=no -o IdentitiesOnly=yes -o KexAlgorithms=+diffie-hellman-group-exchange-sha256 -p 22 ${{ secrets.DEPLOY_SSH_USER }}@ftp.opentshost.com "set -e && cd /home1/opents62/public_html/meetrix && php artisan optimize:clear && php artisan migrate --force && php artisan db:seed --class=GeoPricingSeeder --force"

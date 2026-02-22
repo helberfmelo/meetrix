@@ -258,7 +258,7 @@ import { useAuthStore } from '../stores/auth';
 import { usePageStore } from '../stores/page';
 import axios from '../axios';
 
-const { t } = useI18n();
+const { t, locale } = useI18n();
 const route = useRoute();
 const router = useRouter();
 const authStore = useAuthStore();
@@ -411,8 +411,8 @@ const nextStep = async () => {
                 password: form.password,
                 password_confirmation: form.password_confirmation,
                 account_mode: form.accountMode,
-                country_code: 'BR', // Defaulting for robust flow
-                currency: 'BRL'      // Defaulting for robust flow
+                timezone: form.timezone,
+                preferred_locale: locale.value,
             });
             if (!success) {
                 console.error('Registration failed:', authStore.error);

@@ -8,6 +8,7 @@ use App\Models\BillingTransaction;
 use App\Models\Booking;
 use App\Models\Coupon;
 use App\Models\SchedulingPage;
+use App\Models\Team;
 use App\Services\Payments\PaymentFeature;
 use App\Services\Payments\StripeConnectService;
 use Carbon\Carbon;
@@ -168,8 +169,10 @@ class BookingController extends Controller
         DB::beginTransaction();
 
         try {
+            $assigneeId = $this->resolveRoundRobinAssignee($page);
             $booking = Booking::create([
                 'scheduling_page_id' => $page->id,
+                'assigned_user_id' => $assigneeId,
                 'appointment_type_id' => $type->id,
                 'customer_name' => $customerName,
                 'customer_email' => $customerEmail,
@@ -384,6 +387,41 @@ class BookingController extends Controller
         }
 
         return (string) config('mail.default', 'log');
+    }
+
+    private function resolveRoundRobinAssignee(SchedulingPage $page): ?int
+    {
+        if (!$page->team_id) {
+            return $page->user_id;
+        }
+
+        $roundRobinEnabled = $page->config['round_robin_enabled'] ?? true;
+        if (!$roundRobinEnabled) {
+            return $page->user_id;
+        }
+
+        $team = Team::query()
+            ->with('users')
+            ->lockForUpdate()
+            ->find($page->team_id);
+
+        if (!$team) {
+            return $page->user_id;
+        }
+
+        $members = $team->users->sortBy('id')->values();
+        if ($members->isEmpty()) {
+            return $page->user_id;
+        }
+
+        $lastId = $team->config['round_robin_last_user_id'] ?? null;
+        $nextMember = $members->firstWhere('id', '>', $lastId) ?? $members->first();
+
+        $config = $team->config ?? [];
+        $config['round_robin_last_user_id'] = $nextMember->id;
+        $team->update(['config' => $config]);
+
+        return $nextMember->id;
     }
 
     private function resolveChargeAmount(float $fullAmount, string $paymentFlow, float $depositPercent): float

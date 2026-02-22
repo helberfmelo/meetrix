@@ -30,6 +30,7 @@ class Booking extends Model
         'cancellation_reason',
         'meeting_link',
         'public_token',
+        'assigned_user_id',
     ];
 
     protected $casts = [
@@ -67,6 +68,11 @@ class Booking extends Model
     public function billingTransactions()
     {
         return $this->hasMany(BillingTransaction::class);
+    }
+
+    public function assignedUser()
+    {
+        return $this->belongsTo(User::class, 'assigned_user_id');
     }
 
     public function resolveNotificationLocale(): string

@@ -60,6 +60,9 @@ jobs:
           username: ${{ secrets.DEPLOY_SSH_USER }}
           key: ${{ secrets.DEPLOY_SSH_KEY }}
           passphrase: ${{ secrets.DEPLOY_SSH_PASSPHRASE }}
+          script_stop: true
+          ciphers: "aes256-cbc,aes128-cbc,aes128-ctr,aes192-ctr,aes256-ctr"
+          key_exchanges: "diffie-hellman-group1-sha1,diffie-hellman-group14-sha1,diffie-hellman-group14-sha256,diffie-hellman-group-exchange-sha1,diffie-hellman-group-exchange-sha256,curve25519-sha256@libssh.org,ecdh-sha2-nistp256,ecdh-sha2-nistp384,ecdh-sha2-nistp521"
           script: |
             set -e
             cd /home1/opents62/public_html/meetrix

@@ -54,15 +54,19 @@ jobs:
           fi
 
       - name: 🛠️ Run production migrations and seeders (SSH)
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.DEPLOY_SSH_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H ${{ secrets.DEPLOY_SSH_HOST }} >> ~/.ssh/known_hosts
-          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no -o KexAlgorithms=+diffie-hellman-group-exchange-sha256 ${{ secrets.DEPLOY_SSH_USER }}@${{ secrets.DEPLOY_SSH_HOST }} << 'EOF'
+        uses: appleboy/ssh-action@v1.2.2
+        env:
+          KEX_ALGORITHMS: "diffie-hellman-group-exchange-sha256,diffie-hellman-group14-sha256,diffie-hellman-group14-sha1,curve25519-sha256@libssh.org,ecdh-sha2-nistp256,ecdh-sha2-nistp384,ecdh-sha2-nistp521"
+        with:
+          host: ${{ secrets.DEPLOY_SSH_HOST }}
+          username: ${{ secrets.DEPLOY_SSH_USER }}
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          passphrase: ${{ secrets.DEPLOY_SSH_PASSPHRASE }}
+          script_stop: true
+          envs: KEX_ALGORITHMS
+          script: |
             set -e
             cd /home1/opents62/public_html/meetrix
             php artisan optimize:clear
             php artisan migrate --force
             php artisan db:seed --class=GeoPricingSeeder --force
-          EOF

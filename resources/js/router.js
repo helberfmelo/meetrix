@@ -26,6 +26,7 @@ import PageEditor from './Views/PageEditor.vue';
 import OnboardingWizard from './Views/OnboardingWizard.vue';
 import BookingsView from './Views/BookingsView.vue';
 import Checkout from './Views/Checkout.vue';
+import ConnectOnboardingView from './Views/ConnectOnboardingView.vue';
 
 const localizedRoot = `/:locale(${LOCALE_ROUTE_PATTERN})?`;
 
@@ -75,6 +76,7 @@ const routes = [
             { path: 'polls/create', component: () => import('./Views/PollCreator.vue') },
             { path: 'coupons', component: () => import('./Views/Coupons.vue') },
             { path: 'account', component: () => import('./Views/AccountView.vue') },
+            { path: 'connect/onboarding', component: ConnectOnboardingView },
             { path: 'master-admin', component: () => import('./Views/MasterAdminView.vue') }
         ]
     },

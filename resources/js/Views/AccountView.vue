@@ -64,9 +64,23 @@
                             >
                                 {{ upgradingMode ? $t('account.activating_payments') : $t('account.activate_billing') }}
                             </button>
-                            <p v-else class="text-[10px] font-black uppercase tracking-[0.15em] text-meetrix-green">
-                                Cobranca integrada ativa para esta conta.
-                            </p>
+                            <div v-else class="space-y-2">
+                                <p v-if="loadingConnectStatus" class="text-[10px] font-black uppercase tracking-[0.15em] text-slate-500">
+                                    Verificando status financeiro...
+                                </p>
+                                <p v-else-if="connectStatus?.receiving_ready" class="text-[10px] font-black uppercase tracking-[0.15em] text-meetrix-green">
+                                    Cobranca integrada ativa para esta conta.
+                                </p>
+                                <p v-else class="text-[10px] font-black uppercase tracking-[0.15em] text-amber-600">
+                                    Onboarding financeiro pendente.
+                                </p>
+                                <button
+                                    @click="openFinancialOnboarding"
+                                    class="w-full rounded-xl px-4 py-3 border border-black/10 dark:border-white/10 text-[10px] font-black uppercase tracking-[0.2em]"
+                                >
+                                    {{ connectStatus?.receiving_ready ? 'Gerenciar onboarding' : 'Concluir onboarding' }}
+                                </button>
+                            </div>
                         </div>
                     </div>
                     <p v-else class="text-sm text-slate-500">Carregando...</p>
@@ -240,6 +254,8 @@ import axios from '../axios';
 const router = useRouter();
 const summary = ref(null);
 const billing = ref([]);
+const connectStatus = ref(null);
+const loadingConnectStatus = ref(false);
 
 const profile = ref({
     name: '',
@@ -300,6 +316,24 @@ const parseApiError = (fallbackMessage, e) => {
     return payload.error_code ? `[${payload.error_code}] ${message}` : message;
 };
 
+const loadConnectStatus = async () => {
+    if ((summary.value?.user?.account_mode || 'scheduling_only') !== 'scheduling_with_payments') {
+        connectStatus.value = null;
+        loadingConnectStatus.value = false;
+        return;
+    }
+
+    loadingConnectStatus.value = true;
+    try {
+        const { data } = await axios.get('/api/payments/connect/status');
+        connectStatus.value = data;
+    } catch (e) {
+        connectStatus.value = null;
+    } finally {
+        loadingConnectStatus.value = false;
+    }
+};
+
 const loadSummary = async () => {
     const { data } = await axios.get('/api/account/summary');
     summary.value = data;
@@ -317,6 +351,8 @@ const loadSummary = async () => {
 
     subscription.value.plan = data.user?.subscription_tier || 'free';
     subscription.value.interval = data.user?.billing_cycle || 'monthly';
+
+    await loadConnectStatus();
 };
 
 const loadBillingHistory = async () => {
@@ -392,6 +428,10 @@ const formatMode = (mode) => {
     return 'Apenas agenda';
 };
 
+const openFinancialOnboarding = () => {
+    router.push('/dashboard/connect/onboarding');
+};
+
 const upgradeToPayments = async () => {
     resetMessages();
     upgradingMode.value = true;
@@ -403,7 +443,7 @@ const upgradeToPayments = async () => {
 
         await loadSummary();
         feedback.value = 'Modo atualizado para agenda + cobranca.';
-        router.push('/checkout');
+        router.push('/dashboard/connect/onboarding');
     } catch (e) {
         error.value = parseApiError('Falha ao atualizar modo de conta.', e);
     } finally {
@@ -414,6 +454,7 @@ const upgradeToPayments = async () => {
 const changeSubscription = async () => {
     resetMessages();
     updatingSubscription.value = true;
+    const previousMode = summary.value?.user?.account_mode || 'scheduling_only';
 
     try {
         await axios.post('/api/account/subscription/change', {
@@ -424,6 +465,13 @@ const changeSubscription = async () => {
 
         subscription.value.reason = '';
         await Promise.all([loadSummary(), loadBillingHistory()]);
+
+        const nextMode = summary.value?.user?.account_mode || previousMode;
+        if (previousMode !== 'scheduling_with_payments' && nextMode === 'scheduling_with_payments') {
+            router.push('/dashboard/connect/onboarding');
+            return;
+        }
+
         feedback.value = 'Assinatura atualizada com sucesso.';
     } catch (e) {
         error.value = parseApiError('Falha ao atualizar assinatura.', e);

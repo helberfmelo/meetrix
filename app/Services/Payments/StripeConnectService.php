@@ -14,6 +14,33 @@ class StripeConnectService
     /**
      * @throws ApiErrorException
      */
+    public function createEmbeddedOnboardingSession(User $user): array
+    {
+        $connectedAccount = $this->findOrCreateConnectedAccount($user);
+        $connectedAccount = $this->syncConnectedAccount($connectedAccount);
+
+        $accountSession = $this->stripe()->accountSessions->create([
+            'account' => $connectedAccount->provider_account_id,
+            'components' => [
+                'account_onboarding' => [
+                    'enabled' => true,
+                    'features' => [
+                        'disable_stripe_user_authentication' => true,
+                    ],
+                ],
+            ],
+        ]);
+
+        return [
+            'client_secret' => (string) $accountSession->client_secret,
+            'expires_at' => $accountSession->expires_at,
+            'connected_account' => $connectedAccount->fresh(),
+        ];
+    }
+
+    /**
+     * @throws ApiErrorException
+     */
     public function createAccountLink(User $user): array
     {
         $connectedAccount = $this->findOrCreateConnectedAccount($user);
@@ -115,6 +142,46 @@ class StripeConnectService
             ->whereNotNull('provider_account_id')
             ->latest()
             ->first();
+    }
+
+    public function getLatestConnectedAccount(User $user): ?ConnectedAccount
+    {
+        return ConnectedAccount::query()
+            ->where('user_id', $user->id)
+            ->where('provider', 'stripe_connect')
+            ->latest()
+            ->first();
+    }
+
+    public function syncConnectedAccountSafely(?ConnectedAccount $connectedAccount, array $context = []): ?ConnectedAccount
+    {
+        if (!$connectedAccount || !$connectedAccount->provider_account_id) {
+            return $connectedAccount;
+        }
+
+        try {
+            return $this->syncConnectedAccount($connectedAccount);
+        } catch (ApiErrorException|RuntimeException $exception) {
+            Log::warning('Stripe Connect sync skipped.', [
+                'connected_account_id' => $connectedAccount->id,
+                'provider_account_id' => $connectedAccount->provider_account_id,
+                'error' => $exception->getMessage(),
+                ...$context,
+            ]);
+
+            return $connectedAccount->fresh();
+        }
+    }
+
+    public function isReceivingReady(?ConnectedAccount $connectedAccount): bool
+    {
+        if (!$connectedAccount || !$connectedAccount->provider_account_id) {
+            return false;
+        }
+
+        return $connectedAccount->status === 'active'
+            && (bool) $connectedAccount->charges_enabled
+            && (bool) $connectedAccount->details_submitted;
     }
 
     /**

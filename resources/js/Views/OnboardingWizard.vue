@@ -465,7 +465,7 @@ const nextStep = async () => {
             authenticated: Boolean(authStore.user),
         });
         
-        const nextRoute = form.accountMode === 'scheduling_with_payments' ? '/checkout' : '/dashboard';
+        const nextRoute = form.accountMode === 'scheduling_with_payments' ? '/dashboard/connect/onboarding' : '/dashboard';
         console.log('Step 3 Successful. Redirecting to:', nextRoute);
         loading.value = false;
         router.push(nextRoute);

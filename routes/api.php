@@ -64,6 +64,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/subscription/checkout', [\App\Http\Controllers\SubscriptionController::class, 'checkout']);
     Route::post('/coupons/validate-code', [\App\Http\Controllers\CouponController::class, 'validateCoupon']);
     Route::get('/payments/connect/status', [\App\Http\Controllers\PaymentConnectController::class, 'status']);
+    Route::post('/payments/connect/embedded/session', [\App\Http\Controllers\PaymentConnectController::class, 'embeddedSession']);
     Route::post('/payments/connect/account-link', [\App\Http\Controllers\PaymentConnectController::class, 'accountLink']);
 
     // Admin / Coupons

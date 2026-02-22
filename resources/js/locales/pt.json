@@ -24,7 +24,8 @@
         "password_label": "Senha",
         "password_placeholder": "Senha",
         "submit": "Entrar",
-        "loading": "Entrando..."
+        "loading": "Entrando...",
+        "security_protocol": "PROTOCOLO DE ACESSO MEETRIX // LIGAÇÃO SEGURA"
     },
     "home": {
         "hero_title_1": "Organize sua agenda",
@@ -56,7 +57,7 @@
         "per_month": "/ mês",
         "per_year_incentive": "/ mês no anual",
         "get_trial": "Ativar cobrança",
-        "footer_tagline": "MEETRIX // AGENDAMENTO WORLD CLASS",
+        "footer_tagline": "MEETRIX // MARCAÇÕES DE ALTO NÍVEL",
         "footer_rights": "© 2026 // TODOS OS DIREITOS RESERVADOS",
         "free_features": [
             "Agendamento ilimitado",
@@ -75,17 +76,17 @@
     "dashboard": {
         "title": "Painel",
         "insights_subtitle": "Monitor Ativo // Agenda e Agenda + Cobranca",
-        "system_live": "Sistema Online",
+        "system_live": "Sistema ativo",
         "total_bookings": "Total de Agendamentos",
         "confirmed_tag": "CONFIRMADO",
         "active_pages": "Páginas Ativas",
-        "pages_online_tag": "Páginas Online // Sem Erros",
+        "pages_online_tag": "Páginas ativas // Sem erros",
         "revenue_engine": "MOTOR DE RECEITA",
         "active_tag": "ATIVO",
         "conversion_arch": "ARQUITETURA DE CONVERSÃO",
-        "live_stream": "PROTOCOLO_LIVE_STREAM",
+        "live_stream": "Fluxo em direto",
         "waiting_pages": "Aguardando primeira página...",
-        "node_status": "SISTEMA // ONLINE",
+        "node_status": "SISTEMA // ATIVO",
         "views_index": "Índice de Visualizações",
         "upcoming": "Próximos",
         "recent_bookings": "Agendamentos Recentes",
@@ -93,17 +94,19 @@
         "retention": "Retenção",
         "waiting_first_page": "Aguardando primeira implementação de página...",
         "impressions": "Impressões Totais",
-        "page_reach": "ALCANCE_PAGINA",
+        "page_reach": "Alcance da página",
         "intent_signals": "Sinais de Intenção",
-        "slot_interaction": "INTERACAO_SLOT",
+        "slot_interaction": "Interação com horários",
         "confirmed_conversions": "Conversões Confirmadas",
-        "success_booking": "SUCESSO_AGENDAMENTO"
+        "success_booking": "Marcação concluída",
+        "title_suffix": "Indicadores",
+        "core_engine_status": "Estado do núcleo: 200 OK"
     },
     "admin": {
         "sovereign_node": "Central de Controle",
         "breadcrumb_prefix": "SISTEMA //",
         "overview": "VISÃO GERAL",
-        "master_admin_title": "Admin Mestre",
+        "master_admin_title": "Admin principal",
         "export_csv": "Exportar_CSV",
         "historical_data": "Protocolo_Dados_Historicos // Memoria_Sistema",
         "client": "Cliente",
@@ -213,7 +216,7 @@
         "new_question_placeholder": "Nova Pergunta",
         "total_views": "Total de Visualizações",
         "conversion": "Conversão",
-        "performance_insights": "Insights de Desempenho",
+        "performance_insights": "Informações de desempenho",
         "performance_desc": "Sua taxa de conversão é calculada com base em reservas vs visualizações únicas. Tente ajustar seu 'Texto de Introdução' para melhorar o engajamento.",
         "top_sources": "Principais Fontes",
         "direct_link": "Link Direto",
@@ -224,7 +227,7 @@
         "primary_color_label": "Cor Primária",
         "typography_label": "Tipografia",
         "inter_standard": "Inter (Padrão)",
-        "outfit_premium": "Outfit (Premium)",
+        "outfit_premium": "Traje (Prêmio)",
         "system_default": "Padrão do Sistema",
         "pro_feature_tag": "RECURSO PRO",
         "whatsapp_pro": "WhatsApp Pro",
@@ -234,8 +237,8 @@
         "vector_code": "Código do cupom",
         "type": "Tipo",
         "plan_free": "Grátis",
-        "plan_pro": "Pro",
-        "plan_enterprise": "Enterprise",
+        "plan_pro": "Pró",
+        "plan_enterprise": "Empresa",
         "percentage": "Percentual (%)",
         "fixed_amount": "Valor fixo (R$)",
         "value": "Valor",
@@ -288,7 +291,8 @@
         "poll_create_failed_alert": "Falha ao criar enquete. Verifique as datas selecionadas.",
         "poll_copied": "Link da enquete copiado!",
         "delete_poll_confirm": "Excluir esta enquete?",
-        "failed_delete_poll": "Falha ao excluir enquete"
+        "failed_delete_poll": "Falha ao excluir enquete",
+        "master_admin_load_error": "Não foi possível carregar o painel de administração principal."
     },
     "account": {
         "activate_billing": "Ativar Cobranca no Agendamento",
@@ -339,7 +343,8 @@
         "manage_error": "Falha ao atualizar agendamento.",
         "manage_invalid": "Agendamento invalido ou expirado.",
         "manage_current": "Agendamento atual",
-        "manage_new_time": "Novo horario"
+        "manage_new_time": "Novo horario",
+        "sync_status": "Sincronizado"
     },
     "onboarding": {
         "step_1": "Perfil",
@@ -381,7 +386,19 @@
         "tooltip_mode": "Escolha como deseja começar. Você poderá evoluir de agenda para agenda + cobrança depois.",
         "tooltip_page_title": "Este será o cabeçalho principal na sua página pública de reservas.",
         "tooltip_page_url": "Seu identificador soberano único. Mantenha curto e memorável.",
-        "avail_more_rules_hint": "Depois você poderá adicionar mais regras de disponibilidade no painel do sistema (por exemplo, um horário diferente para sábado)."
+        "avail_more_rules_hint": "Depois você poderá adicionar mais regras de disponibilidade no painel do sistema (por exemplo, um horário diferente para sábado).",
+        "timezone_utc_label": "UTC (Tempo Universal Coordenado)",
+        "system_initialization_ok": "MEETRIX ONBOARDING // SISTEMA INICIALIZADO",
+        "default_page_title_guest": "A minha agenda",
+        "default_page_title_user": "Agenda de {name}",
+        "default_intro_text": "Será um prazer recebê-lo.",
+        "day_mon": "seg",
+        "day_tue": "ter",
+        "day_wed": "qua",
+        "day_thu": "qui",
+        "day_fri": "sex",
+        "day_sat": "Sentado",
+        "day_sun": "Sol"
     },
     "poll": {
         "by": "Por",
@@ -399,5 +416,16 @@
         "enter_info_alert": "Por favor, insira seu nome e e-mail",
         "thanks_alert": "Obrigado pela sua resposta!",
         "submit_failed_alert": "Falha no envio. Você já pode ter votado nestas opções."
+    },
+    "errors": {
+        "registration_failed": "Falha no registro.",
+        "login_failed": "Falha no login.",
+        "profile_load_after_register": "Não foi possível carregar seu perfil após o registro.",
+        "fetch_pages": "Não foi possível carregar as páginas.",
+        "create_page": "Não foi possível criar a página.",
+        "fetch_page": "Não foi possível carregar esta página.",
+        "update_page": "Não foi possível atualizar a página.",
+        "update_availability": "Não foi possível atualizar a disponibilidade.",
+        "update_services": "Não foi possível atualizar os serviços."
     }
 }

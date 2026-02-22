@@ -3,7 +3,7 @@
         <!-- Header: Sovereign Style -->
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 sm:gap-6">
             <div>
-                <h1 class="text-3xl sm:text-5xl font-black text-zinc-950 dark:text-white tracking-tighter uppercase font-outfit">{{ $t('dashboard.title') }}<span class="text-meetrix-orange">.INSIGHTS</span></h1>
+                <h1 class="text-3xl sm:text-5xl font-black text-zinc-950 dark:text-white tracking-tighter uppercase font-outfit">{{ $t('dashboard.title') }}<span class="text-meetrix-orange">.{{ $t('dashboard.title_suffix') }}</span></h1>
                 <p class="text-slate-500 font-bold text-[10px] sm:text-xs uppercase tracking-[0.2em] sm:tracking-[0.4em] mt-2">{{ $t('dashboard.insights_subtitle') }}</p>
             </div>
             <div class="px-4 sm:px-6 py-2.5 sm:py-3 bg-white dark:bg-zinc-900 border border-black/5 dark:border-white/5 rounded-full text-[9px] sm:text-[10px] font-black text-slate-400 uppercase tracking-wide sm:tracking-widest flex items-center gap-2 sm:gap-3 shadow-sm">
@@ -88,7 +88,7 @@
             <!-- Right Column: Continuous Stream -->
             <div class="xl:col-span-4 space-y-6 sm:space-y-8">
                 <div class="bg-white dark:bg-zinc-950 rounded-3xl sm:rounded-5xl border border-black/5 dark:border-white/5 p-5 sm:p-8 lg:p-10 h-full shadow-premium">
-                    <h2 class="text-[10px] sm:text-xs font-black text-zinc-950 dark:text-white uppercase tracking-[0.2em] sm:tracking-[0.5em] mb-6 sm:mb-12">LIVE_STREAM_PROTOCOL</h2>
+                    <h2 class="text-[10px] sm:text-xs font-black text-zinc-950 dark:text-white uppercase tracking-[0.2em] sm:tracking-[0.5em] mb-6 sm:mb-12">{{ $t('dashboard.live_stream') }}</h2>
                     
                     <div v-if="pageStore.pages.length === 0" class="flex flex-col items-center justify-center py-14 sm:py-24 text-center">
                          <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-3xl sm:rounded-4xl bg-zinc-100 dark:bg-zinc-900 border border-black/5 dark:border-white/5 flex items-center justify-center mb-6 sm:mb-8">
@@ -130,7 +130,7 @@
 
         <!-- Footer Info: Raw Industrial -->
         <div class="py-8 sm:py-12 border-t border-black/5 dark:border-white/5 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 sm:gap-6 text-[8px] font-black text-slate-400 dark:text-slate-600 uppercase tracking-[0.2em] sm:tracking-[0.5em]">
-            <div class="text-center sm:text-left">MEETRIX // CORE_ENGINE_STATUS: 200_OK</div>
+            <div class="text-center sm:text-left">MEETRIX // {{ $t('dashboard.core_engine_status') }}</div>
             <div class="flex gap-4 sm:gap-8 justify-center">
                 <span>VER: 2.1.0-PRO</span>
                 <span>ENC: SHA-256</span>

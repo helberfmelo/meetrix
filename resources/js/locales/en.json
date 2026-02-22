@@ -24,7 +24,8 @@
         "password_label": "Password",
         "password_placeholder": "Password",
         "submit": "Sign in",
-        "loading": "Signing in..."
+        "loading": "Signing in...",
+        "security_protocol": "MEETRIX AUTH PROTOCOL // SECURE HANDSHAKE"
     },
     "home": {
         "hero_title_1": "Organize your schedule",
@@ -56,7 +57,7 @@
         "per_month": "/ month",
         "per_year_incentive": "/ month on annual billing",
         "get_trial": "Enable payments",
-        "footer_tagline": "MEETRIX // WORLD CLASS SCHEDULING",
+        "footer_tagline": "MEETRIX // WORLD-CLASS SCHEDULING",
         "footer_rights": "© 2026 // ALL RIGHTS RESERVED",
         "free_features": [
             "Unlimited scheduling",
@@ -75,17 +76,17 @@
     "dashboard": {
         "title": "Dashboard",
         "insights_subtitle": "Active Monitor // Schedule and Schedule + Payments",
-        "system_live": "System Online",
+        "system_live": "System Live",
         "total_bookings": "Total Bookings",
         "confirmed_tag": "CONFIRMED",
         "active_pages": "Active Pages",
-        "pages_online_tag": "Pages Online // No Errors",
+        "pages_online_tag": "Pages Active // Error Free",
         "revenue_engine": "REVENUE ENGINE",
         "active_tag": "ACTIVE",
         "conversion_arch": "CONVERSION ARCHITECTURE",
-        "live_stream": "LIVE_STREAM_PROTOCOL",
+        "live_stream": "Live Stream",
         "waiting_pages": "Waiting for first page deployment...",
-        "node_status": "SYSTEM // ONLINE",
+        "node_status": "SYSTEM // ACTIVE",
         "views_index": "Views Index",
         "upcoming": "Upcoming",
         "recent_bookings": "Recent Bookings",
@@ -93,11 +94,13 @@
         "retention": "Retention",
         "waiting_first_page": "Waiting for first page deployment...",
         "impressions": "Total Impressions",
-        "page_reach": "PAGE_REACH",
+        "page_reach": "Page Reach",
         "intent_signals": "Intent Signals",
-        "slot_interaction": "SLOT_INTERACTION",
+        "slot_interaction": "Slot Interaction",
         "confirmed_conversions": "Confirmed Conversions",
-        "success_booking": "SUCCESS_BOOKING"
+        "success_booking": "Booking Success",
+        "title_suffix": "Insights",
+        "core_engine_status": "Core Engine Status: 200 OK"
     },
     "admin": {
         "sovereign_node": "Control Center",
@@ -283,7 +286,8 @@
         "poll_creating": "Creating...",
         "poll_launch": "Launch Poll",
         "poll_enter_title_alert": "Please enter a poll title.",
-        "poll_create_failed_alert": "Failed to create poll. Check the selected dates."
+        "poll_create_failed_alert": "Failed to create poll. Check the selected dates.",
+        "master_admin_load_error": "Unable to load the Master Admin dashboard."
     },
     "account": {
         "activate_billing": "Enable payments at booking",
@@ -334,7 +338,8 @@
         "manage_error": "Failed to update booking.",
         "manage_invalid": "Invalid or expired booking.",
         "manage_current": "Current booking",
-        "manage_new_time": "New time"
+        "manage_new_time": "New time",
+        "sync_status": "Sync OK"
     },
     "onboarding": {
         "step_1": "Profile",
@@ -376,7 +381,19 @@
         "tooltip_mode": "Choose how you want to start. You can upgrade from schedule-only to schedule + payments later.",
         "tooltip_page_title": "This will be the main header on your public booking page.",
         "tooltip_page_url": "Your unique sovereign identifier. Keep it short and memorable.",
-        "avail_more_rules_hint": "You can add more availability rules later in the dashboard (for example, a different schedule for Saturdays)."
+        "avail_more_rules_hint": "You can add more availability rules later in the dashboard (for example, a different schedule for Saturdays).",
+        "timezone_utc_label": "UTC (Coordinated Universal Time)",
+        "system_initialization_ok": "MEETRIX ONBOARDING // SYSTEM INITIALIZATION OK",
+        "default_page_title_guest": "My Calendar",
+        "default_page_title_user": "{name}'s Calendar",
+        "default_intro_text": "Looking forward to meeting you.",
+        "day_mon": "Mon",
+        "day_tue": "Tue",
+        "day_wed": "Wed",
+        "day_thu": "Thu",
+        "day_fri": "Fri",
+        "day_sat": "Sat",
+        "day_sun": "Sun"
     },
     "poll": {
         "by": "By",
@@ -389,5 +406,16 @@
         "votes_label": "votes",
         "submitting": "Submitting...",
         "submit_availability": "Submit Availability"
+    },
+    "errors": {
+        "registration_failed": "Registration failed.",
+        "login_failed": "Login failed.",
+        "profile_load_after_register": "Unable to load your profile after registration.",
+        "fetch_pages": "Unable to load pages.",
+        "create_page": "Unable to create the page.",
+        "fetch_page": "Unable to load this page.",
+        "update_page": "Unable to update the page.",
+        "update_availability": "Unable to update availability.",
+        "update_services": "Unable to update services."
     }
 }

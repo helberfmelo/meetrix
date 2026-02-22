@@ -124,7 +124,7 @@ const navItems = computed(() => [
     { path: '/dashboard/polls', to: toPath('/dashboard/polls'), label: t('common.polls'), icon: 'fas fa-square-poll-vertical' },
     { path: '/dashboard/coupons', to: toPath('/dashboard/coupons'), label: t('common.coupons'), icon: 'fas fa-ticket' },
     { path: '/dashboard/account', to: toPath('/dashboard/account'), label: t('common.profile'), icon: 'fas fa-user-gear' },
-    ...(user.value?.is_super_admin ? [{ path: '/dashboard/master-admin', to: toPath('/dashboard/master-admin'), label: 'Master Admin', icon: 'fas fa-shield-halved' }] : []),
+    ...(user.value?.is_super_admin ? [{ path: '/dashboard/master-admin', to: toPath('/dashboard/master-admin'), label: t('admin.master_admin_title'), icon: 'fas fa-shield-halved' }] : []),
 ]);
 
 const mobileNavItems = computed(() => navItems.value);

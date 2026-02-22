@@ -85,7 +85,7 @@
                             >
                                 <div class="text-left">
                                     <h3 class="font-black text-slate-900 text-lg sm:text-xl uppercase tracking-tighter">{{ type.name }}</h3>
-                                    <p class="text-slate-400 text-[10px] font-black uppercase tracking-widest mt-1">{{ type.duration_minutes }} {{ $t('booking.minutes_short') }} // SYNC_OK</p>
+                                    <p class="text-slate-400 text-[10px] font-black uppercase tracking-widest mt-1">{{ type.duration_minutes }} {{ $t('booking.minutes_short') }} // {{ $t('booking.sync_status') }}</p>
                                 </div>
                                 <div class="text-right">
                                     <span v-if="type.price > 0" class="font-black text-xl sm:text-2xl tracking-tighter" :style="{ color: primaryColor }">{{ formatCurrency(type.price) }}</span>

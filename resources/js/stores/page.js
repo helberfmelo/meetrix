@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import axios from '../axios';
+import i18n from '../i18n';
 
 export const usePageStore = defineStore('page', {
     state: () => ({
@@ -27,7 +28,7 @@ export const usePageStore = defineStore('page', {
                 const response = await axios.get('/api/pages');
                 this.pages = response.data;
             } catch (error) {
-                this.error = error.response?.data?.message || 'Error fetching pages';
+                this.error = error.response?.data?.message || i18n.global.t('errors.fetch_pages');
                 console.error(this.error);
             } finally {
                 this.loading = false;
@@ -41,7 +42,7 @@ export const usePageStore = defineStore('page', {
                 this.pages.push(response.data);
                 return response.data;
             } catch (error) {
-                this.error = error.response?.data?.message || 'Error creating page';
+                this.error = error.response?.data?.message || i18n.global.t('errors.create_page');
                 throw error;
             } finally {
                 this.loading = false;
@@ -55,7 +56,7 @@ export const usePageStore = defineStore('page', {
                 this.currentPage = response.data;
                 return response.data;
             } catch (error) {
-                this.error = error.response?.data?.message || 'Error fetching page';
+                this.error = error.response?.data?.message || i18n.global.t('errors.fetch_page');
                 throw error;
             } finally {
                 this.loading = false;
@@ -72,7 +73,7 @@ export const usePageStore = defineStore('page', {
                 }
                 return response.data;
             } catch (error) {
-                this.error = error.response?.data?.message || 'Error updating page';
+                this.error = error.response?.data?.message || i18n.global.t('errors.update_page');
                 throw error;
             } finally {
                 this.loading = false;
@@ -85,7 +86,7 @@ export const usePageStore = defineStore('page', {
                 const response = await axios.put(`/api/pages/${pageId}/availability/bulk`, { rules });
                 return response.data;
             } catch (error) {
-                this.error = error.response?.data?.message || 'Error updating availability';
+                this.error = error.response?.data?.message || i18n.global.t('errors.update_availability');
                 throw error;
             } finally {
                 this.loading = false;
@@ -98,7 +99,7 @@ export const usePageStore = defineStore('page', {
                 const response = await axios.put(`/api/pages/${pageId}/appointment-types/bulk`, { types });
                 return response.data;
             } catch (error) {
-                this.error = error.response?.data?.message || 'Error updating services';
+                this.error = error.response?.data?.message || i18n.global.t('errors.update_services');
                 throw error;
             } finally {
                 this.loading = false;

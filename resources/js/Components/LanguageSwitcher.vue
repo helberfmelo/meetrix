@@ -61,20 +61,20 @@ const locales = {
 };
 
 const labels = {
-    'en': 'English (US)',
+    'en': 'English',
     'es': 'Español',
     'fr': 'Français',
     'de': 'Deutsch',
-    'pt-BR': 'Português (BR)',
-    'pt': 'Português (PT)',
+    'pt-BR': 'Português (Brasil)',
+    'pt': 'Português (Portugal)',
     'tr': 'Türkçe',
-    'zh': 'Chinese',
-    'zh-CN': 'Chinese',
+    'zh': '中文',
+    'zh-CN': '简体中文',
     'ar': 'العربية',
-    'ja': 'Japanese',
-    'ko': 'Korean',
+    'ja': '日本語',
+    'ko': '한국어',
     'it': 'Italiano',
-    'ru': 'Russian'
+    'ru': 'Русский'
 };
 
 const currentLocale = computed(() => locale.value);

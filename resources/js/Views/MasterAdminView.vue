@@ -549,7 +549,7 @@ onMounted(async () => {
     try {
         await refreshAll();
     } catch (e) {
-        error.value = 'Nao foi possivel carregar o painel Master Admin.';
+        error.value = t('admin.master_admin_load_error');
     }
 });
 </script>

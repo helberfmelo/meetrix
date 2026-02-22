@@ -134,7 +134,7 @@
                                 v-model="form.timezone"
                                 class="w-full bg-zinc-100 dark:bg-zinc-950 border-2 border-black/5 dark:border-white/5 rounded-2xl px-5 sm:px-8 py-4 sm:py-5 text-zinc-950 dark:text-white font-bold text-base sm:text-lg outline-none focus:border-meetrix-orange transition-all appearance-none cursor-pointer"
                             >
-                                <option value="UTC">UTC (Universal Time)</option>
+                                <option value="UTC">{{ $t('onboarding.timezone_utc_label') }}</option>
                                 <option value="America/Sao_Paulo">America/Sao_Paulo</option>
                                 <option value="Europe/London">Europe/London</option>
                                 <option value="America/New_York">America/New_York</option>
@@ -244,7 +244,7 @@
             </div>
             
             <p class="text-[8px] font-black uppercase tracking-[0.3em] sm:tracking-[0.5em] text-slate-800 text-center">
-                MEETRIX_ONBOARDING // SYSTEM_INITIALIZATION_OK
+                {{ $t('onboarding.system_initialization_ok') }}
             </p>
         </div>
     </div>
@@ -266,12 +266,15 @@ const pageStore = usePageStore();
 
 const step = ref(1);
 const loading = ref(false);
-const stepLabels = ['Profile', 'Page', 'Availability'];
-
-const days = [
-    { id: 1, label: 'Mon' }, { id: 2, label: 'Tue' }, { id: 3, label: 'Wed' }, 
-    { id: 4, label: 'Thu' }, { id: 5, label: 'Fri' }, { id: 6, label: 'Sat' }, { id: 0, label: 'Sun' }
-];
+const days = computed(() => [
+    { id: 1, label: t('onboarding.day_mon') },
+    { id: 2, label: t('onboarding.day_tue') },
+    { id: 3, label: t('onboarding.day_wed') },
+    { id: 4, label: t('onboarding.day_thu') },
+    { id: 5, label: t('onboarding.day_fri') },
+    { id: 6, label: t('onboarding.day_sat') },
+    { id: 0, label: t('onboarding.day_sun') }
+]);
 
 const validAccountModes = ['scheduling_only', 'scheduling_with_payments'];
 const normalizeAccountMode = (value) => {
@@ -290,7 +293,9 @@ const form = reactive({
     password_confirmation: '',
     accountMode: initialAccountMode,
     timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC',
-    pageTitle: authStore.user ? `${authStore.user.name}'s Calendar` : 'My Calendar',
+    pageTitle: authStore.user
+        ? t('onboarding.default_page_title_user', { name: authStore.user.name })
+        : t('onboarding.default_page_title_guest'),
     pageSlug: '',
     selectedDays: [1, 2, 3, 4, 5],
     startTime: '09:00',
@@ -353,8 +358,8 @@ watch(() => authStore.user, (newUser) => {
     if (newUser && !form.name) {
         form.name = newUser.name;
     }
-    if (newUser && form.pageTitle === 'My Calendar') {
-        form.pageTitle = `${newUser.name}'s Calendar`;
+    if (newUser && form.pageTitle === t('onboarding.default_page_title_guest')) {
+        form.pageTitle = t('onboarding.default_page_title_user', { name: newUser.name });
         generateSlug();
     }
     if (newUser && !normalizeAccountMode(route.query.mode) && normalizeAccountMode(newUser.account_mode)) {
@@ -370,10 +375,11 @@ watch(() => route.query.mode, (newMode) => {
 });
 
 const generateSlug = () => {
-    form.pageSlug = form.pageTitle
+    const slug = form.pageTitle
         .toLowerCase()
         .replace(/[^a-z0-9]+/g, '-')
         .replace(/(^-|-$)/g, '');
+    form.pageSlug = slug || 'my-calendar';
 };
 
 generateSlug(); // Initial generation
@@ -438,7 +444,7 @@ const nextStep = async () => {
         const page = await pageStore.createPage({
             title: form.pageTitle,
             slug: form.pageSlug,
-            intro_text: 'Excited to meet you!',
+            intro_text: t('onboarding.default_intro_text'),
         });
 
         // 2. Add Availability Rules

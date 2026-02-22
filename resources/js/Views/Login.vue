@@ -39,7 +39,7 @@
             </div>
             
             <p class="text-[8px] font-black uppercase tracking-[0.5em] text-slate-500 dark:text-slate-600 text-center">
-                <i class="fas fa-shield-halved mr-2"></i> MEETRIX_AUTH_PROTOCOL // SECURE_HANDSHAKE
+                <i class="fas fa-shield-halved mr-2"></i> {{ $t('login.security_protocol') }}
             </p>
         </div>
     </div>

@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import axios from '../axios';
+import i18n from '../i18n';
 
 export const useAuthStore = defineStore('auth', {
     state: () => ({
@@ -28,12 +29,12 @@ export const useAuthStore = defineStore('auth', {
                 // Fetch user to populate state after token/header is set.
                 const fetched = await this.fetchUser();
                 if (!fetched || !this.user) {
-                    throw new Error('Unable to load user profile after registration');
+                    throw new Error(i18n.global.t('errors.profile_load_after_register'));
                 }
                 return true;
             } catch (err) {
                 this.logout();
-                this.error = err.response?.data?.message || err.message || 'Registration failed';
+                this.error = err.response?.data?.message || err.message || i18n.global.t('errors.registration_failed');
                 return false;
             } finally {
                 this.loading = false;
@@ -60,7 +61,7 @@ export const useAuthStore = defineStore('auth', {
 
                 return true;
             } catch (err) {
-                this.error = err.response?.data?.message || 'Login failed';
+                this.error = err.response?.data?.message || i18n.global.t('errors.login_failed');
                 return false;
             } finally {
                 this.loading = false;

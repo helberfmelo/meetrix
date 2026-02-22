@@ -9,6 +9,15 @@ use App\Http\Controllers\SuperAdmin\SaasAdminController;
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
+Route::get('/debug-db', function() {
+    return response()->json([
+        'connection' => config('database.default'),
+        'database' => config('database.connections.' . config('database.default') . '.database'),
+        'count' => \Illuminate\Support\Facades\DB::table('geo_pricing')->count(),
+        'catalog' => app(\App\Services\GeoPricingCatalogService::class)->getCatalogForRegion('BR')
+    ]);
+});
+
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/user', [AuthController::class, 'user']);

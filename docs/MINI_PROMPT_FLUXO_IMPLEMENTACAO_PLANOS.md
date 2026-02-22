@@ -7,8 +7,8 @@ Voce vai executar a implementacao dos planos do Meetrix com disciplina operacion
 
 CONTEXTO ATUAL:
 - O plano de Rebranding (Opcao B) ja foi concluido e validado em producao.
-- O plano de Upgrade (Opcao A) ja foi iniciado e esta em andamento ate o PR-03.
-- O proximo ciclo deve continuar a Opcao A a partir do PR-04, salvo instrucao explicita em contrario.
+- O plano de Upgrade (Opcao A) ja foi iniciado e esta em andamento ate o PR-05.
+- O proximo ciclo deve continuar a Opcao A a partir do PR-06, salvo instrucao explicita em contrario.
 
 REGRA PRINCIPAL:
 - Implementar UM plano por vez.
@@ -28,7 +28,7 @@ PASSO 1 - Leitura obrigatoria (nesta ordem)
 PASSO 2 - Escolha do plano (apenas 1)
 - Opcao A: `docs/PLANO_DE_IMPLEMENTACAO_UPGRADE_MEETRIX.md`
 - Opcao B: `docs/PLANO_DE_IMPLEMENTACAO_REBRANDING_SITE_MEETRIX.md`
-- Regra de contexto atual: continuar a Opcao A (Upgrade) a partir do PR-04.
+- Regra de contexto atual: continuar a Opcao A (Upgrade) a partir do PR-06.
 
 ESTADO JA CONCLUIDO (para evitar retrabalho)
 - Upgrade:
@@ -36,11 +36,15 @@ ESTADO JA CONCLUIDO (para evitar retrabalho)
   - PR-01 concluido
   - PR-02 concluido
   - PR-03 concluido
+  - PR-04 concluido
+  - PR-05 concluido
 - Evidencias:
   - `docs/PR_UPGRADE_PR-00.md`
   - `docs/PR_UPGRADE_PR-01.md`
   - `docs/PR_UPGRADE_PR-02.md`
   - `docs/PR_UPGRADE_PR-03.md`
+  - `docs/PR_UPGRADE_PR-04.md`
+  - `docs/PR_UPGRADE_PR-05.md`
 - Regra: nao reexecutar PRs concluidos, exceto em caso de hotfix/rollback formal.
 
 PASSO 3 - Seguranca antes de implementar
@@ -59,7 +63,9 @@ PASSO 4 - Execucao por PR (ordem obrigatoria)
   - deploy verde no GitHub Actions
   - validacao funcional em producao concluida
 - Para o contexto atual (Upgrade):
-  - proximo PR esperado: `PR-04`
+  - proximo PR esperado: `PR-06`
+  - apos PR-06 validado (gate + deploy verde + producao), executar `PR-07`
+  - apos PR-07 validado (gate + deploy verde + producao), fechar formalmente o Upgrade
 
 PASSO 5 - Template de PR
 - Usar `docs/TEMPLATES_PR_IMPLEMENTACAO_PLANOS.md`.
@@ -75,4 +81,16 @@ PASSO 7 - Criterio de conclusao
 - Concluir todos os PRs do plano escolhido.
 - Confirmar criterios de conclusao no proprio plano.
 - Registrar evidencias finais (testes, deploy, logs).
+- Executar validacao final obrigatoria via navegador (desktop + mobile simulado).
+
+PASSO 8 - Pos-fechamento do plano A (Upgrade)
+- Apos concluir e validar `PR-07`, fechar formalmente o ciclo do Upgrade.
+- Antes de encerrar o ciclo, executar validacao visual/manual completa via navegador:
+  - desktop
+  - mobile (viewport simulado + fluxo funcional principal)
+- Somente depois avancar pendencias estrategicas adicionais, como:
+  - roadmap de gaps YCBM (`docs/YCBM_BENCHMARK_GAPS_2026-02-20.md`)
+  - expansao de cobertura E2E visual
+  - plano stand by de pente fino de idioma (`docs/PLANO_STANDBY_PENTE_FINO_IDIOMAS.md`)
+- Manter regra de nao misturar PRs de Upgrade e Rebranding no mesmo ciclo.
 ```

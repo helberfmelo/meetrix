@@ -1,6 +1,6 @@
 # PROMPT DE CONTINUAÇÃO (HANDOFF)
 
-**OBJETIVO ATUAL**: continuar a execução do plano de **Upgrade do Meetrix** a partir do **PR-04**, mantendo disciplina operacional por PR, com gates de deploy e produção.
+**OBJETIVO ATUAL**: continuar a execução do plano de **Upgrade do Meetrix** a partir do **PR-06**, mantendo disciplina operacional por PR, com gates de deploy e produção.
 
 ## Instruções Obrigatórias
 
@@ -34,7 +34,7 @@
   - `/`, `/login`, `/onboarding`, `/dashboard`, `/p/helber` com `200`;
   - logs sem `headers already sent` e sem `Fatal error` nas verificações finais;
   - deploys recentes em `success` no GitHub Actions (incluindo commit `273fd61`).
-- Plano de Upgrade (Opção A): em execução com PR-00 a PR-03 concluídos em `main`.
+- Plano de Upgrade (Opção A): em execução com PR-00 a PR-05 concluídos em `main`.
   - `PR-00`:
     - tag `snapshot/pre-upgrade-2026-02-21`
     - branch `backup/pre-upgrade-2026-02-21`
@@ -45,24 +45,37 @@
     - evidência: `docs/PR_UPGRADE_PR-02.md`
   - `PR-03` (geo-pricing engine + catálogo):
     - evidência: `docs/PR_UPGRADE_PR-03.md`
+  - `PR-04` (Stripe Connect + webhooks + split):
+    - evidência: `docs/PR_UPGRADE_PR-04.md`
+  - `PR-05` (Conta + Master Admin + lacunas P0 benchmark):
+    - evidência: `docs/PR_UPGRADE_PR-05.md`
   - runs principais do upgrade em `success`:
-    - `22252825769`, `22252951456`, `22253101995`
+    - `22252825769`, `22252951456`, `22253101995`, `22260660732`, `22261656916`
   - observação operacional do PR-02:
     - foi necessário executar `migrate_sovereign.php` durante o gate funcional de produção para re-sincronizar schema/caches; após isso, validações concluídas.
+  - validação funcional de PR-05 concluída em produção:
+    - rotas críticas `/`, `/login`, `/onboarding`, `/checkout`, `/dashboard`, `/p/helber` com `200`;
+    - APIs validadas com admin: `/api/account/summary`, `/api/account/billing-history`, `/api/super-admin/overview`, `/api/super-admin/payments`, `/api/super-admin/customers`, `/api/super-admin/payments/export`;
+    - logs operacionais sem `Fatal error` e sem `headers already sent`.
 
 ## Pendências Prioritárias
 
-1. Continuar plano de Upgrade (Opção A) a partir do `PR-04`:
+1. Continuar plano de Upgrade (Opção A) a partir do `PR-06`:
    - referência: `docs/PLANO_DE_IMPLEMENTACAO_UPGRADE_MEETRIX.md`.
-   - escopo imediato: Stripe Connect, webhooks obrigatórios e split, com feature flag.
-2. Concluir `PR-05`, `PR-06` e `PR-07` em ordem estrita:
+   - escopo imediato: KPIs, analytics e observabilidade financeira.
+2. Concluir `PR-06` e `PR-07` em ordem estrita:
    - não avançar sem gate/deploy/smoke de produção aprovados na etapa atual.
-3. Executar roadmap de gaps do benchmark YCBM:
+3. Após concluir `PR-07`, executar validação final obrigatória via navegador:
+   - desktop;
+   - mobile simulado (viewport mobile + fluxos críticos).
+4. Executar roadmap de gaps do benchmark YCBM:
    - referência: `docs/YCBM_BENCHMARK_GAPS_2026-02-20.md`.
-4. Expandir cobertura E2E visual para os fluxos novos de landing/onboarding pós-rebranding.
+5. Expandir cobertura E2E visual para os fluxos novos de landing/onboarding pós-rebranding.
+6. Manter plano de pente fino de idioma em stand by até fechamento do upgrade:
+   - `docs/PLANO_STANDBY_PENTE_FINO_IDIOMAS.md`
 
 ## Notas de Documentação
 
 - Documento de matriz de copy do rebranding:
   - `docs/REBRANDING_COPY_MATRIX.md`
-- Este handoff substitui o estado anterior de início do upgrade e passa a orientar a continuação a partir do PR-04.
+- Este handoff substitui o estado anterior e passa a orientar a continuação a partir do PR-06.

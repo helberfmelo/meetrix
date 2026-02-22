@@ -126,5 +126,34 @@ Acesso ao FTP: ftp.opentshost.com
 Usuário: opents62
 Senha: SAFsdfasdfEWREgFDS435#@ad
 
+### Acesso GitHub
+https://github.com/helberfmelo/meetrix/
+Usuário: helber@bigbangdigital.com.br
+Senha: #%pt2JgtwrQB@5Awj994
+
+Cadastro de segredos do github
+https://github.com/helberfmelo/meetrix/settings/secrets/actions
+
 ---
-*Última atualização: 2026-02-22 (encerramentos consolidados; evidência: `docs/ENCERRAMENTO_ITENS_2026-02-22.md`)*
+
+### Configuração SSH e Automação (GitHub Actions)
+
+A automação de deploy via GitHub Actions foi aprimorada com sucesso para incluir a execução remota de comandos via SSH no servidor de produção (como rotinas de clear cache, migrações e seeders) após o sincronismo via FTP. 
+
+**Segredos Criados e Atualizados no Repositório:**
+A chave SSH utilizada foi gerada diretamente no servidor no padrão moderno *Ed25519*, autorizada no cPanel, formatada corretamente para compatibilidade com a CI e armazenada da seguinte maneira:
+- `DEPLOY_SSH_HOST`: Host apontado para a conexão SSH (`ftp.opentshost.com`).
+- `DEPLOY_SSH_USER`: Usuário do cPanel (`opents62`).
+- `DEPLOY_SSH_PASSPHRASE`: Frase secreta da chave gerada.
+- `DEPLOY_SSH_KEY`: A chave privada em formato PEM armazenada com segurança.
+
+*> [!NOTE]*
+*> Os valores reais como a chave privada, passphrase e dados vitais estão restritos aos GitHub Secrets para manter o padrão de segurança e nunca devem ser transcritos neste ou em outro documento do repositório em texto limpo.*
+
+**Relatório de Validação de Deploy:**
+- **Build frontend (Vite):** PASS
+- **Sincronização FTP:** PASS
+- **Execução SSH (Optimize, Migrate, Seed):** PASS
+- **Verificação Banco de Dados (`pricing_locale_currency_maps` configurada):** PASS
+
+**Link da Execução do Actions:** [Workflow Run #174](https://github.com/helberfmelo/meetrix/actions/runs/22280090689)

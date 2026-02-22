@@ -52,18 +52,27 @@
    - PR-01: fundação de dados e tabelas financeiras.
    - PR-02: onboarding por modo + upgrade progressivo sem perda de histórico.
    - PR-03: catálogo de geo-pricing por região/moeda/modo (`/api/pricing/catalog`).
+   - PR-04: Stripe Connect + webhooks obrigatórios + split.
+   - PR-05: Conta + Master Admin (self-service assinatura, ações financeiras e exportação CSV).
 10. Deploys do ciclo de upgrade validados em `success`:
-   - `22252825769`, `22252951456`, `22253101995`.
+   - `22252825769`, `22252951456`, `22253101995`, `22260660732`, `22261656916`.
 11. Durante validação do PR-02, produção foi re-sincronizada com:
    - `https://opentshost.com/meetrix/migrate_sovereign.php`
    - execução concluída com migrations + seed + limpeza de cache.
+12. Gate de produção do PR-05 validado:
+   - rotas críticas `/`, `/login`, `/onboarding`, `/checkout`, `/dashboard`, `/p/helber` em `200`;
+   - logs operacionais sem `Fatal error` e sem `headers already sent`;
+   - APIs de conta/admin em `200`, incluindo `/api/super-admin/payments/export`.
 
 ## Pendências Técnicas Relevantes
 
-1. Continuar Upgrade a partir do `PR-04` (Stripe Connect + webhooks + split), mantendo gate completo por etapa.
-2. Executar `PR-05`, `PR-06` e `PR-07` do plano de upgrade em sequência estrita.
-3. Executar roadmap de gaps do benchmark YCBM documentado em `docs/YCBM_BENCHMARK_GAPS_2026-02-20.md`.
-4. Expandir validação E2E visual para landing e onboarding pós-rebranding.
+1. Continuar Upgrade a partir do `PR-06` (KPIs e observabilidade financeira), mantendo gate completo por etapa.
+2. Executar `PR-06` e `PR-07` do plano de upgrade em sequência estrita.
+3. Após `PR-07`, executar validação final completa via navegador (desktop + mobile simulado).
+4. Manter plano de pente fino de idioma em stand by até fechamento do Upgrade:
+   - `docs/PLANO_STANDBY_PENTE_FINO_IDIOMAS.md`
+5. Executar roadmap de gaps do benchmark YCBM documentado em `docs/YCBM_BENCHMARK_GAPS_2026-02-20.md`.
+6. Expandir validação E2E visual para landing e onboarding pós-rebranding.
 
 ## Credenciais Master Admin (Produção)
 
@@ -72,4 +81,4 @@
 - Password: `MeetrixMaster2026Sovereign!#`
 
 ---
-Last update: 2026-02-21 (Upgrade em execução até PR-03, com deploys validados)
+Last update: 2026-02-21 (Upgrade em execução até PR-05, com deploys validados)

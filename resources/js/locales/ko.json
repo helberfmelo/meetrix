@@ -339,7 +339,8 @@
         "status_rejected": "거부됨",
         "status_no_show": "노쇼",
         "status_unknown": "알려지지 않은",
-        "sync_status": "동기화 완료"
+        "sync_status": "동기화 완료",
+        "free_label": "무료"
     },
     "onboarding": {
         "step_1": "프로필",

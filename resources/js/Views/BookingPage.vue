@@ -116,7 +116,7 @@
                                 </div>
                                 <div class="text-right">
                                     <span v-if="type.price > 0" class="font-black text-xl sm:text-2xl tracking-tighter" :style="{ color: primaryColor }">{{ formatCurrency(type.price) }}</span>
-                                    <span v-else class="text-meetrix-green font-black text-lg sm:text-xl tracking-tighter uppercase">{{ $t('home.price_free_value') }}</span>
+                                    <span v-else class="text-meetrix-green font-black text-lg sm:text-xl tracking-tighter uppercase">{{ $t('booking.free_label') }}</span>
                                 </div>
                             </button>
                         </div>

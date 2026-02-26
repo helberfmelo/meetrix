@@ -344,7 +344,8 @@
         "status_rejected": "被拒绝",
         "status_no_show": "缺席",
         "status_unknown": "未知",
-        "sync_status": "同步完成"
+        "sync_status": "同步完成",
+        "free_label": "免费"
     },
     "onboarding": {
         "step_1": "个人资料",

@@ -344,7 +344,8 @@
         "status_rejected": "Abgelehnt",
         "status_no_show": "No-Show",
         "status_unknown": "Unbekannt",
-        "sync_status": "Synchronisiert"
+        "sync_status": "Synchronisiert",
+        "free_label": "Kostenlos"
     },
     "onboarding": {
         "step_1": "Profil",

@@ -339,7 +339,8 @@
         "manage_invalid": "Invalid or expired booking.",
         "manage_current": "Current booking",
         "manage_new_time": "New time",
-        "sync_status": "Sync OK"
+        "sync_status": "Sync OK",
+        "free_label": "Free"
     },
     "onboarding": {
         "step_1": "Profile",

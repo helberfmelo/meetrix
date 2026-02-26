@@ -344,7 +344,8 @@
         "manage_invalid": "Agendamento invalido ou expirado.",
         "manage_current": "Agendamento atual",
         "manage_new_time": "Novo horario",
-        "sync_status": "Sincronizado"
+        "sync_status": "Sincronizado",
+        "free_label": "Grátis"
     },
     "onboarding": {
         "step_1": "Perfil",

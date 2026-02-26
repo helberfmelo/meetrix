@@ -344,7 +344,8 @@
         "status_rejected": "Отклоненный",
         "status_no_show": "Неявка",
         "status_unknown": "Неизвестный",
-        "sync_status": "Синхронизация выполнена"
+        "sync_status": "Синхронизация выполнена",
+        "free_label": "Бесплатно"
     },
     "onboarding": {
         "step_1": "Профиль",

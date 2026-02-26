@@ -344,7 +344,8 @@
         "manage_invalid": "Marcação inválida ou expirada.",
         "manage_current": "Marcação atual",
         "manage_new_time": "Novo horário",
-        "sync_status": "Sincronizado"
+        "sync_status": "Sincronizado",
+        "free_label": "Grátis"
     },
     "onboarding": {
         "step_1": "Perfil",

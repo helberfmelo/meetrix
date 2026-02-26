@@ -344,7 +344,8 @@
         "status_rejected": "Rejeté",
         "status_no_show": "Non-présentation",
         "status_unknown": "Inconnu",
-        "sync_status": "Synchronisé"
+        "sync_status": "Synchronisé",
+        "free_label": "Gratuit"
     },
     "onboarding": {
         "step_1": "Profil",

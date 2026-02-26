@@ -344,7 +344,8 @@
         "status_rejected": "Reddedilmiş",
         "status_no_show": "Rezervasyona gelmeme",
         "status_unknown": "Bilinmiyor",
-        "sync_status": "Senkronize"
+        "sync_status": "Senkronize",
+        "free_label": "Ücretsiz"
     },
     "onboarding": {
         "step_1": "Profil",

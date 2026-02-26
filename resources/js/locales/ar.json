@@ -344,7 +344,8 @@
         "status_rejected": "مرفوض",
         "status_no_show": "عدم الحضور",
         "status_unknown": "مجهول",
-        "sync_status": "تمت المزامنة"
+        "sync_status": "تمت المزامنة",
+        "free_label": "مجاني"
     },
     "onboarding": {
         "step_1": "الملف الشخصي",
